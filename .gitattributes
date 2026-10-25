@@ -1,0 +1,7 @@
+# Development-only files, excluded from release archives (git archive / GitHub zip)
+/tests            export-ignore
+/composer.json    export-ignore
+/composer.lock    export-ignore
+/phpunit.xml.dist export-ignore
+/.gitignore       export-ignore
+/.gitattributes   export-ignore
