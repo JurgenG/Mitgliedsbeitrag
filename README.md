@@ -33,8 +33,13 @@ docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/app -w /app composer:2 php ven
 Code under test must stay compatible with PHP 8.1 (Admidio 5's minimum); Composer is pinned to that
 platform.
 
+## Online payments
+Members can pay their open fee online through a personal pay link (optional, off by default; the
+Mollie connection is still being built). How to set it up and use it: `docs/online-payments-guide.md`.
+The technical design: `docs/online-payments.md`.
+
 ## Development: trying online payments without a provider
-Online payments (work in progress, see `docs/online-payments.md`) can be clicked through in a local
+Online payments can be clicked through in a local
 Admidio instance with the built-in **fake provider**: no account, no API key, no tunnel. It is only
 offered when the web server's environment contains `MEMBERSHIPFEE_PAYMENT_FAKE=1`; never set that
 on a real installation. Details and setup: *Trying it out with the fake provider* in the design doc.

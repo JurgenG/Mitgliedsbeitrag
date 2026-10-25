@@ -371,7 +371,8 @@ member.
 7. ✅ `pay.php`, `payment_link.php`, `#payment_link#` mail placeholder.
 8. ✅ `payment_webhook.php`, `fake_checkout.php`.
 9. `MollieApiKey` (key handling, unit-tested), then `MollieProvider` (curl) + preferences panel.
-10. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
+10. README + user guide (`online-payments-guide.md`); ✅ done for everything except Mollie.
+    `documentation-*.docx` need regenerating by hand.
 
 ## Decisions
 
