@@ -17,6 +17,7 @@ use Admidio\Roles\Entity\Role;
 use Admidio\Roles\Entity\RolesRights;
 use Admidio\Users\Entity\User;
 use Plugins\MembershipFee\classes\Config\ConfigTable;
+use Plugins\MembershipFee\classes\Service\AccessControl;
 
 if (basename($_SERVER['SCRIPT_FILENAME']) === 'common_function.php') {
     exit('This page may not be called directly!');
@@ -179,6 +180,25 @@ function checkCsrfToken()
             $gMessage->show($e->getMessage());
         }
     }
+}
+
+/**
+ * Checks a role-based plugin permission (see AccessControl::PERMISSIONS) for the current user.
+ * Administrators always have every permission. Callers must still check isUserAuthorized() first.
+ *
+ * @param string $permission e.g. 'payment_settings', 'payment_details', 'payment_links'
+ * @return bool true if the current user has the permission
+ */
+function isUserAuthorizedFor(string $permission): bool
+{
+    global $gCurrentUser;
+
+    $pPreferences = new ConfigTable();
+    $pPreferences->read();
+
+    $accessControl = new AccessControl($pPreferences->config['access'] ?? array());
+
+    return $accessControl->isAllowed($permission, $gCurrentUser->isAdministrator(), $gCurrentUser->getRoleMemberships());
 }
 
 /**
