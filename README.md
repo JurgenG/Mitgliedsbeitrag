@@ -10,7 +10,7 @@ The [change history](https://www.admidio.org/dokuwiki/doku.php?id=de:plugins:mit
 
 
 ## Development: automated tests
-Plugin logic that does not depend on Admidio's globals (currently `classes/Payment/` and `classes/Service/AccessControl.php`) is covered by
+Plugin logic that does not depend on Admidio's globals (currently `classes/Payment/`, `classes/Service/AccessControl.php` and `classes/Service/MembershipStatus.php`) is covered by
 PHPUnit tests in `tests/`. The test tooling is development-only and is not part of a release.
 No local PHP or Composer is needed — run it with the official Composer Docker image:
 
