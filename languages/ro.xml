@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="PLG_MEMBERSHIPFEE_ABORT">Anulare</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT">Permisiuni de acces pentru plăți online</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC">Membrii rolurilor selectate primesc permisiunea respectivă. Administratorii au întotdeauna toate permisiunile. Doar administratorii pot modifica aceste setări.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS">Vizualizare detalii plăți</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS_DESC">Vizualizare doar în citire a ID-ului plății, furnizorului, stării și datei plății pentru fiecare membru.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS">Trimitere linkuri de plată</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS_DESC">Trimiteți e-mailuri cu un link de plată personal și reînnoiți linkul de plată al unui membru.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS">Rambursări</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS_DESC">Rambursarea plăților prin furnizorul de plăți (încă nu este disponibil).</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS">Setări de plată</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS_DESC">Activați plățile online, alegeți furnizorul de plăți și gestionați setările acestuia, inclusiv cheia API.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES">Permisiune de acces pentru setările de preferințe</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES_DESC">Aici, pe lângă rolul "Administrator", puteți autoriza roluri suplimentare pentru accesul la modulul "Preferințe".</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_TO_MODULE_INDIVIDUAL_CONTRIBUTIONS">Access to the "Individual Contributions" module</string>

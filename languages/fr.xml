@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="PLG_MEMBERSHIPFEE_ABORT">Annuler</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT">Autorisations d'accès pour les paiements en ligne</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC">Les membres des rôles sélectionnés reçoivent l'autorisation correspondante. Les administrateurs disposent toujours de toutes les autorisations. Seuls les administrateurs peuvent modifier ces paramètres.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS">Consulter les détails des paiements</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS_DESC">Consultation en lecture seule de l'ID de paiement, du prestataire, du statut et de la date de paiement par membre.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS">Envoyer des liens de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS_DESC">Envoyer des e-mails avec un lien de paiement personnel et renouveler le lien de paiement d'un membre.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS">Remboursements</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS_DESC">Rembourser des paiements via le prestataire de paiement (pas encore disponible).</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS">Paramètres de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS_DESC">Activer les paiements en ligne, choisir le prestataire de paiement et gérer ses paramètres, y compris la clé API.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES">Autorisation d'accès pour les paramétrages</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES_DESC">Ici, en plus du rôle "Administrateur", vous pouvez autoriser d'autres rôles pour accéder au module "Paramétrages".</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_TO_MODULE_INDIVIDUAL_CONTRIBUTIONS">Accès au module «Contributions individuelles»</string>

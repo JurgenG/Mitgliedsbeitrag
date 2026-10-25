@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="PLG_MEMBERSHIPFEE_ABORT">Annuleer</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT">Toegangsrechten voor online betalingen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC">Leden van de geselecteerde rollen krijgen het betreffende recht. Beheerders hebben altijd alle rechten. Alleen beheerders kunnen deze instellingen wijzigen.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS">Betalingsgegevens bekijken</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS_DESC">Alleen-lezen weergave van betalings-ID, provider, status en betaaldatum per lid.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS">Betaallinks versturen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS_DESC">E-mails met een persoonlijke betaallink versturen en de betaallink van een lid vernieuwen.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS">Terugbetalingen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS_DESC">Betalingen terugbetalen via de betaalprovider (nog niet beschikbaar).</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS">Betalingsinstellingen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS_DESC">Online betalingen inschakelen, de betaalprovider kiezen en de instellingen ervan beheren, inclusief de API-sleutel.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES">Toegangsrechten voor voorkeuren</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES_DESC">Hier kunt u naast de rol "Beheerder" extra rollen autoriseren voor toegang tot de module "Voorkeuren".</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_TO_MODULE_INDIVIDUAL_CONTRIBUTIONS">Toegang tot de module "Individuele bijdragen".</string>

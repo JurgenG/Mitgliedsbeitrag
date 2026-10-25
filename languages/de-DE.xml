@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="PLG_MEMBERSHIPFEE_ABORT">Abbrechen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT">Zugriffsberechtigungen für Online-Zahlungen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC">Mitglieder der ausgewählten Rollen erhalten die jeweilige Berechtigung. Administratoren haben immer alle Berechtigungen. Nur Administratoren können diese Einstellungen ändern.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS">Zahlungsdetails anzeigen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS_DESC">Nur-Lese-Ansicht von Zahlungs-ID, Anbieter, Status und Zahlungsdatum je Mitglied.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS">Zahlungslinks versenden</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS_DESC">E-Mails mit persönlichem Zahlungslink versenden und den Zahlungslink eines Mitglieds erneuern.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS">Erstattungen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS_DESC">Zahlungen über den Zahlungsanbieter erstatten (noch nicht verfügbar).</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS">Zahlungseinstellungen</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS_DESC">Online-Zahlungen aktivieren, den Zahlungsanbieter auswählen und dessen Einstellungen inklusive API-Schlüssel verwalten.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES">Zugriffsberechtigung für Einstellungen</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES_DESC">Hier können, zusätzlich zur Rolle "Administrator", weitere Rollen für den Zugriff auf das Modul "Einstellungen" berechtigt werden.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_TO_MODULE_INDIVIDUAL_CONTRIBUTIONS">Zugriff auf das Modul "Individualbeiträge"</string>

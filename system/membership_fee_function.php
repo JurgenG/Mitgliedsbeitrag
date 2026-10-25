@@ -293,6 +293,18 @@ try {
             }
             break;
 
+        case 'access_payment':
+            // only administrators may assign payment permissions (see docs/online-payments.md)
+            if (!$gCurrentUser->isAdministrator()) {
+                $gMessage->show($gL10n->get('SYS_NO_RIGHTS'));
+                // => EXIT
+            }
+            foreach (array('settings', 'details', 'links', 'refunds') as $paymentPermission) {
+                $roleIds = (array) ($_POST['access_payment_' . $paymentPermission] ?? array());
+                $pPreferences->config['access']['payment_' . $paymentPermission] = array_values(array_filter(array_map('intval', $roleIds)));
+            }
+            break;
+
         case 'multiplier_roles':
             if (isset($_POST['multiplier_roles'])) {
                 $pPreferences->config['multiplier']['roles'] = array_filter($_POST['multiplier_roles']);

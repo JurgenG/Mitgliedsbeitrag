@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="PLG_MEMBERSHIPFEE_ABORT">Cancel</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT">Access permissions for online payments</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC">Members of the selected roles receive the respective permission. Administrators always have all permissions. Only administrators can change these settings.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS">View payment details</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DETAILS_DESC">Read-only view of payment ID, provider, status and payment date per member.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS">Send payment links</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_LINKS_DESC">Send emails with a personal payment link and renew a member's payment link.</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS">Refunds</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_REFUNDS_DESC">Refund payments via the payment provider (not yet available).</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS">Payment settings</string>
+    <string name="PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_SETTINGS_DESC">Enable online payments, choose the payment provider and manage its settings, including the API key.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES">Access permission for preferences</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES_DESC">Here, in addition to the role "Administrator", you can authorize additional roles for access to the "Preferences" module.</string>
     <string name="PLG_MEMBERSHIPFEE_ACCESS_TO_MODULE_INDIVIDUAL_CONTRIBUTIONS">Access to the "Individual Contributions" module</string>

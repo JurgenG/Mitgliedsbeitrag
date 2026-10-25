@@ -1667,6 +1667,42 @@ try {
 
             $page->addHtml(getMenuePanel('preferences', 'access_preferences', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PREFERENCES'), 'bi bi-key-fill', $formAccessPreferences->show()));
 
+            // PANEL: ACCESS_PAYMENT (only administrators may assign payment permissions)
+
+            if ($gCurrentUser->isAdministrator()) {
+                $formAccessPayment = new HtmlForm('access_payment_form', SecurityUtils::encodeUrl(ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/membership_fee_function.php', array(
+                    'form' => 'access_payment'
+                )), $page, array(
+                    'class' => 'form-preferences'
+                ));
+
+                $formAccessPayment->addDescription($gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_DESC'));
+
+                $sqlRoles = array(
+                    'query' => 'SELECT rol.rol_id, rol.rol_name, cat.cat_name
+                                  FROM ' . TBL_CATEGORIES . ' AS cat, ' . TBL_ROLES . ' AS rol
+                                 WHERE cat.cat_id = rol.rol_cat_id
+                                   AND ( cat.cat_org_id = ? -- $gCurrentOrgId
+                                    OR cat.cat_org_id IS NULL )
+                              ORDER BY cat_sequence, rol.rol_name ASC',
+                    'params' => array($gCurrentOrgId)
+                );
+
+                foreach (array('settings', 'details', 'links', 'refunds') as $paymentPermission) {
+                    $formAccessPayment->addSelectBoxFromSql('access_payment_' . $paymentPermission, $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_' . strtoupper($paymentPermission)), $gDb, $sqlRoles, array(
+                        'defaultValue' => $pPreferences->config['access']['payment_' . $paymentPermission],
+                        'helpTextId' => 'PLG_MEMBERSHIPFEE_ACCESS_PAYMENT_' . strtoupper($paymentPermission) . '_DESC',
+                        'multiselect' => true
+                    ));
+                }
+                $formAccessPayment->addSubmitButton('btn_save_configurations', $gL10n->get('SYS_SAVE'), array(
+                    'icon' => 'bi-check-lg',
+                    'class' => ' offset-sm-3'
+                ));
+
+                $page->addHtml(getMenuePanel('preferences', 'access_payment', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PAYMENT'), 'bi bi-credit-card', $formAccessPayment->show()));
+            }
+
             // PANEL: DELETE
 
             $formDelete = new HtmlForm('delete_form', '', $page);
