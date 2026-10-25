@@ -24,6 +24,25 @@ class FakeProvider implements PaymentProviderInterface
     /** @var array<string, PaymentResult> */
     private array $payments = array();
 
+    public function getName(): string
+    {
+        return 'fake';
+    }
+
+    /**
+     * Like Mollie: the webhook only carries the payment id as POST parameter "id"
+     */
+    public function extractWebhookPaymentId(array $post, array $headers, string $rawBody): ?string
+    {
+        $id = $post['id'] ?? null;
+
+        if (!is_string($id) || !preg_match('/^tr_[A-Za-z0-9]+$/', $id)) {
+            return null;
+        }
+
+        return $id;
+    }
+
     public function createPayment(
         string $amount,
         string $currency,

@@ -19,6 +19,11 @@ namespace Plugins\MembershipFee\classes\Payment;
 interface PaymentProviderInterface
 {
     /**
+     * Stable lowercase key of the provider (e.g. "mollie"), used in config, webhook URL and stored payment data
+     */
+    public function getName(): string;
+
+    /**
      * Creates a one-off payment and returns it including the checkout URL for the payer
      * @param string                $amount      Amount with two decimals, e.g. "25.00"
      * @param string                $currency    ISO 4217 code, e.g. "EUR"
@@ -43,4 +48,14 @@ interface PaymentProviderInterface
      * @throws PaymentException if the payment does not exist or the provider can't be reached
      */
     public function getPayment(string $paymentId): PaymentResult;
+
+    /**
+     * Verifies an incoming webhook call the provider's way and returns the id of the payment to look up.
+     * Callers must never act on the webhook data itself, only on getPayment() of the returned id.
+     * @param array<string, mixed>  $post    Parsed POST parameters ($_POST)
+     * @param array<string, string> $headers Request headers, e.g. for signature checks
+     * @param string                $rawBody Unparsed request body, e.g. for signature checks
+     * @return string|null Payment id, or null if the call is invalid and must be ignored
+     */
+    public function extractWebhookPaymentId(array $post, array $headers, string $rawBody): ?string;
 }

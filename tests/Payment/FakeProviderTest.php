@@ -42,6 +42,41 @@ final class FakeProviderTest extends TestCase
         $this->assertInstanceOf(PaymentProviderInterface::class, $this->provider);
     }
 
+    public function testNameIsFake(): void
+    {
+        $this->assertSame('fake', $this->provider->getName());
+    }
+
+    public function testExtractWebhookPaymentIdReturnsPostedId(): void
+    {
+        $id = $this->create()->id;
+
+        $this->assertSame($id, $this->provider->extractWebhookPaymentId(array('id' => $id), array(), 'id=' . $id));
+    }
+
+    /**
+     * @dataProvider invalidWebhookPosts
+     * @param array<string, mixed> $post
+     */
+    public function testExtractWebhookPaymentIdIgnoresInvalidCalls(array $post): void
+    {
+        $this->assertNull($this->provider->extractWebhookPaymentId($post, array(), ''));
+    }
+
+    /**
+     * @return array<string, array{array<string, mixed>}>
+     */
+    public static function invalidWebhookPosts(): array
+    {
+        return array(
+            'missing id'    => array(array()),
+            'empty id'      => array(array('id' => '')),
+            'wrong prefix'  => array(array('id' => 'xx_abc')),
+            'injection'     => array(array('id' => "tr_abc' OR 1=1")),
+            'array instead' => array(array('id' => array('tr_abc')))
+        );
+    }
+
     public function testCreatePaymentReturnsOpenPaymentWithCheckoutUrl(): void
     {
         $payment = $this->create();
