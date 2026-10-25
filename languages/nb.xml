@@ -401,6 +401,8 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Bidragsbetalinger</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Som standard vurderes alle bidragsroller ved redigering av bidragene. Ved hjelp av dette rollevalget kan redigering av bidragene kun utføres for de valgte rollene. Det bør ikke være noen begrensning på visse roller, så dette feltet bør stå tomt.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Betalingslenke</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPIED">Betalingslenken er kopiert</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPY">Kopier lenken</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Personlig lenke som #VAR1# kan bruke til å betale den utestående medlemskontingenten på nett. Send den bare til dette medlemmet.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Denne betalingslenken er ikke lenger gyldig. Hvis du nettopp har betalt, er betalingen din registrert.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Det er ingen utestående medlemskontingent å betale.</string>

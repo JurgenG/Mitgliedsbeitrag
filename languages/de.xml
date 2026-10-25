@@ -401,6 +401,8 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Beitragszahlungen</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Standardmäßig werden beim Bearbeiten der Beitragszahlungen alle Beitragsrollen betrachtet. Über diese Rollenauswahl kann eine Beitragszahlung nur für die gewählten Rollen durchgeführt werden. Soll keine Einschränkung auf bestimmte Rollen erfolgen, so ist dieses Feld leer zu lassen.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Zahlungslink</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPIED">Zahlungslink kopiert</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPY">Link kopieren</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Persönlicher Link, mit dem #VAR1# den offenen Mitgliedsbeitrag online bezahlen kann. Nur an dieses Mitglied senden.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Dieser Zahlungslink ist nicht mehr gültig. Wenn Sie gerade bezahlt haben, wurde Ihre Zahlung erfasst.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Es gibt keinen offenen Mitgliedsbeitrag zu bezahlen.</string>

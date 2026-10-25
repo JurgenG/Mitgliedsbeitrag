@@ -401,6 +401,8 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Contribution payments</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">By default, all contribution roles are considered while editing the contributions. About this role selection editing the contributions may be performed only for the selected roles. There should be no restriction on certain roles, so this field should be left blank.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Pay link</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPIED">Pay link copied</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPY">Copy link</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Personal link with which #VAR1# can pay the open membership fee online. Send it only to this member.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">This payment link is no longer valid. If you have just paid, your payment has been registered.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">There is no open membership fee to pay.</string>

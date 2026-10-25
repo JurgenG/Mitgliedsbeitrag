@@ -52,11 +52,36 @@ try {
     $form->addInput('payment_link', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_LINK'), $payLink, array(
         'property' => HtmlForm::FIELD_READONLY
     ));
+    $form->addButton('btn_copy_payment_link', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPY'), array(
+        'icon' => 'bi-clipboard',
+        'class' => 'offset-sm-3'
+    ));
     $form->addButton('btn_open_payment_link', $gL10n->get('PLG_MEMBERSHIPFEE_PAY_NOW'), array(
         'icon' => 'bi-box-arrow-up-right',
         'link' => $payLink,
-        'class' => 'btn-primary offset-sm-3'
+        'class' => 'btn-primary admidio-margin-bottom'
     ));
+
+    // navigator.clipboard needs https (or localhost); otherwise fall back to selecting the text
+    $page->addJavascript('
+        $("#btn_copy_payment_link").click(function(event) {
+            event.preventDefault();
+            const $link = $("#payment_link");
+            const copied = function() {
+                $("#btn_copy_payment_link").attr("title", ' . json_encode($gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_LINK_COPIED')) . ').tooltip("dispose").tooltip().tooltip("show");
+            };
+            const copyBySelection = function() {
+                $link.select();
+                if (document.execCommand("copy")) {
+                    copied();
+                }
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText($link.val()).then(copied, copyBySelection);
+            } else {
+                copyBySelection();
+            }
+        });', true);
 
     $page->addHtml($form->show());
     $page->show();

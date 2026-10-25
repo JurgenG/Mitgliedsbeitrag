@@ -332,9 +332,9 @@ member.
   `saveChangesWithoutRights()`, because nobody is logged in when the webhook or the pay page runs and
   Admidio otherwise refuses to save disabled fields.
 - **Showing a pay link:** on *Payments*, users with `payment_links` get a link icon per member.
-  It opens `payment_link.php`, which creates the member's token if needed and shows the link to
-  copy. In mail texts, `#payment_link#` expands to the same link. It stays empty if online payments
-  are off or the sender lacks `payment_links`.
+  It opens `payment_link.php`, which creates the member's token if needed and shows the link with a
+  *Copy link* button. In mail texts, `#payment_link#` expands to the same link. It stays empty if
+  online payments are off or the sender lacks `payment_links`.
 - **`pay.php`** (no login). Parameters: `org`, `user`, `token`, and `mode` = `pay` (default) or
   `return`. `org` must be the current organisation, and online payments must be on.
   - `pay`: `startPayment()` → 303 redirect to the checkout, or a "nothing to pay" or "link no
