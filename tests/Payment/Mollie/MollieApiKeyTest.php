@@ -58,7 +58,7 @@ final class MollieApiKeyTest extends TestCase
     {
         $masked = MollieApiKey::mask(self::LIVE_KEY);
 
-        $this->assertSame('live_••••XsM' === $masked ? $masked : 'live_••••lXsM', $masked);
+        $this->assertSame('live_••••lXsM', $masked);
         $this->assertStringNotContainsString('dHar4XY7', $masked);
     }
 
