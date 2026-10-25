@@ -193,6 +193,24 @@ final class PaymentServiceTest extends TestCase
         );
     }
 
+    public function testCheckPayLinkReturnsMemberForValidLink(): void
+    {
+        $member = $this->service->checkPayLink(self::UUID, $this->token);
+
+        $this->assertNotNull($member);
+        $this->assertSame(self::UUID, $member->userUuid);
+    }
+
+    /**
+     * @dataProvider invalidLinks
+     */
+    public function testCheckPayLinkReturnsNullForInvalidLink(string $uuid, string $storedToken, string $givenToken): void
+    {
+        $this->store->put(new PaymentMember(self::UUID, 25.0, false, $storedToken, 'Membership fee 2026'));
+
+        $this->assertNull($this->service->checkPayLink($uuid, $givenToken));
+    }
+
     public function testInvalidPayLinkIsAPaymentException(): void
     {
         $this->assertInstanceOf(PaymentException::class, new InvalidPayLinkException('x'));

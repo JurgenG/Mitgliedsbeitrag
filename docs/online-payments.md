@@ -99,6 +99,7 @@ The Admidio implementation of the store comes with the profile fields (step 6).
 | Method | Behaviour |
 |---|---|
 | `getOrCreateToken(userUuid)` | Returns the member's pay token, creating and storing one first if there is none. Used for `#payment_link#` |
+| `checkPayLink(userUuid, token)` | Returns the member if the link is valid (member exists, has a token, token matches), otherwise `null`. Used by the return page |
 | `startPayment(userUuid, token, redirectUrl, webhookUrl)` | Throws `InvalidPayLinkException` if the member is unknown, has no token, or the token doesn't match (`hash_equals()`). Returns `null` if there is nothing to pay (already paid, or fee ≤ 0). Otherwise creates a payment for the **current** fee and returns it |
 | `handleWebhook(post, headers, rawBody)` | Runs the webhook logic below and returns one of the `WEBHOOK_*` outcomes. It never throws for bad input, so the endpoint can always answer 200 |
 | `formatAmount(float)` (static) | Fee → provider amount string with two decimals and a dot, e.g. `25` → `"25.00"` |
@@ -309,8 +310,10 @@ member.
   `return`. `org` must be the current organisation, and online payments must be on.
   - `pay`: `startPayment()` → 303 redirect to the checkout, or a "nothing to pay" or "link no
     longer valid" message. A provider error shows "try again later" without details.
-  - `return` (the payment's `redirectUrl`): if the token is still valid, the fee isn't confirmed yet:
-    "not completed or not confirmed yet" plus a *Pay now* button. If the token is no longer valid,
+  - `return` (the payment's `redirectUrl`) uses `checkPayLink()`. If the link is valid and the fee
+    is open, the payment isn't confirmed yet: "not completed or not confirmed yet" plus a *Pay now*
+    button. Valid but nothing open (e.g. an admin entered the payment by hand): "nothing to pay".
+    If the token is no longer valid,
     the neutral "link no longer valid; if you just paid, your payment has been registered" message
     appears. That never confirms or denies a payment to someone who only knows the uuid.
 - **`payment_webhook.php`** (no login). It ignores calls for another provider than the active one,
