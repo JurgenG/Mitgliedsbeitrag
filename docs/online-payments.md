@@ -46,6 +46,9 @@ classes/Payment/PaymentException.php           provider errors (no Admidio depen
 classes/Payment/FakeProvider.php               in-memory provider for development and testing
 classes/Payment/Mollie/MollieProvider.php      only code that talks to the Mollie REST API
 classes/Payment/PaymentService.php             plugin logic: open fee → payment, payment → PAID
+classes/Payment/PaymentMember.php              value object: a member's fee, paid flag, pay token, purpose
+classes/Payment/PaymentMemberStoreInterface.php  reads/writes PaymentMember data (Admidio-backed in production)
+classes/Payment/InvalidPayLinkException.php    unknown member or wrong token on the pay link
 system/pay.php                                 public: member's link → creates payment → redirect
 system/payment_webhook.php?provider=<name>     public: status callback for every provider
 ```
@@ -71,6 +74,47 @@ The webhook endpoint never acts on the webhook body itself. It always calls `get
 that `extractWebhookPaymentId()` returns. Providers that sign webhooks (Stripe, PayPal) would verify
 the signature there. Mollie doesn't sign them, so `MollieProvider` only validates the id format.
 That is safe because the subsequent `getPayment()` is authoritative.
+
+### PaymentService
+
+`PaymentService` holds the plugin's payment logic for **one organisation**. It is constructed with
+the active provider, a member store, the org id, the org's timezone and a fallback description. It
+doesn't touch Admidio globals, so it is unit-tested against `FakeProvider` and an in-memory store.
+
+Member data reaches it through `PaymentMemberStoreInterface`:
+
+| Method | Purpose |
+|---|---|
+| `findMember(userUuid): ?PaymentMember` | Current fee (already normalised with `normalize_fee()`), paid flag (`PAID{org}` set), pay token, purpose text |
+| `saveToken(userUuid, token)` | Stores a new pay token in `PAYTOKEN{org}` |
+| `markPaid(userUuid, paidDate, paymentId, provider, newToken)` | Sets `PAID{org}` (`Y-m-d`), `PAYMENT_ID{org}`, `PAYMENT_PROVIDER{org}` and the new token in one `save()`. Like `payments.php` it also clears `DUEDATE{org}`, so a planned SEPA collection isn't executed as well |
+
+The Admidio implementation of the store comes with the profile fields (step 6).
+
+| Method | Behaviour |
+|---|---|
+| `getOrCreateToken(userUuid)` | Returns the member's pay token, creating and storing one first if there is none. Used for `#payment_link#` |
+| `startPayment(userUuid, token, redirectUrl, webhookUrl)` | Throws `InvalidPayLinkException` if the member is unknown, has no token, or the token doesn't match (`hash_equals()`). Returns `null` if there is nothing to pay (already paid, or fee ≤ 0). Otherwise creates a payment for the **current** fee and returns it |
+| `handleWebhook(post, headers, rawBody)` | Runs the webhook logic below and returns one of the `WEBHOOK_*` outcomes. It never throws for bad input, so the endpoint can always answer 200 |
+| `formatAmount(float)` (static) | Fee → provider amount string with two decimals and a dot, e.g. `25` → `"25.00"` |
+
+Payments are created with currency `EUR`, the member's purpose text (or the fallback if it is empty)
+and metadata `org_id`, `user_uuid` and `fee` (the formatted amount).
+
+`handleWebhook()` outcomes, checked in this order:
+
+| Outcome | When | Effect |
+|---|---|---|
+| `ignored` | provider's `extractWebhookPaymentId()` returns `null` | none |
+| `unknown_payment` | `getPayment()` fails | none |
+| `not_paid` | status is anything other than `paid` | none |
+| `not_ours` | `metadata.org_id` isn't this org, or the member doesn't exist | none |
+| `already_paid` | the member's `PAID{org}` is already set (webhook retries) | none |
+| `amount_mismatch` | amount or currency differ from the member's **current** fee, e.g. the fee was recalculated after checkout | none; an admin has to check it by hand |
+| `marked_paid` | all checks pass | `markPaid()` with the provider's paid timestamp converted to the org's timezone (date only), and a new token so the old link stops working |
+
+The pay link has the form `pay.php?org=<org id>&user=<user uuid>&token=<token>`. The token is
+`bin2hex(random_bytes(32))` (64 hex characters).
 
 ## Flow
 
@@ -214,9 +258,10 @@ keys in all language files.
    `test_mode`). Language keys are added with the UI that uses them.
 3. ✅ `PaymentProviderInterface`, `PaymentResult`, `FakeProvider`, with unit tests; then
    `getName()` and `extractWebhookPaymentId()` for multi-provider support.
-4. Permissions: config defaults, `AccessControl` (unit-tested), `isUserAuthorizedFor()`, and the
+4. ✅ Permissions: config defaults, `AccessControl` (unit-tested), `isUserAuthorizedFor()`, and the
    role-selection panel in the preferences.
-5. `PaymentService`: open-fee lookup, token handling, mark paid (tested against `FakeProvider`).
+5. `PaymentService` with `PaymentMemberStoreInterface`: open-fee lookup, token handling, webhook
+   logic, mark paid (tested against `FakeProvider` and an in-memory store).
 6. Optional profile fields (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`): created on enable,
    removed on uninstall.
 7. `pay.php` + `#payment_link#` mail placeholder.
