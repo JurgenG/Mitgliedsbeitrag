@@ -27,3 +27,8 @@ Online payments (work in progress, see `docs/online-payments.md`) can be clicked
 Admidio instance with the built-in **fake provider**: no account, no API key, no tunnel. It is only
 offered when the web server's environment contains `MEMBERSHIPFEE_PAYMENT_FAKE=1`; never set that
 on a real installation. Details and setup: *Trying it out with the fake provider* in the design doc.
+
+## Membership status on the start page
+`system/membership_fee_overview.php` shows a logged-in member their own status (paid until, payment
+deadline, *Pay now* when a fee is open and online payments are on). Admidio has no setting for
+start-page boxes, so it is added with a small child theme; see `docs/membership-status.md`.
