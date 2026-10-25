@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Plugins\MembershipFee\classes\Payment\FakeProvider;
+use Plugins\MembershipFee\classes\Payment\InvalidAmountException;
 use Plugins\MembershipFee\classes\Payment\InvalidPayLinkException;
 use Plugins\MembershipFee\classes\Payment\PaymentException;
 use Plugins\MembershipFee\classes\Payment\PaymentMember;
@@ -36,12 +37,18 @@ final class PaymentServiceTest extends TestCase
         $this->store = new InMemoryPaymentMemberStore();
         $this->token = str_repeat('ab', 32);
         $this->store->put(new PaymentMember(self::UUID, 25.0, false, $this->token, 'Membership fee 2026'));
-        $this->service = new PaymentService(
+        $this->service = $this->service(false);
+    }
+
+    private function service(bool $allowHigherAmount): PaymentService
+    {
+        return new PaymentService(
             $this->provider,
             $this->store,
             1,
             new DateTimeZone('Europe/Brussels'),
-            'Membership fee'
+            'Membership fee',
+            $allowHigherAmount
         );
     }
 
@@ -211,6 +218,109 @@ final class PaymentServiceTest extends TestCase
         $this->assertNull($this->service->checkPayLink($uuid, $givenToken));
     }
 
+    // ---- paying more than the fee -------------------------------------------------------------
+
+    public function testStartPaymentWithHigherAmountWhenAllowed(): void
+    {
+        $payment = $this->service(true)->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 40.0);
+
+        $this->assertSame('40.00', $payment->amount);
+        $this->assertSame('25.00', $payment->metadata['fee']);
+    }
+
+    public function testStartPaymentAcceptsTheFeeAsAmountWhenNotAllowed(): void
+    {
+        $payment = $this->service->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 25.0);
+
+        $this->assertSame('25.00', $payment->amount);
+    }
+
+    public function testStartPaymentRoundsAmountToCents(): void
+    {
+        $payment = $this->service->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 25.004);
+
+        $this->assertSame('25.00', $payment->amount);
+    }
+
+    public function testStartPaymentRejectsHigherAmountWhenNotAllowed(): void
+    {
+        $this->expectException(InvalidAmountException::class);
+        $this->service->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 40.0);
+    }
+
+    /**
+     * @dataProvider lowerAmounts
+     */
+    public function testStartPaymentRejectsAmountBelowTheFee(float $amount): void
+    {
+        $this->expectException(InvalidAmountException::class);
+        $this->service(true)->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, $amount);
+    }
+
+    /**
+     * @return array<string, array{float}>
+     */
+    public static function lowerAmounts(): array
+    {
+        return array(
+            'one cent less' => array(24.99),
+            'zero'          => array(0.0),
+            'negative'      => array(-40.0)
+        );
+    }
+
+    public function testInvalidAmountIsAPaymentException(): void
+    {
+        $this->assertInstanceOf(PaymentException::class, new InvalidAmountException('x'));
+    }
+
+    public function testWebhookRecordsHigherAmountAsTheMembersFee(): void
+    {
+        $payment = $this->service(true)->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 40.0);
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+
+        $this->assertSame(PaymentService::WEBHOOK_MARKED_PAID, $this->webhook($payment->id));
+        $this->assertSame('40.00', $this->store->markPaidCalls[0]['paidAmount']);
+        $this->assertSame(40.0, $this->store->findMember(self::UUID)->fee);
+    }
+
+    public function testWebhookAcceptsHigherAmountAfterSettingWasSwitchedOff(): void
+    {
+        $payment = $this->service(true)->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 40.0);
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+
+        // $this->service doesn't allow paying more
+        $this->assertSame(PaymentService::WEBHOOK_MARKED_PAID, $this->webhook($payment->id));
+    }
+
+    public function testWebhookRejectsHigherPaymentWhenFeeChangedAfterCheckout(): void
+    {
+        $payment = $this->service(true)->startPayment(self::UUID, $this->token, self::REDIRECT_URL, self::WEBHOOK_URL, 40.0);
+        $this->setFee(30.0);
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+
+        $this->assertSame(PaymentService::WEBHOOK_AMOUNT_MISMATCH, $this->webhook($payment->id));
+        $this->assertSame(array(), $this->store->markPaidCalls);
+    }
+
+    public function testWebhookRejectsAmountBelowTheCheckoutFee(): void
+    {
+        $payment = $this->provider->createPayment('20.00', 'EUR', 'x', self::REDIRECT_URL, self::WEBHOOK_URL,
+            array('org_id' => '1', 'user_uuid' => self::UUID, 'fee' => '25.00'));
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+
+        $this->assertSame(PaymentService::WEBHOOK_AMOUNT_MISMATCH, $this->webhook($payment->id));
+    }
+
+    public function testWebhookRejectsPaymentWithoutFeeInMetadata(): void
+    {
+        $payment = $this->provider->createPayment('25.00', 'EUR', 'x', self::REDIRECT_URL, self::WEBHOOK_URL,
+            array('org_id' => '1', 'user_uuid' => self::UUID));
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+
+        $this->assertSame(PaymentService::WEBHOOK_AMOUNT_MISMATCH, $this->webhook($payment->id));
+    }
+
     public function testInvalidPayLinkIsAPaymentException(): void
     {
         $this->assertInstanceOf(PaymentException::class, new InvalidPayLinkException('x'));
@@ -302,6 +412,7 @@ final class PaymentServiceTest extends TestCase
         $this->assertSame('fake', $call['provider']);
         $this->assertMatchesRegularExpression('/^[0-9a-f]{64}$/', $call['newToken']);
         $this->assertNotSame($this->token, $call['newToken']);
+        $this->assertSame('25.00', $call['paidAmount']);
     }
 
     public function testPaidDateIsTheProviderTimestampInOrganisationTimezone(): void

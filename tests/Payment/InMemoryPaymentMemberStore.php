@@ -20,7 +20,7 @@ final class InMemoryPaymentMemberStore implements PaymentMemberStoreInterface
     /** @var array<string, PaymentMember> */
     private array $members = array();
 
-    /** @var array<int, array{userUuid: string, paidDate: string, paymentId: string, provider: string, newToken: string}> */
+    /** @var array<int, array{userUuid: string, paidDate: string, paymentId: string, provider: string, newToken: string, paidAmount: string}> */
     public array $markPaidCalls = array();
 
     public function put(PaymentMember $member): void
@@ -39,17 +39,18 @@ final class InMemoryPaymentMemberStore implements PaymentMemberStoreInterface
         $this->put(new PaymentMember($member->userUuid, $member->fee, $member->paid, $token, $member->purpose));
     }
 
-    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken): void
+    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken, string $paidAmount): void
     {
         $this->markPaidCalls[] = array(
-            'userUuid'  => $userUuid,
-            'paidDate'  => $paidDate,
-            'paymentId' => $paymentId,
-            'provider'  => $provider,
-            'newToken'  => $newToken
+            'userUuid'   => $userUuid,
+            'paidDate'   => $paidDate,
+            'paymentId'  => $paymentId,
+            'provider'   => $provider,
+            'newToken'   => $newToken,
+            'paidAmount' => $paidAmount
         );
 
         $member = $this->members[$userUuid];
-        $this->put(new PaymentMember($member->userUuid, $member->fee, true, $newToken, $member->purpose));
+        $this->put(new PaymentMember($member->userUuid, (float) $paidAmount, true, $newToken, $member->purpose));
     }
 }
