@@ -15,6 +15,7 @@ use Plugins\MembershipFee\classes\Payment\FakeProvider;
 use Plugins\MembershipFee\classes\Payment\PaymentException;
 use Plugins\MembershipFee\classes\Payment\PaymentProviderInterface;
 use Plugins\MembershipFee\classes\Payment\PaymentResult;
+use Plugins\MembershipFee\classes\Payment\PaymentUnavailableException;
 
 final class FakeProviderTest extends TestCase
 {
@@ -108,6 +109,29 @@ final class FakeProviderTest extends TestCase
     {
         $this->expectException(PaymentException::class);
         $this->provider->getPayment('tr_unknown');
+    }
+
+    public function testGetPaymentThrowsUnavailableWhileProviderIsDown(): void
+    {
+        $created = $this->create();
+        $this->provider->setUnavailable(true);
+
+        $this->expectException(PaymentUnavailableException::class);
+        $this->provider->getPayment($created->id);
+    }
+
+    public function testGetPaymentWorksAgainWhenProviderIsBack(): void
+    {
+        $created = $this->create();
+        $this->provider->setUnavailable(true);
+        $this->provider->setUnavailable(false);
+
+        $this->assertSame($created->id, $this->provider->getPayment($created->id)->id);
+    }
+
+    public function testUnavailableExceptionIsAPaymentException(): void
+    {
+        $this->assertInstanceOf(PaymentException::class, new PaymentUnavailableException('x'));
     }
 
     public function testSetStatusPaidMarksPaymentAsPaid(): void

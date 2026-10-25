@@ -29,6 +29,8 @@ class FakeProvider implements PaymentProviderInterface
     /** @var array<string, string> */
     private array $redirectUrls = array();
 
+    private bool $unavailable = false;
+
     /**
      * @param string|null $storageFile JSON file to keep the payments in, null to keep them in memory
      * @param string      $checkoutUrl Checkout page; the payment id is appended as parameter "payment"
@@ -89,6 +91,10 @@ class FakeProvider implements PaymentProviderInterface
 
     public function getPayment(string $paymentId): PaymentResult
     {
+        if ($this->unavailable) {
+            throw new PaymentUnavailableException('Fake provider: unavailable');
+        }
+
         $this->load();
 
         if (!isset($this->payments[$paymentId])) {
@@ -96,6 +102,15 @@ class FakeProvider implements PaymentProviderInterface
         }
 
         return $this->payments[$paymentId];
+    }
+
+    /**
+     * Simulates a provider that can't be reached: getPayment() then throws PaymentUnavailableException
+     * @param bool $unavailable
+     */
+    public function setUnavailable(bool $unavailable): void
+    {
+        $this->unavailable = $unavailable;
     }
 
     /**

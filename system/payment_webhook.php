@@ -4,7 +4,8 @@
  * Public webhook: the payment provider reports a status change of a payment
  *
  * No login, no isUserAuthorized() and no CSRF check: the documented exception to the plugin's rules.
- * Safe because only the payment as fetched from the provider is trusted. Always answers 200.
+ * Safe because only the payment as fetched from the provider is trusted. Answers 200, or 503 if the
+ * payment couldn't be checked now, so the provider retries.
  * See docs/online-payments.md, section Security.
  *
  * @copyright The Admidio Team
@@ -24,6 +25,7 @@ require_once (__DIR__ . '/../../../system/common.php');
 require_once (__DIR__ . '/common_function.php');
 
 $outcome = PaymentService::WEBHOOK_IGNORED;
+$failed = false;
 
 try {
     $getProvider = admFuncVariableIsValid($_GET, 'provider', 'string', array('defaultValue' => ''));
@@ -43,9 +45,18 @@ try {
     }
 } catch (Throwable $e) {
     $gLogger->error('MembershipFee: payment webhook failed: ' . $e->getMessage());
+    $failed = true;
 }
 
-logPaymentWebhookOutcome($outcome, (string) ($_POST['id'] ?? ''));
+if (!$failed) {
+    logPaymentWebhookOutcome($outcome, (string) ($_POST['id'] ?? ''));
+}
 
-http_response_code(200);
-echo 'OK';
+if ($failed || $outcome === PaymentService::WEBHOOK_PROVIDER_UNAVAILABLE) {
+    // the webhook is idempotent, so a retry by the provider is safe
+    http_response_code(503);
+    echo 'Unavailable';
+} else {
+    http_response_code(200);
+    echo 'OK';
+}

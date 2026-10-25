@@ -341,6 +341,16 @@ final class PaymentServiceTest extends TestCase
         $this->assertSame(PaymentService::WEBHOOK_UNKNOWN_PAYMENT, $this->webhook('tr_doesnotexist'));
     }
 
+    public function testWebhookReportsUnavailableProvider(): void
+    {
+        $payment = $this->start();
+        $this->provider->setStatus($payment->id, PaymentResult::STATUS_PAID);
+        $this->provider->setUnavailable(true);
+
+        $this->assertSame(PaymentService::WEBHOOK_PROVIDER_UNAVAILABLE, $this->webhook($payment->id));
+        $this->assertCount(0, $this->store->markPaidCalls);
+    }
+
     /**
      * @dataProvider unpaidStatuses
      */

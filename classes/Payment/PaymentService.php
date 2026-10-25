@@ -25,6 +25,7 @@ final class PaymentService
     public const CURRENCY = 'EUR';
 
     public const WEBHOOK_IGNORED = 'ignored';
+    public const WEBHOOK_PROVIDER_UNAVAILABLE = 'provider_unavailable';
     public const WEBHOOK_UNKNOWN_PAYMENT = 'unknown_payment';
     public const WEBHOOK_NOT_PAID = 'not_paid';
     public const WEBHOOK_NOT_OURS = 'not_ours';
@@ -176,6 +177,8 @@ final class PaymentService
 
         try {
             $payment = $this->provider->getPayment($paymentId);
+        } catch (PaymentUnavailableException $e) {
+            return self::WEBHOOK_PROVIDER_UNAVAILABLE;
         } catch (PaymentException $e) {
             return self::WEBHOOK_UNKNOWN_PAYMENT;
         }

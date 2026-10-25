@@ -45,7 +45,8 @@ interface PaymentProviderInterface
     /**
      * Fetches the current state of a payment from the provider
      * @param string $paymentId
-     * @throws PaymentException if the payment does not exist or the provider can't be reached
+     * @throws PaymentUnavailableException if the provider can't be reached or has a temporary error
+     * @throws PaymentException if the payment does not exist or the request fails otherwise
      */
     public function getPayment(string $paymentId): PaymentResult;
 

@@ -89,6 +89,8 @@ function logPaymentWebhookOutcome(string $outcome, string $paymentId): void
 
     if ($outcome === PaymentService::WEBHOOK_AMOUNT_MISMATCH) {
         $gLogger->warning('MembershipFee: paid amount differs from the current fee, check this payment by hand', $context);
+    } elseif ($outcome === PaymentService::WEBHOOK_PROVIDER_UNAVAILABLE) {
+        $gLogger->warning('MembershipFee: payment provider unavailable, the provider will retry the webhook', $context);
     } else {
         $gLogger->info('MembershipFee: payment webhook: ' . $outcome, $context);
     }

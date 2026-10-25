@@ -49,6 +49,7 @@ classes/Payment/Mollie/MollieProvider.php      only code that talks to the Molli
 classes/Payment/PaymentService.php             plugin logic: open fee → payment, payment → PAID
 classes/Payment/PaymentMember.php              value object: a member's fee, paid flag, pay token, purpose
 classes/Payment/PaymentMemberStoreInterface.php  reads/writes PaymentMember data (Admidio-backed in production)
+classes/Payment/PaymentUnavailableException.php  provider can't be reached or has a temporary error
 classes/Payment/InvalidPayLinkException.php    unknown member or wrong token on the pay link
 classes/Payment/InvalidAmountException.php     chosen amount below the fee, or above it when not allowed
 classes/Payment/AdmidioPaymentMemberStore.php  PaymentMemberStoreInterface on top of Admidio's User entity
@@ -74,7 +75,7 @@ system/fake_checkout.php                       development only: checkout page o
 |---|---|
 | `getName(): string` | Stable lowercase key (`mollie`, `fake`, …), used in config, the webhook URL and the stored `PAYMENT_PROVIDER{org}` |
 | `createPayment(amount, currency, description, redirectUrl, webhookUrl, metadata)` | Creates a one-off payment and returns it including the checkout URL |
-| `getPayment(id)` | Fetches the authoritative current state from the provider |
+| `getPayment(id)` | Fetches the authoritative current state from the provider. Throws `PaymentUnavailableException` if the provider can't be reached or answers with a temporary error (timeout, 5xx, rate limit), `PaymentException` for anything else (e.g. unknown id) |
 | `extractWebhookPaymentId(post, headers, rawBody): ?string` | Verifies a webhook call the provider's way and returns the payment id to look up, or `null` to ignore the call |
 
 The webhook endpoint never acts on the webhook body itself. It always calls `getPayment()` on the id
@@ -104,7 +105,7 @@ The Admidio implementation of the store comes with the profile fields (step 6).
 | `getOrCreateToken(userUuid)` | Returns the member's pay token, creating and storing one first if there is none. Used for `#payment_link#` |
 | `checkPayLink(userUuid, token)` | Returns the member if the link is valid (member exists, has a token, token matches), otherwise `null`. Used by the return page |
 | `startPayment(userUuid, token, redirectUrl, webhookUrl, amount = null)` | Throws `InvalidPayLinkException` if the member is unknown, has no token, or the token doesn't match (`hash_equals()`). Returns `null` if there is nothing to pay (already paid, or fee ≤ 0). Otherwise creates a payment and returns it: for the **current** fee, or for `amount` if given. `amount` is rounded to cents; less than the fee, or more than the fee while paying more isn't allowed, throws `InvalidAmountException` |
-| `handleWebhook(post, headers, rawBody)` | Runs the webhook logic below and returns one of the `WEBHOOK_*` outcomes. It never throws for bad input, so the endpoint can always answer 200 |
+| `handleWebhook(post, headers, rawBody)` | Runs the webhook logic below and returns one of the `WEBHOOK_*` outcomes. It never throws for bad input or provider errors, so the endpoint decides the HTTP status from the outcome |
 | `formatAmount(float)` (static) | Fee → provider amount string with two decimals and a dot, e.g. `25` → `"25.00"` |
 
 Payments are created with currency `EUR`, the member's purpose text (or the fallback if it is empty)
@@ -115,7 +116,8 @@ and metadata `org_id`, `user_uuid` and `fee` (the member's fee at checkout, form
 | Outcome | When | Effect |
 |---|---|---|
 | `ignored` | provider's `extractWebhookPaymentId()` returns `null` | none |
-| `unknown_payment` | `getPayment()` fails | none |
+| `provider_unavailable` | `getPayment()` throws `PaymentUnavailableException` (provider can't be reached, timeout, server error) | none; the endpoint answers 503 so the provider retries |
+| `unknown_payment` | `getPayment()` fails otherwise (e.g. the payment doesn't exist) | none |
 | `not_paid` | status is anything other than `paid` | none |
 | `not_ours` | `metadata.org_id` isn't this org, or the member doesn't exist | none |
 | `already_paid` | the member's `PAID{org}` is already set (webhook retries) | none |
@@ -192,8 +194,10 @@ installations aren't forced into a reinstall.
     forged call can at most trigger a re-check of a real payment.
   - It is idempotent: if `PAID{org}` is already set, it does nothing. Providers retry (Mollie up to
     about 26 hours).
-  - It always answers HTTP 200, also for unknown ids, so it leaks nothing. It must respond within
-    15 s.
+  - It answers HTTP 200 for every outcome, also for unknown ids, so it leaks nothing. Only if the
+    payment can't be checked right now (`provider_unavailable`, or an unexpected error such as a
+    database failure) it answers 503, so the provider retries later. That is safe because the
+    webhook is idempotent, and it reveals nothing about the payment. It must respond within 15 s.
   - The organisation is taken from `metadata.org_id` of the fetched payment. The URL's `org` only
     selects which credentials to use for the fetch, and a wrong value just makes the fetch fail.
 - **Pay endpoint** (`pay.php`): no login, so members don't need an Admidio account. Access is
@@ -308,6 +312,8 @@ no provider account, no API key and no tunnel.
   away, in the same request. Untick it to simulate a late or lost webhook, then trigger it by hand:
   `curl -d id=<payment id> '<webhook URL>'`. Afterwards the page sends you to the payment's return
   page, like a real provider.
+- An unreachable provider is only simulated in unit tests: `FakeProvider::setUnavailable(true)`
+  makes `getPayment()` throw `PaymentUnavailableException`.
 - Other realistic cases need no extra buttons: changing the fee after checkout gives
   `amount_mismatch`, paying twice through the same link is impossible because the token changes,
   and opening an old link shows the "link no longer valid" page.
@@ -342,7 +348,8 @@ member.
     appears. That never confirms or denies a payment to someone who only knows the uuid.
 - **`payment_webhook.php`** (no login). It ignores calls for another provider than the active one,
   another org or when payments are off. Otherwise it runs `handleWebhook()`, writes the outcome to
-  Admidio's log (`amount_mismatch` as a warning) and always answers 200.
+  Admidio's log (`amount_mismatch` and `provider_unavailable` as a warning) and answers 200, or 503
+  if the payment couldn't be checked (see *Security*).
 - **Multiple organisations:** links and webhooks only work for the organisation Admidio currently
   serves (`$gCurrentOrgId`). That is the default organisation unless the visitor's session selects
   another one.
