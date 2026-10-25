@@ -1,6 +1,6 @@
 # Membership status on the start page — design
 
-Status: **in progress** on branch `feature/mollie-payments`.
+Status: **implemented** on branch `feature/mollie-payments`. Settings: *Preferences → Membership status*.
 
 ## Goal
 
