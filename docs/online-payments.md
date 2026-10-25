@@ -150,6 +150,9 @@ needs membership in one of the selected roles. Default: no roles, so admin only.
 | `payment_links` | Send mails containing `#payment_link#`; invalidate/regenerate a member's personal pay link |
 | `payment_refunds` | Reserved for refunds through the provider. Refunds are out of scope for phase 1; nothing uses it yet |
 
+- **Only administrators can assign these permissions.** The panel *Access permissions for online
+  payments* is shown only to administrators, and its save handler rejects everyone else. Otherwise a
+  user with preferences access could grant themselves `payment_settings` and see the API key.
 - The permissions are **independent**: none implies another, and *Access to preferences* does **not**
   include `payment_settings`. A treasurer can send links without seeing the API key.
 - All of them additionally require normal plugin access (`isUserAuthorized()`).
