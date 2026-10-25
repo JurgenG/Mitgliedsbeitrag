@@ -31,9 +31,10 @@ fields block the plugin's update check.
 
 ## Architecture
 
-```
+```text
 classes/Payment/PaymentProviderInterface.php   createPayment(), getPayment()
 classes/Payment/PaymentResult.php              value object: id, status, checkout URL, amount, metadata
+classes/Payment/PaymentException.php           provider errors (no Admidio dependency, so unit-testable)
 classes/Payment/FakeProvider.php               in-memory provider for development and testing
 classes/Payment/Mollie/MollieProvider.php      only code that talks to the Mollie REST API
 classes/Payment/PaymentService.php             plugin logic: open fee → payment, payment → PAID
@@ -41,7 +42,8 @@ system/pay.php                                 public: member's link → creates
 system/mollie_webhook.php                      public: Mollie status callback
 ```
 
-- **No Composer and no SDK.** The plugin has no Composer setup, so `MollieProvider` calls the
+- **No runtime Composer dependency and no SDK.** Composer is used for dev tooling only (PHPUnit),
+  never shipped, so `MollieProvider` calls the
   Mollie v2 REST API directly with curl. It only needs *create payment* and *get payment*.
 - **Plugin logic doesn't depend on Mollie.** `PaymentService` only knows the interface, so it can
   be developed and tested against `FakeProvider` without an API key.
