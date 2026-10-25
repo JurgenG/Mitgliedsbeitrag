@@ -68,7 +68,8 @@ function createPaymentService(ConfigTable $pPreferences): PaymentService
         new AdmidioPaymentMemberStore($gDb, $gProfileFields, $gCurrentOrgId),
         $gCurrentOrgId,
         new DateTimeZone($gTimezone),
-        $gL10n->get('PLG_MEMBERSHIPFEE_MEMBERSHIP_FEE')
+        $gL10n->get('PLG_MEMBERSHIPFEE_MEMBERSHIP_FEE'),
+        (bool) ($pPreferences->config['payment']['allow_higher_amount'] ?? 0)
     );
 }
 

@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">plătit la</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Numai data plății</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">Opțiunea 'Numai data plății' șterge doar data plății.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Permiteți plata unei sume mai mari decât cotizația</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Membrii pot mări suma pe pagina de plată, dar nu o pot micșora. Suma plătită devine apoi cotizația acelui membru.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Sumă</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Cotizația dvs. este de #VAR1#. Puteți plăti mai mult, dar nu mai puțin.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">Suma trebuie să fie de cel puțin #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Plățile online nu sunt activate.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Activați plățile online</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">ID referință</string> 

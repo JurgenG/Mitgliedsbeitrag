@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">payé le</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Date payée seulement</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">L\'option \'Date payée seulement\' supprime uniquement la date payée.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Autoriser un montant supérieur à la cotisation</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Les membres peuvent augmenter le montant sur la page de paiement, mais pas le diminuer. Le montant payé devient alors la cotisation de ce membre.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Montant</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Votre cotisation s'élève à #VAR1#. Vous pouvez payer plus, mais pas moins.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">Le montant doit être d'au moins #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Les paiements en ligne ne sont pas activés.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Activer les paiements en ligne</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">ID de référence</string>

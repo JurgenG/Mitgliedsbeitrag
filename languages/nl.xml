@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">betaald op</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Alleen betaald datum</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Alleen betaald datum' verwijdert alleen de betaald datum.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Hoger bedrag dan het lidgeld toestaan</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Leden kunnen het bedrag op de betaalpagina verhogen, maar niet verlagen. Het betaalde bedrag wordt dan het lidgeld van dat lid.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Bedrag</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Uw lidgeld bedraagt #VAR1#. U mag meer betalen, maar niet minder.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">Het bedrag moet minstens #VAR1# zijn.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online betalingen zijn niet ingeschakeld.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Online betalingen inschakelen</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referentie ID</string> 

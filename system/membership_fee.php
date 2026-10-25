@@ -1728,6 +1728,9 @@ try {
                         'defaultValue' => $pPreferences->config['payment']['provider'],
                         'showContextDependentFirstEntry' => false
                     ));
+                    $formOnlinePayment->addCheckbox('payment_allow_higher_amount', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER'), (bool) ($pPreferences->config['payment']['allow_higher_amount'] ?? 0), array(
+                        'helpTextId' => 'PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC'
+                    ));
                     $formOnlinePayment->addStaticControl('payment_webhook_url', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL'), getPaymentWebhookUrl($pPreferences->config['payment']['provider']), array(
                         'helpTextId' => 'PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC'
                     ));

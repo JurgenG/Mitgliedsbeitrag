@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">betalt den</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Kun betalingsdato</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Kun betalingsdato' sletter kun betalingsdatoen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Tillat å betale mer enn kontingenten</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Medlemmer kan øke beløpet på betalingssiden, men ikke senke det. Det betalte beløpet blir da medlemmets kontingent.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Beløp</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Medlemskontingenten din er #VAR1#. Du kan betale mer, men ikke mindre.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">Beløpet må være minst #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Nettbetaling er ikke aktivert.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Aktiver nettbetaling</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referanse-ID</string> 

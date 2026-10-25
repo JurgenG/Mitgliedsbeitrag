@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">bezahlt am</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Nur Bezahlt-Datum</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Nur Bezahlt-Datum' löscht nur das Bezahlt-Datum.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Höheren Betrag als den Beitrag zulassen</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Mitglieder können den Betrag auf der Zahlungsseite erhöhen, aber nicht senken. Der gezahlte Betrag wird dann zum Beitrag dieses Mitglieds.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Betrag</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Ihr Mitgliedsbeitrag beträgt #VAR1#. Sie können mehr bezahlen, aber nicht weniger.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">Der Betrag muss mindestens #VAR1# betragen.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online-Zahlungen sind nicht aktiviert.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Online-Zahlungen aktivieren</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referenz-ID</string> 

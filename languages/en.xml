@@ -365,6 +365,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">paid on</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Paid-date only</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Paid-date only' deletes only the paid-date.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER">Allow paying more than the fee</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ALLOW_HIGHER_DESC">Members can raise the amount on the pay page, never lower it. The amount paid then becomes that member's fee.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT">Amount</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_DESC">Your membership fee is #VAR1#. You may pay more, but not less.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_AMOUNT_TOO_LOW">The amount must be at least #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online payments are not enabled.</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Enable online payments</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Reference ID</string> 

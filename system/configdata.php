@@ -214,10 +214,12 @@ $config_default['individual_contributions'] = array(
 // Multiplier roles (family roles only)
 $config_default['multiplier']['roles'] = array();
 
-// Online payments (optional, off by default); 'provider' is the name of the active payment provider
+// Online payments (optional, off by default); 'provider' is the name of the active payment provider,
+// 'allow_higher_amount' lets members pay more than their fee
 $config_default['payment'] = array(
     'enabled' => 0,
-    'provider' => 'mollie'
+    'provider' => 'mollie',
+    'allow_higher_amount' => 0
 );
 
 // Settings of the payment provider Mollie

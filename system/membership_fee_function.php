@@ -315,6 +315,7 @@ try {
             ));
             $pPreferences->config['payment']['provider'] = $provider;
             $pPreferences->config['payment']['enabled'] = isset($_POST['payment_enabled']) ? 1 : 0;
+            $pPreferences->config['payment']['allow_higher_amount'] = isset($_POST['payment_allow_higher_amount']) ? 1 : 0;
 
             if ($pPreferences->config['payment']['enabled']) {
                 createPaymentProfileFields();
