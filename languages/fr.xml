@@ -165,6 +165,9 @@
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_FEE">La cotisation calculée</string>
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_MANDATE_CHANGE">Rempli automatiquement par le module Changement du mandat.</string>
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAID">Date à laquelle la cotisation a été payée ; vide si elle n'est pas encore payée</string>
+    <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYMENT_ID">ID du dernier paiement en ligne chez le prestataire de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYMENT_PROVIDER">Prestataire de paiement du dernier paiement en ligne</string>
+    <string name="PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYTOKEN">Jeton personnel du lien de paiement</string>
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_MANDATE_PREFIX_FAM">FAM</string>
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_MANDATE_PREFIX_MEM">MBR</string>
     <string name="PLG_MEMBERSHIPFEE_DEFAULT_MANDATE_PREFIX_PAY">PAY</string>

@@ -9,7 +9,7 @@ Online documentation is available here: https://www.admidio.org/dokuwiki/doku.ph
 Default values that the plugin writes to the database come from the language files, in the language that is active at that moment:
 
 - the default settings in `system/configdata.php` (fee text prefix and suffix, family role prefix and description, example bank and account holder, invoice file name, mandate reference prefixes), written when the plugin is first started or a setting is added;
-- the descriptions of the profile fields the plugin creates (`system/install_db.php`);
+- the descriptions of the profile fields the plugin creates (`system/install_db.php`, and `system/payment_common.php` for the online payment fields);
 - the e-mail texts, written when they are first shown.
 
 These language keys start with `PLG_MEMBERSHIPFEE_DEFAULT_`. Once written, a value belongs to the organisation: changing the language later does not change it. The default fee text prefix contains the current year. Values that end up in SEPA files only use characters allowed there.
