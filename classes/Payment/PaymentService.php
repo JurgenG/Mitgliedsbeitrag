@@ -38,13 +38,15 @@ final class PaymentService
      * @param int                         $orgId              The organisation this service acts for
      * @param DateTimeZone                $timezone           Organisation timezone, for the paid date
      * @param string                      $defaultDescription Used when a member has no purpose text
+     * @param bool                        $allowHigherAmount  True if members may pay more than their fee
      */
     public function __construct(
         private readonly PaymentProviderInterface $provider,
         private readonly PaymentMemberStoreInterface $store,
         private readonly int $orgId,
         private readonly DateTimeZone $timezone,
-        private readonly string $defaultDescription
+        private readonly string $defaultDescription,
+        private readonly bool $allowHigherAmount = false
     ) {
     }
 
@@ -56,6 +58,16 @@ final class PaymentService
     public static function formatAmount(float $fee): string
     {
         return number_format($fee, 2, '.', '');
+    }
+
+    /**
+     * Converts an amount string with two decimals into cents, so amounts are compared without float noise
+     * @param string $amount e.g. "25.00"
+     * @return int e.g. 2500
+     */
+    private static function toCents(string $amount): int
+    {
+        return (int) round((float) $amount * 100);
     }
 
     /**
@@ -105,11 +117,13 @@ final class PaymentService
      * @param string $token       Token from the pay link
      * @param string $redirectUrl Where the payer returns to after checkout
      * @param string $webhookUrl  Where the provider reports status changes
+     * @param float|null $amount  Amount chosen by the member, null to pay exactly the fee
      * @return PaymentResult|null The payment to redirect to, or null if there is nothing to pay
      * @throws InvalidPayLinkException if member or token don't match
+     * @throws InvalidAmountException if the amount is below the fee, or above it while that isn't allowed
      * @throws PaymentException if the provider fails
      */
-    public function startPayment(string $userUuid, string $token, string $redirectUrl, string $webhookUrl): ?PaymentResult
+    public function startPayment(string $userUuid, string $token, string $redirectUrl, string $webhookUrl, ?float $amount = null): ?PaymentResult
     {
         $member = $this->checkPayLink($userUuid, $token);
 
@@ -121,10 +135,18 @@ final class PaymentService
             return null;
         }
 
-        $amount = self::formatAmount($member->fee);
+        $fee = self::formatAmount($member->fee);
+        $payAmount = $amount === null ? $fee : self::formatAmount($amount);
+
+        if (self::toCents($payAmount) < self::toCents($fee)) {
+            throw new InvalidAmountException('Amount below the fee');
+        }
+        if (self::toCents($payAmount) > self::toCents($fee) && !$this->allowHigherAmount) {
+            throw new InvalidAmountException('Paying more than the fee is not allowed');
+        }
 
         return $this->provider->createPayment(
-            $amount,
+            $payAmount,
             self::CURRENCY,
             $member->purpose !== '' ? $member->purpose : $this->defaultDescription,
             $redirectUrl,
@@ -132,7 +154,7 @@ final class PaymentService
             array(
                 'org_id'    => (string) $this->orgId,
                 'user_uuid' => $member->userUuid,
-                'fee'       => $amount
+                'fee'       => $fee
             )
         );
     }
@@ -176,8 +198,12 @@ final class PaymentService
             return self::WEBHOOK_ALREADY_PAID;
         }
 
-        // the fee may have been recalculated after checkout; an admin has to decide then
-        if ($payment->currency !== self::CURRENCY || $payment->amount !== self::formatAmount($member->fee)) {
+        // the fee may have been recalculated after checkout; an admin has to decide then.
+        // a higher amount is fine even if paying more was switched off since: we created this payment
+        $checkoutFee = (string) ($payment->metadata['fee'] ?? '');
+        if ($payment->currency !== self::CURRENCY
+            || $checkoutFee !== self::formatAmount($member->fee)
+            || self::toCents($payment->amount) < self::toCents($checkoutFee)) {
             return self::WEBHOOK_AMOUNT_MISMATCH;
         }
 
@@ -188,7 +214,8 @@ final class PaymentService
             $paidAt->setTimezone($this->timezone)->format('Y-m-d'),
             $payment->id,
             $this->provider->getName(),
-            self::newToken()
+            self::newToken(),
+            $payment->amount
         );
 
         return self::WEBHOOK_MARKED_PAID;

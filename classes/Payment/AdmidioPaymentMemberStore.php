@@ -60,9 +60,16 @@ final class AdmidioPaymentMemberStore implements PaymentMemberStoreInterface
         $user->save();
     }
 
-    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken): void
+    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken, string $paidAmount): void
     {
         $user = $this->requireUser($userUuid);
+
+        // only when the member paid more: the fee becomes the amount paid, written like recalculation.php does (25, 12.5)
+        $currentFee = normalize_fee($user->getValue('FEE' . $this->orgId, 'database'));
+        if (round($currentFee * 100) !== round((float) $paidAmount * 100)) {
+            $user->setValue('FEE' . $this->orgId, (string) (float) $paidAmount);
+        }
+
         $user->setValue('PAID' . $this->orgId, $paidDate);
         $user->setValue('PAYMENT_ID' . $this->orgId, $paymentId);
         $user->setValue('PAYMENT_PROVIDER' . $this->orgId, $provider);

@@ -37,7 +37,8 @@ interface PaymentMemberStoreInterface
      * @param string $paidDate  Date in the organisation's timezone, Y-m-d
      * @param string $paymentId Provider's payment id
      * @param string $provider  Provider name, see PaymentProviderInterface::getName()
-     * @param string $newToken  Replaces the pay token so the old link stops working
+     * @param string $newToken   Replaces the pay token so the old link stops working
+     * @param string $paidAmount Amount paid, two decimals; becomes the member's fee FEE{org}
      */
-    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken): void;
+    public function markPaid(string $userUuid, string $paidDate, string $paymentId, string $provider, string $newToken, string $paidAmount): void;
 }
