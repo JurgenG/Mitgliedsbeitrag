@@ -208,6 +208,13 @@ $config_default['individual_contributions'] = array(
 // Multiplier roles (family roles only)
 $config_default['multiplier']['roles'] = array();
 
+// Online payments via Mollie (optional, off by default)
+$config_default['mollie'] = array(
+    'enabled' => 0,
+    'api_key' => '',
+    'test_mode' => 1
+);
+
 /*
  * Using this character combination, configuration data that is managed as an array at runtime
  * is combined into a string and stored in the Admidio database.

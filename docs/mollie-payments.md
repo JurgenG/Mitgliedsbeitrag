@@ -72,7 +72,7 @@ mapping in our hands and always charges the current fee.
 
 | What | Where |
 |---|---|
-| Enabled, API key, test mode, redirect text | `adm_plugin_preferences`, new config section `Mollie` (defaults in `configdata.php`) |
+| Enabled (`0`), API key (`''`), test mode (`1`) | `adm_plugin_preferences`, new config section `mollie` (defaults in `configdata.php`) |
 | Per-member pay token | new profile field `PAYTOKEN{org}` (hidden, disabled, like the other plugin fields) |
 | Last Mollie payment id | new profile field `MOLLIE_PAYMENTID{org}` (for support and idempotency) |
 | Payment ↔ member mapping | Mollie `metadata`: `{ "org_id": …, "user_uuid": …, "fee": "…" }` |
@@ -130,7 +130,7 @@ All strings go through `$gL10n` with new `PLG_MEMBERSHIPFEE_MOLLIE_*` keys in al
 ## Implementation steps (small commits)
 
 1. This design doc.
-2. Config section `Mollie` + defaults + language keys.
+2. Config section `mollie` + defaults. (Language keys are added with the UI that uses them.)
 3. `PaymentProviderInterface`, `PaymentResult`, `FakeProvider`.
 4. `PaymentService`: open-fee lookup, token handling, mark paid (tested against `FakeProvider`).
 5. Optional profile fields (`PAYTOKEN`, `MOLLIE_PAYMENTID`): created on enable, removed on uninstall.
