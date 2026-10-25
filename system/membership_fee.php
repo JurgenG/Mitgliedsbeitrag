@@ -1704,6 +1704,37 @@ try {
                 $page->addHtml(getMenuePanel('preferences', 'access_payment', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PAYMENT'), 'bi bi-credit-card', $formAccessPayment->show()));
             }
 
+            // PANEL: MEMBERSHIP_STATUS
+
+            $formMembershipStatus = new HtmlForm('membership_status_form', SecurityUtils::encodeUrl(ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/membership_fee_function.php', array(
+                'form' => 'membership_status'
+            )), $page, array(
+                'class' => 'form-preferences'
+            ));
+
+            $formMembershipStatus->addDescription($gL10n->get('PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC'));
+            $formMembershipStatus->addSelectBox('period_end_day', $gL10n->get('PLG_MEMBERSHIPFEE_PERIOD_END') . ' (' . $gL10n->get('PLG_MEMBERSHIPFEE_PERIOD_END_DAY') . ')', array_combine(range(1, 31), range(1, 31)), array(
+                'defaultValue' => $pPreferences->config['membership_status']['period_end_day'] ?? 31,
+                'showContextDependentFirstEntry' => false,
+                'helpTextId' => 'PLG_MEMBERSHIPFEE_PERIOD_END_DESC'
+            ));
+            $formMembershipStatus->addSelectBox('period_end_month', $gL10n->get('PLG_MEMBERSHIPFEE_PERIOD_END') . ' (' . $gL10n->get('PLG_MEMBERSHIPFEE_PERIOD_END_MONTH') . ')', array_combine(range(1, 12), range(1, 12)), array(
+                'defaultValue' => $pPreferences->config['membership_status']['period_end_month'] ?? 12,
+                'showContextDependentFirstEntry' => false
+            ));
+            $formMembershipStatus->addInput('warning_days', $gL10n->get('PLG_MEMBERSHIPFEE_WARNING_DAYS'), $pPreferences->config['membership_status']['warning_days'] ?? 30, array(
+                'type' => 'number',
+                'minNumber' => 0,
+                'step' => 1,
+                'helpTextId' => 'PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC'
+            ));
+            $formMembershipStatus->addSubmitButton('btn_save_configurations', $gL10n->get('SYS_SAVE'), array(
+                'icon' => 'bi-check-lg',
+                'class' => ' offset-sm-3'
+            ));
+
+            $page->addHtml(getMenuePanel('preferences', 'membership_status', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS'), 'bi bi-person-check', $formMembershipStatus->show()));
+
             // PANEL: ONLINE_PAYMENT
 
             if (isUserAuthorizedFor('payment_settings')) {

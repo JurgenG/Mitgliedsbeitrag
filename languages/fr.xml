@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Mandats</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Gestion des mandats</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Max</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Statut d'adhésion</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Paramètres du bloc de la page d'accueil dans lequel les membres voient leur propre statut d'adhésion (voir docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Nombre de membres</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">Données de l\'utilisateur</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** ATTENTION *** Ces données ne peuvent pas être restaurées après suppression ! *** ATTENTION *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Le prestataire de paiement signale les changements de statut à cette adresse. Elle doit être accessible depuis Internet.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Payer maintenant</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">encore impayé</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">La période d'adhésion se termine le</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Jour</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Jour et mois. Un paiement compte pour la période dans laquelle il tombe : avec 30.06, un paiement le 15.08.2026 rend membre jusqu'au 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">Cette date n'existe pas chaque année. Choisissez une autre fin de période d'adhésion.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Mois</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">État</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Informations sur le plug-in</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Nom du plug-in</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Échelonnement</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Nombre d\'échelonnement</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">État</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Merci de payer bientôt : l'échéance est le #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Payé. Votre adhésion se termine le #VAR1# ; la cotisation pour la période suivante suivra.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Votre adhésion s'est terminée le #VAR1#. La cotisation pour la nouvelle période n'a pas encore été fixée.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Due : merci de payer avant le #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">En retard : l'échéance était le #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Payé : membre jusqu'au #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">Rue du TitCpte</string>    
     <string name="PLG_MEMBERSHIPFEE_SUM">Total</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Totaliser</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Lien de paiement personnel pour le paiement en ligne (vide si les paiements en ligne sont désactivés)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Définition d\'affichage</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Ici, vous pouvez définir les colonnes pour les vues Paiements de la prime, Gestion des mandats, Date d'échéance et Factures.\n\n Notics : Une ou plusieurs colonnes sont déjà prédéfinies dans les affichages respectives. Ils ne peuvent pas être déplacés ou supprimés.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">Avertir ce nombre de jours à l'avance</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">Lorsque l'échéance de paiement ou la fin de l'adhésion est aussi proche, le bloc de la page d'accueil le met en évidence.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">avec les données du compte</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">Avec date d\'échéance</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">Par courriel</string>    

@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Mandates</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Mandate management</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Max</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Membership status</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Settings for the box on the start page in which members see their own membership status (see docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Number of members</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">User data</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** WARNING *** This data can not be recovered after deletion !!! *** DANGER *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">The payment provider reports status changes to this address. It must be reachable from the internet.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Pay now</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Not yet received</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">Membership period ends on</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Day</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Day and month. A payment counts for the period it falls in: with 30.06, a payment on 15.08.2026 makes someone a member until 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">This date doesn't exist in every year. Choose another end of the membership period.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Month</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin information</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Plugin name</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Staggering</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Number of staggering</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">Status</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Please pay soon: the deadline is #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Paid. Your membership ends on #VAR1#; the fee for the next period will follow.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Your membership ended on #VAR1#. The fee for the new period has not been set yet.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Open: please pay before #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">Overdue: the deadline was #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Paid: member until #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">AccHolder&apos;s street</string>    
     <string name="PLG_MEMBERSHIPFEE_SUM">Sum</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Add up</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Personal pay link for online payment (empty if online payments are off)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">View definitions</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Here you can define the columns for the views contribution payments, mandate management, due dates and invoices.\n\n Note: One or more columns are already predefined in the respective views. These can not be moved in their position and can not be deleted.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">Warn this many days ahead</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">When the payment deadline or the end of the membership is this close, the box on the start page highlights it.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">with account data</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">With due date</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">With email</string>    

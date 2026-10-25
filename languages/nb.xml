@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Mandater</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Mandatadministrasjon</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Maks</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Medlemskapsstatus</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Innstillinger for boksen på startsiden der medlemmer ser sin egen medlemskapsstatus (se docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Antall medlemmer</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">Brukerdata</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** ADVARSEL *** Disse dataene kan ikke gjenopprettes etter sletting !!! *** FARE *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Betalingsleverandøren melder statusendringer til denne adressen. Den må være tilgjengelig fra Internett.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Betal nå</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Ikke mottatt ennå</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">Medlemsperioden slutter</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Dag</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Dag og måned. En betaling gjelder for perioden den faller i: med 30.06 blir man ved betaling 15.08.2026 medlem til 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">Denne datoen finnes ikke hvert år. Velg en annen slutt på medlemsperioden.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Måned</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin-informasjon</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Plugin-navn</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Spre</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Antall spredning</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">Status</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Vennligst betal snart: fristen er #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Betalt. Medlemskapet ditt slutter #VAR1#; kontingenten for neste periode kommer.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Medlemskapet ditt sluttet #VAR1#. Kontingenten for den nye perioden er ikke fastsatt ennå.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Utestående: vennligst betal før #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">Forfalt: fristen var #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Betalt: medlem til #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">Kontoeiers gate</string>
     <string name="PLG_MEMBERSHIPFEE_SUM">Sum</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Legg sammen</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Personlig betalingslenke for nettbetaling (tom hvis nettbetaling er slått av)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Vis definisjoner</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Her kan du definere kolonnene for visningene bidragsbetalinger, mandatstyring, forfallsdatoer og fakturaer.\n\n Merk: En eller flere kolonner er allerede forhåndsdefinert i de respektive visningene. Disse kan ikke flyttes i sin posisjon og kan ikke slettes.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">Varsle så mange dager i forveien</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">Når betalingsfristen eller slutten på medlemskapet er så nær, fremhever boksen på startsiden det.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">Med kontodata</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">Med forfallsdato</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">Med e-post</string>    

@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Machtigingen</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Machtigings management</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Max</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Lidmaatschapsstatus</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Instellingen voor het blok op de startpagina waarin leden hun eigen lidmaatschapsstatus zien (zie docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Aantal leden</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">Gebruikers data</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** WAARSCHUWING *** Deze gegevens kunnen na verwijdering niet worden hersteld !!! *** GEVAAR *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Naar dit adres meldt de betaalprovider statuswijzigingen. Het moet vanaf het internet bereikbaar zijn.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Nu betalen</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Nog niet ontvangen</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">Lidmaatschapsperiode eindigt op</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Dag</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Dag en maand. Een betaling telt voor de periode waarin ze valt: met 30.06 is iemand na een betaling op 15.08.2026 lid tot 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">Deze datum bestaat niet elk jaar. Kies een ander einde van de lidmaatschapsperiode.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Maand</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin informatie</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Plugin naam</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Reeksen</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Aantal reeksen</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">Status</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Gelieve binnenkort te betalen: de uiterste datum is #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Betaald. Uw lidmaatschap loopt af op #VAR1#; het lidgeld voor de volgende periode volgt.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Uw lidmaatschap liep af op #VAR1#. Het lidgeld voor de nieuwe periode is nog niet vastgelegd.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Openstaand: gelieve te betalen vóór #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">Vervallen: de uiterste datum was #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Betaald: lid tot #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">Rek.houder straat</string>    
     <string name="PLG_MEMBERSHIPFEE_SUM">Som</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Tel op</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Persoonlijke betaallink voor online betaling (leeg als online betalingen uitgeschakeld zijn)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Bekijk definities</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Hier kunt u de kolommen definiëren voor de weergaven contributiebetalingen, machtigingen beheer, vervaldata en facturen.\n\n Let op: Een of meer kolommen zijn al voorgedefinieerd in de respectievelijke weergaven. Deze kunnen niet in hun positie worden verplaatst en kunnen niet worden verwijderd.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">Zoveel dagen vooraf waarschuwen</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">Als de uiterste betaaldatum of het einde van het lidmaatschap zo dichtbij is, markeert het blok op de startpagina dat.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">met rekeninggegevens</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">Met vervaldag</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">Met e-mail</string>    

@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Mandate</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Gestionare Mandate</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Max</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Starea calității de membru</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Setări pentru caseta de pe pagina de start în care membrii își văd propria stare de membru (vezi docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Numar de membrii</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">Datele utilizatorului</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** ATENȚIE *** Aceste date nu pot fi recuperate după ștergere !!! *** PERICOL *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Furnizorul de plăți raportează modificările de stare la această adresă. Trebuie să fie accesibilă de pe internet.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Plătiți acum</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Nerecepționat</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">Perioada de membru se încheie la</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Zi</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Zi și lună. O plată contează pentru perioada în care cade: cu 30.06, o plată pe 15.08.2026 face pe cineva membru până la 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">Această dată nu există în fiecare an. Alegeți un alt sfârșit al perioadei de membru.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Lună</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Informații despre plugin</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Denumire Plugin</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Păsuire</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Număr de pași</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">Status</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Vă rugăm să plătiți în curând: termenul este #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Plătit. Calitatea de membru se încheie la #VAR1#; cotizația pentru perioada următoare va urma.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Calitatea de membru s-a încheiat la #VAR1#. Cotizația pentru noua perioadă nu a fost încă stabilită.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Restant: vă rugăm să plătiți înainte de #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">Restant: termenul a fost #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Plătit: membru până la #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">Adresa stradala a membrului</string>    
     <string name="PLG_MEMBERSHIPFEE_SUM">Suma</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Adună</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Link personal de plată online (gol dacă plățile online sunt dezactivate)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Vezi definițiile</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Aici puteți defini coloanele pentru vizualizările "Plăți contribuții", "Gestionarea mandatelor", "Termene de scadență" și "Facturi"".\n\n Notă: Una sau mai multe coloane sunt deja predefinite în vizualizările respective. Acestea nu pot fi mutate și nu pot fi șterse.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">Avertizare cu atâtea zile înainte</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">Când termenul de plată sau sfârșitul calității de membru este atât de aproape, caseta de pe pagina de start îl evidențiază.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">cu datele contului</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">Cu data de scadență</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">Prin e-mail</string>     

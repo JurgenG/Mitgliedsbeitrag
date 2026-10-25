@@ -222,6 +222,14 @@ $config_default['payment'] = array(
     'allow_higher_amount' => 0
 );
 
+// Membership status box on the start page: end of the membership period (day, month) and
+// how many days ahead a deadline or period end is highlighted (see docs/membership-status.md)
+$config_default['membership_status'] = array(
+    'period_end_day' => 31,
+    'period_end_month' => 12,
+    'warning_days' => 30
+);
+
 // Settings of the payment provider Mollie
 $config_default['mollie'] = array(
     'api_key' => '',

@@ -289,6 +289,8 @@
     <string name="PLG_MEMBERSHIPFEE_MANDATES">Mandate</string>
     <string name="PLG_MEMBERSHIPFEE_MANDATES_FIELDS">Mandatsverwaltung</string>
     <string name="PLG_MEMBERSHIPFEE_MAX">Max</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS">Mitgliedschaftsstatus</string>
+    <string name="PLG_MEMBERSHIPFEE_MEMBERSHIP_STATUS_DESC">Einstellungen für den Kasten auf der Startseite, in dem Mitglieder ihren eigenen Mitgliedschaftsstatus sehen (siehe docs/membership-status.md).</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_ACCOUNT">Anzahl der Mitglieder</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA">Benutzerdaten</string>
     <string name="PLG_MEMBERSHIPFEE_MEMBER_DATA_ALERT_DESC"> *** ACHTUNG *** Diese Daten können nach dem Löschen nicht wiederhergestellt werden!!! *** ACHTUNG *** </string>
@@ -391,6 +393,11 @@
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">An diese Adresse meldet der Zahlungsdienstleister Statusänderungen. Sie muss aus dem Internet erreichbar sein.</string>
     <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Jetzt bezahlen</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">noch ausstehend</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END">Mitgliedschaftsperiode endet am</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DAY">Tag</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_DESC">Tag und Monat. Eine Zahlung gilt für die Periode, in die sie fällt: Bei 30.06 ist man mit einer Zahlung am 15.08.2026 Mitglied bis 30.06.2027.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_INVALID">Dieses Datum gibt es nicht in jedem Jahr. Bitte ein anderes Ende der Mitgliedschaftsperiode wählen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PERIOD_END_MONTH">Monat</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Stand</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugininformationen</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_NAME">Name des Plugins</string>
@@ -493,6 +500,12 @@
     <string name="PLG_MEMBERSHIPFEE_STAGGERING">Staffelung</string>
     <string name="PLG_MEMBERSHIPFEE_STAGGERING_NUMBER">Anzahl der Staffelungen</string>
     <string name="PLG_MEMBERSHIPFEE_STATUS">Status</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_DUE_SOON">Bitte bald bezahlen: Die Frist endet am #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_ENDING">Bezahlt. Ihre Mitgliedschaft endet am #VAR1#; der Beitrag für die nächste Periode folgt.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_EXPIRED">Ihre Mitgliedschaft endete am #VAR1#. Der Beitrag für die neue Periode wurde noch nicht festgelegt.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OPEN">Offen: Bitte bis #VAR1# bezahlen.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_OVERDUE">Überfällig: Die Frist endete am #VAR1#.</string>
+    <string name="PLG_MEMBERSHIPFEE_STATUS_PAID">Bezahlt: Mitglied bis #VAR1#.</string>
     <string name="PLG_MEMBERSHIPFEE_STREET">KtoInh-Straße</string>    
     <string name="PLG_MEMBERSHIPFEE_SUM">Summe</string>
     <string name="PLG_MEMBERSHIPFEE_SUMMATION">Aufsummieren</string>
@@ -543,6 +556,8 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Persönlicher Zahlungslink für die Online-Zahlung (leer, wenn Online-Zahlungen ausgeschaltet sind)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Ansichtsdefinitionen</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Hier können die Spalten für die Ansichten Beitragszahlungen, Mandatsverwaltung, Fälligkeitsdatum und Rechnung definiert werden.\n\n Hinweis: In den jeweiligen Ansichten sind bereits eine oder mehrere Spalten vordefiniert. Diese können in ihrer Position nicht verschoben und auch nicht gelöscht werden.</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS">So viele Tage vorher warnen</string>
+    <string name="PLG_MEMBERSHIPFEE_WARNING_DAYS_DESC">Wenn die Zahlungsfrist oder das Ende der Mitgliedschaft so nah ist, hebt der Kasten auf der Startseite es hervor.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">mit Kontodaten</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_DUEDATE">Mit Fälligkeitsdatum</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_EMAIL">Mit E-Mail</string>    

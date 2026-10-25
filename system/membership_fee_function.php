@@ -17,6 +17,7 @@ use Admidio\Infrastructure\Entity\Text;
 use Admidio\Infrastructure\Exception;
 use Admidio\Roles\Entity\Role;
 use Plugins\MembershipFee\classes\Config\ConfigTable;
+use Plugins\MembershipFee\classes\Service\MembershipStatus;
 
 require_once (__DIR__ . '/../../../system/common.php');
 require_once (__DIR__ . '/common_function.php');
@@ -320,6 +321,25 @@ try {
             if ($pPreferences->config['payment']['enabled']) {
                 createPaymentProfileFields();
             }
+            break;
+
+        case 'membership_status':
+            $periodEndDay = admFuncVariableIsValid($_POST, 'period_end_day', 'int', array('defaultValue' => 31));
+            $periodEndMonth = admFuncVariableIsValid($_POST, 'period_end_month', 'int', array('defaultValue' => 12));
+            $warningDays = max(0, admFuncVariableIsValid($_POST, 'warning_days', 'int', array('defaultValue' => 30)));
+
+            // the constructor refuses dates that don't exist every year, e.g. 31.04 or 29.02
+            try {
+                new MembershipStatus($periodEndDay, $periodEndMonth, $warningDays);
+            } catch (InvalidArgumentException $e) {
+                $gMessage->show($gL10n->get('PLG_MEMBERSHIPFEE_PERIOD_END_INVALID'));
+                // => EXIT
+            }
+            $pPreferences->config['membership_status'] = array(
+                'period_end_day' => $periodEndDay,
+                'period_end_month' => $periodEndMonth,
+                'warning_days' => $warningDays
+            );
             break;
 
         case 'multiplier_roles':
