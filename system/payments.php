@@ -432,7 +432,15 @@ else
             }  
             break;							// abort after the first member, since only the usfIds of one member are needed to create the headlines
         }
-   
+
+        // pay link column for users who may send pay links (online payments)
+        $showPaymentLinks = isOnlinePaymentActive($pPreferences) && isUserAuthorizedFor('payment_links');
+        if ($showPaymentLinks)
+        {
+            $columnAlign[] = 'center';
+            $columnValues[] = $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_LINK');
+        }
+
         $table->setColumnAlignByArray($columnAlign);
         $table->addRowHeadingByArray($columnValues);
         $table->disableDatatablesColumnsSort(array(1));
@@ -486,6 +494,11 @@ else
                 {
                     $columnValues[] = $htmlValue;
                 }
+            }
+            if ($showPaymentLinks)
+            {
+                $columnValues[] = '<a class="admidio-icon-link" href="'.SecurityUtils::encodeUrl(ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER .'/system/payment_link.php', array('user_uuid' => $user->getValue('usr_uuid'))).'">
+                    <i class="bi bi-link-45deg" data-bs-toggle="tooltip" title="'.$gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_LINK').'"></i></a>';
             }
             $table->addRowByArray($columnValues, 'userid_'.$member, array('nobr' => 'true'));
         }  // end foreach user
