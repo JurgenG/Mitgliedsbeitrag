@@ -161,7 +161,7 @@ function getPaymentLinkForMail(string $userUuid): string
  */
 function createPaymentProfileFields(): void
 {
-    global $gDb, $gCurrentOrgId, $gCurrentSession;
+    global $gDb, $gCurrentOrgId, $gCurrentSession, $gL10n;
 
     $sql = 'SELECT cat_id
               FROM ' . TBL_CATEGORIES . '
@@ -176,9 +176,9 @@ function createPaymentProfileFields(): void
     }
 
     $fields = array(
-        'PAYTOKEN' => array('PMB_PAYTOKEN', 'Persönliches Token des Zahlungslinks'),
-        'PAYMENT_ID' => array('PMB_PAYMENT_ID', 'ID der letzten Online-Zahlung beim Zahlungsdienstleister'),
-        'PAYMENT_PROVIDER' => array('PMB_PAYMENT_PROVIDER', 'Zahlungsdienstleister der letzten Online-Zahlung')
+        'PAYTOKEN' => array('PMB_PAYTOKEN', $gL10n->get('PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYTOKEN')),
+        'PAYMENT_ID' => array('PMB_PAYMENT_ID', $gL10n->get('PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYMENT_ID')),
+        'PAYMENT_PROVIDER' => array('PMB_PAYMENT_PROVIDER', $gL10n->get('PLG_MEMBERSHIPFEE_DEFAULT_FIELD_DESC_PAYMENT_PROVIDER'))
     );
 
     $created = false;
