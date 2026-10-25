@@ -1405,7 +1405,7 @@ function test_iban($iban)
             $NewString .= $MovedCharArray[$key];
         }
 
-        if (bcmod($NewString, '97') == 1) {
+        if (iban_mod97($NewString) === 1) {
             return TRUE;
         } else {
             return FALSE;
