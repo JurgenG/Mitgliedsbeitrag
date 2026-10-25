@@ -334,11 +334,11 @@ member.
    role-selection panel in the preferences.
 5. ✅ `PaymentService` with `PaymentMemberStoreInterface`: open-fee lookup, token handling, webhook
    logic, mark paid (tested against `FakeProvider` and an in-memory store).
-6. Fake provider usable in Admidio: file storage for `FakeProvider`, `PaymentProviderFactory`
+6. ✅ Fake provider usable in Admidio: file storage for `FakeProvider`, `PaymentProviderFactory`
    (unit-tested), then the *Online payments* panel (enable + provider), profile fields
    (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`), `AdmidioPaymentMemberStore`.
-7. `pay.php`, `payment_link.php`, `#payment_link#` mail placeholder.
-8. `payment_webhook.php`, `fake_checkout.php`.
+7. ✅ `pay.php`, `payment_link.php`, `#payment_link#` mail placeholder.
+8. ✅ `payment_webhook.php`, `fake_checkout.php`.
 9. `MollieApiKey` (key handling, unit-tested), then `MollieProvider` (curl) + preferences panel.
 10. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
 
