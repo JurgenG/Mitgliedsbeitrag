@@ -18,7 +18,8 @@ a data migration.
 
 In scope (phase 1):
 
-- One-off payment of the member's current open fee (`FEE{org}`, purpose `CONTRIBUTORY_TEXT{org}`).
+- One-off payment of the member's current open fee (`FEE{org}`, purpose `CONTRIBUTORY_TEXT{org}`),
+  or of a higher amount if the organisation allows it.
 - A per-member payment link that can be mailed with the existing mail function.
 - Automatic update of `PAID{org}` when the provider confirms the payment.
 - Per-organisation configuration: on/off, active provider, and that provider's settings.
@@ -49,6 +50,7 @@ classes/Payment/PaymentService.php             plugin logic: open fee → paymen
 classes/Payment/PaymentMember.php              value object: a member's fee, paid flag, pay token, purpose
 classes/Payment/PaymentMemberStoreInterface.php  reads/writes PaymentMember data (Admidio-backed in production)
 classes/Payment/InvalidPayLinkException.php    unknown member or wrong token on the pay link
+classes/Payment/InvalidAmountException.php     chosen amount below the fee, or above it when not allowed
 classes/Payment/AdmidioPaymentMemberStore.php  PaymentMemberStoreInterface on top of Admidio's User entity
 classes/Payment/PaymentProviderFactory.php     which providers may be selected, and builds the active one
 system/payment_common.php                      Admidio glue: build the PaymentService, pay link, profile fields
@@ -83,7 +85,8 @@ That is safe because the subsequent `getPayment()` is authoritative.
 ### PaymentService
 
 `PaymentService` holds the plugin's payment logic for **one organisation**. It is constructed with
-the active provider, a member store, the org id, the org's timezone and a fallback description. It
+the active provider, a member store, the org id, the org's timezone, a fallback description and
+whether paying more than the fee is allowed. It
 doesn't touch Admidio globals, so it is unit-tested against `FakeProvider` and an in-memory store.
 
 Member data reaches it through `PaymentMemberStoreInterface`:
@@ -92,7 +95,7 @@ Member data reaches it through `PaymentMemberStoreInterface`:
 |---|---|
 | `findMember(userUuid): ?PaymentMember` | Current fee (already normalised with `normalize_fee()`), paid flag (`PAID{org}` set), pay token, purpose text |
 | `saveToken(userUuid, token)` | Stores a new pay token in `PAYTOKEN{org}` |
-| `markPaid(userUuid, paidDate, paymentId, provider, newToken)` | Sets `PAID{org}` (`Y-m-d`), `PAYMENT_ID{org}`, `PAYMENT_PROVIDER{org}` and the new token in one `save()`. Like `payments.php` it also clears `DUEDATE{org}`, so a planned SEPA collection isn't executed as well |
+| `markPaid(userUuid, paidDate, paymentId, provider, newToken, paidAmount)` | Sets `PAID{org}` (`Y-m-d`), `PAYMENT_ID{org}`, `PAYMENT_PROVIDER{org}`, the new token and `FEE{org}` = `paidAmount` (`"40.00"`; unchanged if the member paid exactly the fee) in one `save()`. Like `payments.php` it also clears `DUEDATE{org}`, so a planned SEPA collection isn't executed as well |
 
 The Admidio implementation of the store comes with the profile fields (step 6).
 
@@ -100,12 +103,12 @@ The Admidio implementation of the store comes with the profile fields (step 6).
 |---|---|
 | `getOrCreateToken(userUuid)` | Returns the member's pay token, creating and storing one first if there is none. Used for `#payment_link#` |
 | `checkPayLink(userUuid, token)` | Returns the member if the link is valid (member exists, has a token, token matches), otherwise `null`. Used by the return page |
-| `startPayment(userUuid, token, redirectUrl, webhookUrl)` | Throws `InvalidPayLinkException` if the member is unknown, has no token, or the token doesn't match (`hash_equals()`). Returns `null` if there is nothing to pay (already paid, or fee ≤ 0). Otherwise creates a payment for the **current** fee and returns it |
+| `startPayment(userUuid, token, redirectUrl, webhookUrl, amount = null)` | Throws `InvalidPayLinkException` if the member is unknown, has no token, or the token doesn't match (`hash_equals()`). Returns `null` if there is nothing to pay (already paid, or fee ≤ 0). Otherwise creates a payment and returns it: for the **current** fee, or for `amount` if given. `amount` is rounded to cents; less than the fee, or more than the fee while paying more isn't allowed, throws `InvalidAmountException` |
 | `handleWebhook(post, headers, rawBody)` | Runs the webhook logic below and returns one of the `WEBHOOK_*` outcomes. It never throws for bad input, so the endpoint can always answer 200 |
 | `formatAmount(float)` (static) | Fee → provider amount string with two decimals and a dot, e.g. `25` → `"25.00"` |
 
 Payments are created with currency `EUR`, the member's purpose text (or the fallback if it is empty)
-and metadata `org_id`, `user_uuid` and `fee` (the formatted amount).
+and metadata `org_id`, `user_uuid` and `fee` (the member's fee at checkout, formatted; the minimum).
 
 `handleWebhook()` outcomes, checked in this order:
 
@@ -116,8 +119,27 @@ and metadata `org_id`, `user_uuid` and `fee` (the formatted amount).
 | `not_paid` | status is anything other than `paid` | none |
 | `not_ours` | `metadata.org_id` isn't this org, or the member doesn't exist | none |
 | `already_paid` | the member's `PAID{org}` is already set (webhook retries) | none |
-| `amount_mismatch` | amount or currency differ from the member's **current** fee, e.g. the fee was recalculated after checkout | none; an admin has to check it by hand |
-| `marked_paid` | all checks pass | `markPaid()` with the provider's paid timestamp converted to the org's timezone (date only), and a new token so the old link stops working |
+| `amount_mismatch` | currency isn't `EUR`, `metadata.fee` differs from the member's **current** fee (e.g. the fee was recalculated after checkout), or the paid amount is lower than `metadata.fee` | none; an admin has to check it by hand |
+| `marked_paid` | all checks pass | `markPaid()` with the provider's paid timestamp converted to the org's timezone (date only), the paid amount, and a new token so the old link stops working |
+
+A paid amount above the fee is accepted even if *paying more* was switched off after checkout: the
+payment was created by the plugin with the organisation's own credentials.
+
+### Paying more than the fee
+
+Optional, per organisation, off by default: setting `payment.allow_higher_amount` (*Allow paying
+more than the fee* in the *Online payments* panel). There is no maximum; the provider's own limits
+apply.
+
+- Off: the pay link goes straight to the checkout, as before.
+- On: the pay link first shows a small form with the purpose, the fee as the minimum and an amount
+  field prefilled with the fee. The member may raise the amount, never lower it. The amount is
+  normalised with `normalize_fee()` and checked again by `startPayment()`; a lower amount shows the
+  form again with an error.
+- After payment, `FEE{org}` of **that member only** is set to the amount paid, so the profile,
+  exports and `#fee#` show what the member actually contributed. The calculated fee stays visible
+  in the change history. A later recalculation in *overwrite* or *summation* mode sets the fee back
+  to the calculated value unless *only members who haven't paid* is ticked.
 
 The pay link has the form `pay.php?org=<org id>&user=<user uuid>&token=<token>`. The token is
 `bin2hex(random_bytes(32))` (64 hex characters).
@@ -148,7 +170,7 @@ mapping in our hands, always charges the current fee and works the same for ever
 
 | What | Where |
 |---|---|
-| Feature on/off (`0`), active provider (`mollie`) | config section `payment` in `adm_plugin_preferences` |
+| Feature on/off (`0`), active provider (`mollie`), paying more allowed (`0`) | config section `payment` in `adm_plugin_preferences` |
 | Mollie API key (`''`), test mode (`1`) | config section `mollie` (one section per provider) |
 | Per-member pay token | new profile field `PAYTOKEN{org}` (hidden, disabled, like the other plugin fields) |
 | Last payment id | new profile field `PAYMENT_ID{org}` (for support and idempotency) |
@@ -240,6 +262,7 @@ A new panel *Online payments* in the plugin preferences, saved through
 
 - Enabled (checkbox)
 - Provider (select; phase 1: Mollie only)
+- Allow paying more than the fee (checkbox, off by default; see *Paying more than the fee*)
 - Provider settings. For Mollie: API key (masked) and mode test / live. The key prefix `test_` /
   `live_` must match the mode, otherwise a validation error is shown.
 - A read-only display of the webhook URL, for reference.
@@ -309,7 +332,8 @@ member.
 - **`pay.php`** (no login). Parameters: `org`, `user`, `token`, and `mode` = `pay` (default) or
   `return`. `org` must be the current organisation, and online payments must be on.
   - `pay`: `startPayment()` → 303 redirect to the checkout, or a "nothing to pay" or "link no
-    longer valid" message. A provider error shows "try again later" without details.
+    longer valid" message. A provider error shows "try again later" without details. With *paying
+    more* on, a GET shows the amount form and its POST (CSRF-checked) starts the payment.
   - `return` (the payment's `redirectUrl`) uses `checkPayLink()`. If the link is valid and the fee
     is open, the payment isn't confirmed yet: "not completed or not confirmed yet" plus a *Pay now*
     button. Valid but nothing open (e.g. an admin entered the payment by hand): "nothing to pay".
@@ -345,8 +369,10 @@ member.
 ## Decisions
 
 - **Upstream:** developed in the `JurgenG` fork first; offered upstream once it works end to end.
-- **Transaction costs:** included in the membership fee. No surcharge; the member pays exactly
-  `FEE{org}`.
+- **Transaction costs:** included in the membership fee. No surcharge; the member pays `FEE{org}`,
+  or more if the organisation allows it.
+- **Paying more:** allowed per organisation, no maximum; the amount paid becomes that member's
+  `FEE{org}`. Paying less is never accepted (no partial payments).
 - **Payment date:** `PAID{org}` is set to the provider's paid timestamp (Mollie: `paidAt`; date part,
   organisation timezone), not the webhook processing date, so late webhook retries don't shift the
   date.
