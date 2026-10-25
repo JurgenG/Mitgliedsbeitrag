@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">bezahlt am</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Nur Bezahlt-Datum</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Nur Bezahlt-Datum' löscht nur das Bezahlt-Datum.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online-Zahlungen sind nicht aktiviert.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Online-Zahlungen aktivieren</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referenz-ID</string> 
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Beitragszahlungen</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Standardmäßig werden beim Bearbeiten der Beitragszahlungen alle Beitragsrollen betrachtet. Über diese Rollenauswahl kann eine Beitragszahlung nur für die gewählten Rollen durchgeführt werden. Soll keine Einschränkung auf bestimmte Rollen erfolgen, so ist dieses Feld leer zu lassen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Zahlungslink</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Persönlicher Link, mit dem #VAR1# den offenen Mitgliedsbeitrag online bezahlen kann. Nur an dieses Mitglied senden.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Dieser Zahlungslink ist nicht mehr gültig. Wenn Sie gerade bezahlt haben, wurde Ihre Zahlung erfasst.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Es gibt keinen offenen Mitgliedsbeitrag zu bezahlen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Ihre Zahlung wurde noch nicht abgeschlossen oder noch nicht bestätigt. Wenn Sie bezahlt haben, laden Sie diese Seite gleich neu.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">Es ist noch kein Zahlungsdienstleister verfügbar.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Online-Zahlungen</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Mitglieder können ihren offenen Mitgliedsbeitrag online über einen Zahlungsdienstleister bezahlen. Sobald der Dienstleister die Zahlung bestätigt, wird der Beitrag automatisch als bezahlt markiert.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Zahlungsdienstleister</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">Die Zahlung konnte nicht gestartet werden. Bitte versuchen Sie es später erneut.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Fake (nur Entwicklung)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">Webhook-URL</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">An diese Adresse meldet der Zahlungsdienstleister Statusänderungen. Sie muss aus dem Internet erreichbar sein.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Jetzt bezahlen</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">noch ausstehend</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Stand</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugininformationen</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Nachname des Mitglieds</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Mandatsreferenz für diesen Beitragseinzug</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Verwendungszweck</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Persönlicher Zahlungslink für die Online-Zahlung (leer, wenn Online-Zahlungen ausgeschaltet sind)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Ansichtsdefinitionen</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Hier können die Spalten für die Ansichten Beitragszahlungen, Mandatsverwaltung, Fälligkeitsdatum und Rechnung definiert werden.\n\n Hinweis: In den jeweiligen Ansichten sind bereits eine oder mehrere Spalten vordefiniert. Diese können in ihrer Position nicht verschoben und auch nicht gelöscht werden.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">mit Kontodaten</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">Ursprüngliche IBAN</string>
     <string name="PMB_ORIG_MANDATEID">Ursprüngliche Mandatsreferenz</string>
     <string name="PMB_PAID">Bezahlt</string>
+    <string name="PMB_PAYMENT_ID">Zahlungs-ID</string>
+    <string name="PMB_PAYMENT_PROVIDER">Zahlungsdienstleister</string>
+    <string name="PMB_PAYTOKEN">Zahlungstoken</string>
     <string name="PMB_SEQUENCETYPE">Sequenztyp</string> 
 </resources>

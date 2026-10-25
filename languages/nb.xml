@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">betalt den</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Kun betalingsdato</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Kun betalingsdato' sletter kun betalingsdatoen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Nettbetaling er ikke aktivert.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Aktiver nettbetaling</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referanse-ID</string> 
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Bidragsbetalinger</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Som standard vurderes alle bidragsroller ved redigering av bidragene. Ved hjelp av dette rollevalget kan redigering av bidragene kun utføres for de valgte rollene. Det bør ikke være noen begrensning på visse roller, så dette feltet bør stå tomt.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Betalingslenke</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Personlig lenke som #VAR1# kan bruke til å betale den utestående medlemskontingenten på nett. Send den bare til dette medlemmet.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Denne betalingslenken er ikke lenger gyldig. Hvis du nettopp har betalt, er betalingen din registrert.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Det er ingen utestående medlemskontingent å betale.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Betalingen din er ikke fullført eller ikke bekreftet ennå. Hvis du har betalt, last inn denne siden på nytt om et øyeblikk.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">Ingen betalingsleverandør er tilgjengelig ennå.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Nettbetaling</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Medlemmer kan betale utestående medlemskontingent på nett via en betalingsleverandør. Når leverandøren bekrefter betalingen, merkes kontingenten automatisk som betalt.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Betalingsleverandør</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">Betalingen kunne ikke startes. Prøv igjen senere.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Falsk (kun utvikling)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">Webhook-URL</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Betalingsleverandøren melder statusendringer til denne adressen. Den må være tilgjengelig fra Internett.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Betal nå</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Ikke mottatt ennå</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin-informasjon</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Etternavn på medlemmet</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Mandatreferanse for denne innkrevingen av bidrag</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Formål</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Personlig betalingslenke for nettbetaling (tom hvis nettbetaling er slått av)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Vis definisjoner</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Her kan du definere kolonnene for visningene bidragsbetalinger, mandatstyring, forfallsdatoer og fakturaer.\n\n Merk: En eller flere kolonner er allerede forhåndsdefinert i de respektive visningene. Disse kan ikke flyttes i sin posisjon og kan ikke slettes.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">Med kontodata</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">Opprinnelig IBAN</string>
     <string name="PMB_ORIG_MANDATEID">Opprinnelig mandatreferanse</string>
     <string name="PMB_PAID">Betalt</string>
+    <string name="PMB_PAYMENT_ID">Betalings-ID</string>
+    <string name="PMB_PAYMENT_PROVIDER">Betalingsleverandør</string>
+    <string name="PMB_PAYTOKEN">Betalingstoken</string>
     <string name="PMB_SEQUENCETYPE">Sekvenstype</string>
 </resources>

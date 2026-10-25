@@ -305,6 +305,22 @@ try {
             }
             break;
 
+        case 'online_payment':
+            if (!isUserAuthorizedFor('payment_settings')) {
+                $gMessage->show($gL10n->get('SYS_NO_RIGHTS'));
+                // => EXIT
+            }
+            $provider = admFuncVariableIsValid($_POST, 'payment_provider', 'string', array(
+                'validValues' => getPaymentProviderFactory()->selectableProviders()
+            ));
+            $pPreferences->config['payment']['provider'] = $provider;
+            $pPreferences->config['payment']['enabled'] = isset($_POST['payment_enabled']) ? 1 : 0;
+
+            if ($pPreferences->config['payment']['enabled']) {
+                createPaymentProfileFields();
+            }
+            break;
+
         case 'multiplier_roles':
             if (isset($_POST['multiplier_roles'])) {
                 $pPreferences->config['multiplier']['roles'] = array_filter($_POST['multiplier_roles']);

@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">betaald op</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Alleen betaald datum</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Alleen betaald datum' verwijdert alleen de betaald datum.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online betalingen zijn niet ingeschakeld.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Online betalingen inschakelen</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Referentie ID</string> 
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Contributiebetalingen</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Bij het verwerken van contributie betalingen wordt standaard rekening gehouden met alle rollen. Deze rolselectie kan alleen worden gebruikt om contributie te verwerken voor de geselecteerde rollen. Als er geen beperking is tot bepaalde rollen, moet dit veld leeg worden gelaten.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Betaallink</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Persoonlijke link waarmee #VAR1# het openstaande lidgeld online kan betalen. Stuur hem alleen naar dit lid.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Deze betaallink is niet meer geldig. Als u net betaald hebt, is uw betaling geregistreerd.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Er is geen openstaand lidgeld te betalen.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Uw betaling is nog niet voltooid of nog niet bevestigd. Als u betaald hebt, laad deze pagina dan zo meteen opnieuw.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">Er is nog geen betaalprovider beschikbaar.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Online betalingen</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Leden kunnen hun openstaand lidgeld online betalen via een betaalprovider. Zodra de provider de betaling bevestigt, wordt het lidgeld automatisch als betaald gemarkeerd.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Betaalprovider</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">De betaling kon niet worden gestart. Probeer het later opnieuw.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Fake (alleen ontwikkeling)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">Webhook-URL</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Naar dit adres meldt de betaalprovider statuswijzigingen. Het moet vanaf het internet bereikbaar zijn.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Nu betalen</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Nog niet ontvangen</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin informatie</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Achternaam van het lid</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Machtigingsreferentie voor deze incasso van contributie</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Beoogde doel</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Persoonlijke betaallink voor online betaling (leeg als online betalingen uitgeschakeld zijn)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Bekijk definities</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Hier kunt u de kolommen definiëren voor de weergaven contributiebetalingen, machtigingen beheer, vervaldata en facturen.\n\n Let op: Een of meer kolommen zijn al voorgedefinieerd in de respectievelijke weergaven. Deze kunnen niet in hun positie worden verplaatst en kunnen niet worden verwijderd.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">met rekeninggegevens</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">Originele IBAN</string>
     <string name="PMB_ORIG_MANDATEID">Originele machtigingsreferentie</string>
     <string name="PMB_PAID">Betaald</string>
+    <string name="PMB_PAYMENT_ID">Betalings-ID</string>
+    <string name="PMB_PAYMENT_PROVIDER">Betaalprovider</string>
+    <string name="PMB_PAYTOKEN">Betaaltoken</string>
     <string name="PMB_SEQUENCETYPE">Volgordetype</string>
 </resources>

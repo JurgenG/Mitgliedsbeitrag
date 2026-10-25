@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">payé le</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Date payée seulement</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">L\'option \'Date payée seulement\' supprime uniquement la date payée.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Les paiements en ligne ne sont pas activés.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Activer les paiements en ligne</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">ID de référence</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Paiements de cotisations</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">Par défaut, tous les rôles de cotisation sont pris en compte lors du traitement des paiements de cotisation. Tu peux utiliser cette sélection de rôles pour effectuer le payement les cotisations uniquement pour les rôles sélectionnés. Si tu ne veux pas limiter ta sélection à certains rôles, laisse ce champ vide.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Lien de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Lien personnel permettant à #VAR1# de payer en ligne la cotisation due. Ne l'envoyez qu'à ce membre.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Ce lien de paiement n'est plus valable. Si vous venez de payer, votre paiement a été enregistré.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Il n'y a aucune cotisation due à payer.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Votre paiement n'est pas encore terminé ou pas encore confirmé. Si vous avez payé, rechargez cette page dans un instant.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">Aucun prestataire de paiement n'est encore disponible.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Paiements en ligne</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Les membres peuvent payer leur cotisation due en ligne via un prestataire de paiement. Dès que le prestataire confirme le paiement, la cotisation est automatiquement marquée comme payée.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Prestataire de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">Le paiement n'a pas pu être lancé. Veuillez réessayer plus tard.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Fictif (développement uniquement)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">URL du webhook</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Le prestataire de paiement signale les changements de statut à cette adresse. Elle doit être accessible depuis Internet.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Payer maintenant</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">encore impayé</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">État</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Informations sur le plug-in</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Nom de famille du membre</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Référence du mandat pour ce recouvrement de cotisation</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Motif de paiement</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Lien de paiement personnel pour le paiement en ligne (vide si les paiements en ligne sont désactivés)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Définition d\'affichage</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Ici, vous pouvez définir les colonnes pour les vues Paiements de la prime, Gestion des mandats, Date d'échéance et Factures.\n\n Notics : Une ou plusieurs colonnes sont déjà prédéfinies dans les affichages respectives. Ils ne peuvent pas être déplacés ou supprimés.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">avec les données du compte</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">IBAN original</string>
     <string name="PMB_ORIG_MANDATEID">Référence de mandat original</string>
     <string name="PMB_PAID">Payé</string>
+    <string name="PMB_PAYMENT_ID">ID de paiement</string>
+    <string name="PMB_PAYMENT_PROVIDER">Prestataire de paiement</string>
+    <string name="PMB_PAYTOKEN">Jeton de paiement</string>
     <string name="PMB_SEQUENCETYPE">Type de séquence</string>
 </resources>

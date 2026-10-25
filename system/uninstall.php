@@ -168,6 +168,9 @@ try {
             $fieldArray[] = 'ORIG_IBAN';
             $fieldArray[] = 'ORIG_MANDATEID' . $gCurrentOrgId;
             $fieldArray[] = 'PAID' . $gCurrentOrgId;
+            $fieldArray[] = 'PAYMENT_ID' . $gCurrentOrgId;
+            $fieldArray[] = 'PAYMENT_PROVIDER' . $gCurrentOrgId;
+            $fieldArray[] = 'PAYTOKEN' . $gCurrentOrgId;
             $fieldArray[] = 'SEQUENCETYPE' . $gCurrentOrgId;
 
             $profileField = new ProfileField($gDb);
@@ -177,9 +180,12 @@ try {
                 $result_profileField = false;
                 $catId = '';
 
-                $profileField->readDataByColumns(array(
+                // the online payment fields only exist if online payments were ever enabled
+                if (!$profileField->readDataByColumns(array(
                     'usf_name_intern' => $fieldName
-                ));
+                ))) {
+                    continue;
+                }
 
                 $catId = $profileField->getValue('usf_cat_id');
                 $category->readDataById((int) $catId);

@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">paid on</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Paid-date only</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">'Paid-date only' deletes only the paid-date.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Online payments are not enabled.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Enable online payments</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">Reference ID</string> 
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Contribution payments</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">By default, all contribution roles are considered while editing the contributions. About this role selection editing the contributions may be performed only for the selected roles. There should be no restriction on certain roles, so this field should be left blank.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Pay link</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Personal link with which #VAR1# can pay the open membership fee online. Send it only to this member.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">This payment link is no longer valid. If you have just paid, your payment has been registered.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">There is no open membership fee to pay.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Your payment has not been completed or not been confirmed yet. If you have paid, reload this page in a moment.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">No payment provider is available yet.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Online payments</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Members can pay their open membership fee online through a payment provider. When the provider confirms the payment, the fee is marked as paid automatically.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Payment provider</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">The payment could not be started. Please try again later.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Fake (development only)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">Webhook URL</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">The payment provider reports status changes to this address. It must be reachable from the internet.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Pay now</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Not yet received</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Plugin information</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Last name of the member</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Mandate reference for this collection of contributions</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Intended purpose</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Personal pay link for online payment (empty if online payments are off)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">View definitions</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Here you can define the columns for the views contribution payments, mandate management, due dates and invoices.\n\n Note: One or more columns are already predefined in the respective views. These can not be moved in their position and can not be deleted.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">with account data</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">Original IBAN</string>
     <string name="PMB_ORIG_MANDATEID">Original mandate reference</string>
     <string name="PMB_PAID">Paid</string>
+    <string name="PMB_PAYMENT_ID">Payment ID</string>
+    <string name="PMB_PAYMENT_PROVIDER">Payment provider</string>
+    <string name="PMB_PAYTOKEN">Pay token</string>
     <string name="PMB_SEQUENCETYPE">Sequence type</string>
 </resources>

@@ -1439,7 +1439,8 @@ try {
             <strong>#bank#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_VARIABLE_BANK') . '<br />
             <strong>#debtor#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_VARIABLE_DEBTOR') . '<br />
             <strong>#membership_fee_text#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT') . '<br />
-            <strong > # membernumber#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_MEMBERNUMBER') . '</p>');
+            <strong > # membernumber#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_MEMBERNUMBER') . '<br />
+            <strong>#payment_link#</strong> - ' . $gL10n->get('PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK') . '</p>');
 
             $text = new Text($gDb);
             $text->readDataByColumns(array(
@@ -1701,6 +1702,42 @@ try {
                 ));
 
                 $page->addHtml(getMenuePanel('preferences', 'access_payment', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_PAYMENT'), 'bi bi-credit-card', $formAccessPayment->show()));
+            }
+
+            // PANEL: ONLINE_PAYMENT
+
+            if (isUserAuthorizedFor('payment_settings')) {
+                $formOnlinePayment = new HtmlForm('online_payment_form', SecurityUtils::encodeUrl(ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/membership_fee_function.php', array(
+                    'form' => 'online_payment'
+                )), $page, array(
+                    'class' => 'form-preferences'
+                ));
+
+                $formOnlinePayment->addDescription($gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC'));
+
+                $providers = array();
+                foreach (getPaymentProviderFactory()->selectableProviders() as $provider) {
+                    $providers[$provider] = $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_' . strtoupper($provider));
+                }
+
+                if (count($providers) === 0) {
+                    $formOnlinePayment->addDescription('<div class="alert alert-info">' . $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER') . '</div>');
+                } else {
+                    $formOnlinePayment->addCheckbox('payment_enabled', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_ENABLED'), (bool) $pPreferences->config['payment']['enabled']);
+                    $formOnlinePayment->addSelectBox('payment_provider', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER'), $providers, array(
+                        'defaultValue' => $pPreferences->config['payment']['provider'],
+                        'showContextDependentFirstEntry' => false
+                    ));
+                    $formOnlinePayment->addStaticControl('payment_webhook_url', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL'), getPaymentWebhookUrl($pPreferences->config['payment']['provider']), array(
+                        'helpTextId' => 'PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC'
+                    ));
+                    $formOnlinePayment->addSubmitButton('btn_save_configurations', $gL10n->get('SYS_SAVE'), array(
+                        'icon' => 'bi-check-lg',
+                        'class' => ' offset-sm-3'
+                    ));
+                }
+
+                $page->addHtml(getMenuePanel('preferences', 'online_payment', 'accordion_preferences', $gL10n->get('PLG_MEMBERSHIPFEE_PAYMENT_ONLINE'), 'bi bi-wallet2', $formOnlinePayment->show()));
             }
 
             // PANEL: DELETE

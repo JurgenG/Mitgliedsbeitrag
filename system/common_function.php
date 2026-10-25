@@ -31,6 +31,8 @@ if (! defined('PLUGIN_FOLDER')) {
 
 spl_autoload_register('myAutoloader');
 
+require_once (__DIR__ . '/payment_common.php');
+
 /**
  * My autoloader
  * Script from the web
@@ -1849,6 +1851,11 @@ function replace_emailparameter($text, $user)
     $text = preg_replace('/#membership_fee_text#/', $user->getValue('CONTRIBUTORY_TEXT' . $gCurrentOrgId), $text);
     $text = preg_replace('/#iban_obfuscated#/', obfuscate_iban($user->getValue('IBAN')), $text);
     $text = preg_replace('/#membernumber#/', $user->getValue('MEMBERNUMBER' . $gCurrentOrgId), $text);
+
+    // only create a pay token if the text actually uses the link
+    if (str_contains($text, '#payment_link#')) {
+        $text = str_replace('#payment_link#', getPaymentLinkForMail($user->getValue('usr_uuid')), $text);
+    }
 
     return $text;
 }

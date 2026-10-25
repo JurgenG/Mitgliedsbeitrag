@@ -365,9 +365,26 @@
     <string name="PLG_MEMBERSHIPFEE_PAID_ON">plătit la</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY">Numai data plății</string>
     <string name="PLG_MEMBERSHIPFEE_PAID_ONLY_DESC">Opțiunea 'Numai data plății' șterge doar data plății.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_DISABLED">Plățile online nu sunt activate.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ENABLED">Activați plățile online</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENT_ID">ID referință</string> 
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_FIELDS">Plata contribuțieis</string>
     <string name="PLG_MEMBERSHIPFEE_PAYMENTS_ROLLQUERY_DESC">În mod implicit, toate rolurile de contribuție sunt luate în considerare la editarea contribuțiilor. În ceea ce privește această selecție a rolurilor, editarea contribuțiilor se poate efectua numai pentru rolurile selectate. Nu ar trebui să existe restricții pentru anumite roluri, așa că acest câmp trebuie lăsat necompletat.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK">Link de plată</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_DESC">Link personal cu care #VAR1# poate plăti online cotizația restantă. Trimiteți-l doar acestui membru.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_LINK_INVALID">Acest link de plată nu mai este valabil. Dacă tocmai ați plătit, plata dvs. a fost înregistrată.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOTHING_TO_PAY">Nu există nicio cotizație restantă de plătit.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NOT_CONFIRMED">Plata dvs. nu a fost încă finalizată sau confirmată. Dacă ați plătit, reîncărcați această pagină peste câteva momente.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_NO_PROVIDER">Încă nu este disponibil niciun furnizor de plăți.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE">Plăți online</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_ONLINE_DESC">Membrii își pot plăti online cotizația restantă printr-un furnizor de plăți. Când furnizorul confirmă plata, cotizația este marcată automat ca plătită.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER">Furnizor de plăți</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_ERROR">Plata nu a putut fi inițiată. Vă rugăm să încercați din nou mai târziu.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_FAKE">Fals (doar dezvoltare)</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_PROVIDER_MOLLIE">Mollie</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL">URL webhook</string>
+    <string name="PLG_MEMBERSHIPFEE_PAYMENT_WEBHOOK_URL_DESC">Furnizorul de plăți raportează modificările de stare la această adresă. Trebuie să fie accesibilă de pe internet.</string>
+    <string name="PLG_MEMBERSHIPFEE_PAY_NOW">Plătiți acum</string>
     <string name="PLG_MEMBERSHIPFEE_PENDING">Nerecepționat</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_DATE">Status</string>
     <string name="PLG_MEMBERSHIPFEE_PLUGIN_INFORMATION">Informații despre plugin</string>
@@ -518,6 +535,7 @@
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_LAST_NAME">Numele membrului</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MANDATE_ID">Referința mandatului pentru această colecție de contribuții</string>
     <string name="PLG_MEMBERSHIPFEE_VARIABLE_MEMBERSHIP_FEE_TEXT">Scopul prevăzut</string>
+    <string name="PLG_MEMBERSHIPFEE_VARIABLE_PAYMENT_LINK">Link personal de plată online (gol dacă plățile online sunt dezactivate)</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS">Vezi definițiile</string>
     <string name="PLG_MEMBERSHIPFEE_VIEW_DEFINITIONS_HEADER">Aici puteți defini coloanele pentru vizualizările "Plăți contribuții", "Gestionarea mandatelor", "Termene de scadență" și "Facturi"".\n\n Notă: Una sau mai multe coloane sunt deja predefinite în vizualizările respective. Acestea nu pot fi mutate și nu pot fi șterse.</string>
     <string name="PLG_MEMBERSHIPFEE_WITH_ACCOUNT_DATA">cu datele contului</string>
@@ -561,5 +579,8 @@
     <string name="PMB_ORIG_IBAN">IBAN inițial</string>
     <string name="PMB_ORIG_MANDATEID">Referința mandatului inițial</string>
     <string name="PMB_PAID">Plătit</string>
+    <string name="PMB_PAYMENT_ID">ID plată</string>
+    <string name="PMB_PAYMENT_PROVIDER">Furnizor de plăți</string>
+    <string name="PMB_PAYTOKEN">Token de plată</string>
     <string name="PMB_SEQUENCETYPE">Tipul secvenței</string>
 </resources>
