@@ -128,12 +128,33 @@ installations aren't forced into a reinstall.
   through an unguessable token (`random_bytes(32)`, hex), compared with `hash_equals()`. It is
   regenerated after a successful payment, so an old link stops working. It shows no personal data
   beyond the purpose text and amount.
-- **API keys / secrets**: stored per organisation, editable only via
-  `isUserAuthorizedForPreferences()`. They are shown masked (`live_••••abcd`), never logged, never
-  echoed back into the form, and never put in mail or exports. An empty input field means "keep the
-  current key".
+- **API keys / secrets**: see *API key handling* below.
 - Amounts are passed to providers as strings with two decimals (`"25.00"`) in `EUR`. The fee is
   normalised with the existing helpers, never parsed ad hoc.
+
+## API key handling
+
+The Mollie API key is the first real secret the plugin stores. It is kept in the config section
+`mollie` (the plugin's existing storage), but treated as a secret everywhere else:
+
+- **Who:** only users with `payment_settings` (administrators by default) may view or change it.
+  The permission is checked when the panel is rendered *and* in the save handler.
+- **Never echoed back:** the form field is a password input with an empty value. Next to it, a hint
+  shows the stored key masked (`live_••••abcd`: prefix and last four characters). On save, an empty
+  field keeps the stored key.
+- **Never logged or dumped:** not in exceptions, error messages, `tests.php`, mails or exports. Error
+  texts from the provider are shown without the key.
+- **Format check on save:** the key must match `^(test|live)_[A-Za-z0-9]{30,}$`, and its prefix must
+  match the selected mode (`test_` ↔ test mode, `live_` ↔ live mode). Otherwise a validation error is
+  shown and nothing is saved. This keeps a live key from running in test mode and the reverse.
+- **Optional override:** if the environment variable `MEMBERSHIPFEE_MOLLIE_API_KEY` is set, it wins
+  over the stored key, and the panel says so and disables the field. This lets administrators who
+  can configure the server keep the key out of the database entirely. The same format check applies.
+- **Rotation:** revoke the key in the Mollie dashboard and paste the new one. Treat the key as exposed
+  if a database backup leaks.
+
+The logic (format check, mode match, masking, "empty keeps stored", override) lives in the
+Admidio-independent class `classes/Payment/Mollie/MollieApiKey.php` and is unit-tested.
 
 ## Permissions
 
@@ -200,7 +221,7 @@ keys in all language files.
    removed on uninstall.
 7. `pay.php` + `#payment_link#` mail placeholder.
 8. `payment_webhook.php`.
-9. `MollieProvider` (curl) + preferences panel.
+9. `MollieApiKey` (key handling, unit-tested), then `MollieProvider` (curl) + preferences panel.
 10. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
 
 ## Decisions
