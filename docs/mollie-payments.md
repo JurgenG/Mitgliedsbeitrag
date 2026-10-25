@@ -139,9 +139,10 @@ All strings go through `$gL10n` with new `PLG_MEMBERSHIPFEE_MOLLIE_*` keys in al
 8. `MollieProvider` (curl) + preferences panel.
 9. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
 
-## Open questions
+## Decisions
 
-- Should the upstream maintainer accept this as an optional module? To be raised in an upstream
-  issue before step 2.
-- Who pays transaction costs? Phase 1 assumes the association does, so no surcharge.
-- Payment date: Mollie's `paidAt` (proposed) or the webhook processing date?
+- **Upstream:** developed in the `JurgenG` fork first; offered upstream once it works end to end.
+- **Transaction costs:** included in the membership fee. No surcharge; the member pays exactly
+  `FEE{org}`.
+- **Payment date:** `PAID{org}` is set to Mollie's `paidAt` (date part, organisation timezone), not
+  the webhook processing date, so late webhook retries don't shift the date.
