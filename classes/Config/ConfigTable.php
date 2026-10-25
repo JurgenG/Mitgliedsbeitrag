@@ -10,15 +10,15 @@
  */
 
 /******************************************************************************
- * Klasse verwaltet die Konfigurationstabelle "adm_plugin_preferences"
+ * Class manages the configuration table "adm_plugin_preferences"
  *
- * Folgende Methoden stehen zur Verfuegung:
+ * The following methods are available:
  *
- * init()                       :   prueft, ob die Konfigurationstabelle existiert,
- *                                  legt sie ggf. an und befuellt sie mit Default-Werten
- * save()                       :   schreibt die Konfiguration in die Datenbank
- * read()                       :   liest die Konfigurationsdaten aus der Datenbank
- * checkforupdate()             :   vergleicht die Angaben in der Datei version.php mit den Daten in der DB
+ * init()                       :   checks whether the configuration table exists,
+ *                                  creates it if necessary and fills it with default values
+ * save()                       :   writes the configuration to the database
+ * read()                       :   reads the configuration data from the database
+ * checkforupdate()             :   compares the data in the file version.php with the data in the DB
  *
  *****************************************************************************/
 
@@ -26,7 +26,7 @@ namespace Plugins\MembershipFee\classes\Config;
  
 class ConfigTable
 {
-    public $config = array();     ///< Array mit allen Konfigurationsdaten
+    public $config = array();     ///< Array with all configuration data
 
     protected $table_name;
     protected static $shortcut =  'PMB';
@@ -64,19 +64,19 @@ class ConfigTable
     }
 
     /**
-     * Prueft, ob die Konfigurationstabelle existiert, legt sie ggf an und befuellt sie mit Standardwerten
+     * Checks whether the configuration table exists, creates it if necessary and fills it with default values
      * @return void
      */
     public function init()
     {
-        // pruefen, ob es die Tabelle bereits gibt
+        // check whether the table already exists
         $sql = 'SELECT * FROM '.$this->table_name;
         $pdoStatement = $GLOBALS['gDb']->queryPrepared($sql, array(), false);
 
         // Check the query for results in case installation is running at this time and the config file is already created but database is not installed so far
         if ($pdoStatement === false)
         {
-            // Tabelle ist nicht vorhanden --> anlegen
+            // table does not exist --> create it
             $sql = 'CREATE TABLE '.$this->table_name.' (
                 plp_id      integer     unsigned not null AUTO_INCREMENT,
                 plp_org_id  integer     unsigned not null,
@@ -95,23 +95,23 @@ class ConfigTable
         $this->config['Plugininformationen']['version'] = self::$version;
         $this->config['Plugininformationen']['stand'] = self::$stand;
 
-        // die eingelesenen Konfigurationsdaten in ein Arbeitsarray kopieren
+        // copy the loaded configuration data into a working array
         $config_ist = $this->config;
 
-        // die Default-config durchlaufen
+        // iterate through the default config
         foreach ($this->config_default as $section => $sectiondata)
         {
             foreach ($sectiondata as $key => $value)
             {
-                // gibt es diese Sektion bereits in der config?
+                // does this section already exist in the config?
                 if (isset($config_ist[$section][$key]))
                 {
-                    // wenn ja, diese Sektion in der Ist-config loeschen
+                    // if yes, remove this section from the actual config
                     unset($config_ist[$section][$key]);
                 }
                 else
                 {
-                    // wenn nicht, diese Sektion in der config anlegen und mit den Standardwerten aus der Soll-config befuellen
+                    // if not, create this section in the config and fill it with the default values from the target config
                     $this->config[$section][$key] = $value;
                 }
             }
@@ -122,10 +122,10 @@ class ConfigTable
             }
         }
 
-        // die Ist-config durchlaufen
-        // jetzt befinden sich hier nur noch die DB-Eintraege, die nicht verwendet werden und deshalb:
-        // 1. in der DB geloescht werden koennen
-        // 2. in der normalen config geloescht werden koennen
+        // iterate through the actual config
+        // now only the DB entries that are not used remain here, and therefore:
+        // 1. can be deleted in the DB
+        // 2. can be deleted in the normal config
         foreach ($config_ist as $section => $sectiondata)
         {
             foreach ($sectiondata as $key => $value)
@@ -145,12 +145,12 @@ class ConfigTable
             }
         }
 
-        // die aktualisierten und bereinigten Konfigurationsdaten in die DB schreiben
+        // write the updated and cleaned configuration data to the DB
         $this->save();
     }
 
     /**
-     * Schreibt die Konfigurationsdaten in die Datenbank
+     * Writes the configuration data to the database
      * @return void
      */
     public function save()
@@ -161,7 +161,7 @@ class ConfigTable
             {
                 if (is_array($value))
                 {
-                    // um diesen Datensatz in der Datenbank als Array zu kennzeichnen, wird er von Doppelklammern eingeschlossen
+                    // to mark this record as an array in the database, it is enclosed in double parentheses
                     $value = '(('.implode(self::$dbtoken, $value).'))';
                 }
 
@@ -175,8 +175,8 @@ class ConfigTable
             	$statement = $GLOBALS['gDb']->queryPrepared($sql, array($plp_name, $GLOBALS['gCurrentOrgId']));
                 $row = $statement->fetchObject();
 
-                // Gibt es den Datensatz bereits?
-                // wenn ja: UPDATE des bestehende Datensatzes
+                // Does the record already exist?
+                // if yes: UPDATE the existing record
                 if (isset($row->plp_id) && strlen($row->plp_id) > 0)
                 {
                     $sql = 'UPDATE '.$this->table_name.'
@@ -184,7 +184,7 @@ class ConfigTable
                 			 WHERE plp_id = ? ';
                     $GLOBALS['gDb']->queryPrepared($sql, array($value, $row->plp_id));
                 }
-                // wenn nicht: INSERT eines neuen Datensatzes
+                // if not: INSERT a new record
                 else
                 {
                     $sql = 'INSERT INTO '.$this->table_name.' (plp_org_id, plp_name, plp_value)
@@ -196,7 +196,7 @@ class ConfigTable
     }
 
     /**
-     * Liest die Konfigurationsdaten aus der Datenbank
+     * Reads the configuration data from the database
      * @return void
      */
     public function read()
@@ -212,7 +212,7 @@ class ConfigTable
         {
             $array = explode('__', $row['plp_name']);
 
-            // wenn plp_value von ((  )) eingeschlossen ist, dann ist es als Array einzulesen
+            // if plp_value is enclosed in ((  )), it has to be read as an array
             if ((substr($row['plp_value'], 0, 2) == '((') && (substr($row['plp_value'], -2) == '))'))
             {
                 $row['plp_value'] = substr($row['plp_value'], 2, -2);
@@ -226,17 +226,17 @@ class ConfigTable
     }
 
     /**
-     * Vergleicht die Daten in der version.php mit den Daten in der DB
+     * Compares the data in version.php with the data in the DB
      * @return int  $ret<br/>
-     *              0 = kein Update erforderlich<br/>
-     *              1 = Versionen von Stand und Datum sind unterschiedlich: Init-Routine durchlaufen<br/>
-     *              2 = Struktur der DB unterschiedlich: Install-Routine durchlaufen
+     *              0 = no update required<br/>
+     *              1 = versions of status and date differ: run init routine<br/>
+     *              2 = DB structure differs: run install routine
      */
     public function checkforupdate()
     {
         $ret = 0;
 
-        // pruefen, ob es die Konfigurationstabelle gibt
+        // check whether the configuration table exists
         $sql = 'SELECT * FROM '.$this->table_name;
         $pdoStatement = $GLOBALS['gDb']->queryPrepared($sql, array(), false);
 
@@ -281,7 +281,7 @@ class ConfigTable
             $ret = 2;
         }
 
-        // einen Suchstring fuer die SQL-Abfrage aufbereiten
+        // prepare a search string for the SQL query
         $fieldsarray = array();
         $fieldsarray[] = 'MEMBERNUMBER'.$GLOBALS['gCurrentOrgId'];
         $fieldsarray[] = 'ACCESSION'.$GLOBALS['gCurrentOrgId'];
@@ -311,7 +311,7 @@ class ConfigTable
         }
         $fieldsString = substr($fieldsString, 0, -1);
 
-        // pruefen, ob alle erforderlichen Profilfelder des Plugins vorhanden sind
+        // check whether all required profile fields of the plugin exist
         $sql = 'SELECT DISTINCT usf_id
                   FROM '.TBL_USER_FIELDS.' , '. TBL_CATEGORIES.  '
                  WHERE usf_name_intern IN ('.$fieldsString.')
@@ -328,7 +328,7 @@ class ConfigTable
     }
     
     /**
-	 * Liest alle Zugriffsrollen ein die in der Konfigurationstabelle gespeichert sind
+	 * Reads all access roles stored in the configuration table
 	 * @return  array $data
 	 */
      
@@ -352,8 +352,8 @@ class ConfigTable
 	}
 	
 	/**
-	 * Ermittelt die Anzahl der Installationen dieses Plugins
-	 * @return  int Anzahl
+	 * Determines the number of installations of this plugin
+	 * @return  int number
 	 */
 	
 	public function getAllPluginInstallations()

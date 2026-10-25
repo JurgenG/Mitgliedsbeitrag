@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Rollenübersicht fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Role overview for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

@@ -125,9 +125,9 @@ class Membernumbers
      		$sqlRoleCond =  'AND rol_id IN ('.Database::getQmForValues($roleIds).')';
      	}
 
-     	// usr_id, Name, Vorname und Mitgliedsnummer einlesen von Mitgliedern,
-     	// die 1. keine Mitgliedsnummer besitzen
-     	// oder 2. eine Mitgliedsnummer < 1 besitzen
+     	// read usr_id, last name, first name and member number of members
+     	// who 1. have no member number
+     	// or 2. have a member number < 1
      	$sql = 'SELECT usr_id, last_name.usd_value AS last_name, first_name.usd_value AS first_name, membernumber.usd_value AS membernumber
                   FROM '.TBL_USERS.'
              LEFT JOIN '.TBL_USER_DATA.' AS last_name
@@ -193,9 +193,9 @@ class Membernumbers
     		$membernumberCounter = 1;
     		$memberCounter = 0;
 
-    		if (!$fillGaps)                       //Lücken in den Mitgliedsnummern nicht auffüllen
+    		if (!$fillGaps)                       //Do not fill gaps in the member numbers
     		{
-    		    //wenn die Lücken in den Mitgliedsnumern nicht aufgefüllt werden sollen, dann muss die höchste bereits vergebene Mitgliedsnummer ausgelesen werden
+    		    //if the gaps in the member numbers are not to be filled, the highest member number already assigned must be read
 
     		    // Arbeitsarray erzeugen
     		    $workmNumbers = array();
@@ -217,7 +217,7 @@ class Membernumbers
     		            }
     		        }
     		    }
-    		    // Startindex für Mitgliedsnummern bestimmen
+    		    // determine start index for member numbers
     		    $membernumberCounter = max($workmNumbers)+1;
     		}
 
@@ -259,7 +259,7 @@ class Membernumbers
      */
     public function separateFormatSegment($formatText = '')
     {
-    	//$formatText darf nicht leer sein und muss Zeichen fuer lfd. Nummer enthalten
+    	//$formatText must not be empty and must contain characters for the sequential number
     	if ($formatText != '' && strstr($formatText, '#') != false)
     	{
     		$firstHash = strpos($formatText, '#');

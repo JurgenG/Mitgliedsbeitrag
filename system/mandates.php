@@ -1,23 +1,23 @@
 <?php
 /**
  ***********************************************************************************************
- * Setzen eines Mandatsdatums fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Setting a mandate date for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
  *
- * Hinweis:   mandates.php ist eine modifizierte members_assignment.php
+ * Note:   mandates.php is a modified members_assignment.php
  *
  * Parameters:
  *
- * mode             : html   - Standardmodus zun Anzeigen einer html-Liste aller Benutzer mit Beitraegen
- *                    assign - Setzen eines Mandatsdatums
- * usr_id           : Id des Benutzers, fuer den das Mandatsdatum gesetzt/geloescht wird
+ * mode             : html   - default mode for displaying an html list of all users with fees
+ *                    assign - set a mandate date
+ * usr_id           : ID of the user for whom the mandate date is set/deleted
  * datum_neu        : Mandatsdatum
- * mem_show_choice  : 0 - (Default) Alle Benutzer anzeigen
- *                    1 - Nur Benutzer anzeigen, bei denen ein Mandatsdatum vorhanden ist
- *                    2 - Nur Benutzer anzeigen, bei denen kein Mandatsdatum vorhanden ist
+ * mem_show_choice  : 0 - (Default) Show all users
+ *                    1 - Show only users who have a mandate date
+ *                    2 - Show only users who have no mandate date
  ***********************************************************************************************
  */
 
@@ -57,7 +57,7 @@ if ($getMode == 'assign')
     $ret_text = 'ERROR';
 
     $userArray = array();
-    if ($getUserId != 0)           // Mandatsdatum nur fuer einen einzigen User aendern
+    if ($getUserId != 0)           // change the mandate date for a single user only
     {
         $userArray[0] = $getUserId;
     }
@@ -72,15 +72,15 @@ if ($getMode == 'assign')
         {
             $user->readDataById($data);
 
-            //zuerst mal sehen, ob bei diesem user bereits ein Mandatsdatum vorhanden ist
+            //first check whether this user already has a mandate date
             if (strlen($user->getValue('MANDATEDATE'.$gCurrentOrgId)) === 0)
             {
-                //er hat noch kein Mandatsdatum, deshalb ein neues eintragen
+                //he has no mandate date yet, so enter a new one
                 $user->setValue('MANDATEDATE'.$gCurrentOrgId, $getDatumNeu);
             }
             else
             {
-                //er hat bereits ein Mandatsdatum, deshalb das vorhandene loeschen
+                //he already has a mandate date, so delete the existing one
                 $user->setValue('MANDATEDATE'.$gCurrentOrgId, '');
             }
 
@@ -99,7 +99,7 @@ else
     $userArray = array();
     $membersList = array();
    
-    $membersListFields = array_filter($pPreferences->config['columnconfig']['mandates_fields']);                //array_filter: l�schen leerer Eintr�ge, falls das Setup fehlgeschlagen ist 
+    $membersListFields = array_filter($pPreferences->config['columnconfig']['mandates_fields']);                //array_filter: delete empty entries in case the setup failed 
     
     $membersListSqlCondition = 'AND mem_usr_id IN (SELECT DISTINCT usr_id
         FROM '. TBL_USERS. '
@@ -121,15 +121,15 @@ else
        WHERE iban.usd_value IS NOT NULL
          AND mandateid.usd_value IS NOT NULL ';
     
-    if ($getMembersShow == 1)                   // Nur Benutzer anzeigen, bei denen ein Mandatsdatum vorhanden ist
+    if ($getMembersShow == 1)                   // Show only users who have a mandate date
     {
     	$membersListSqlCondition .= ' AND mandatedate.usd_value IS NOT NULL ) ';
     }
-    elseif ($getMembersShow == 2)				// Nur Benutzer anzeigen, bei denen kein Mandatsdatum vorhanden ist
+    elseif ($getMembersShow == 2)				// Show only users who have no mandate date
     {
     	$membersListSqlCondition .= ' AND mandatedate.usd_value IS NULL ) ';
     }
-    else 										// Alle Benutzer anzeigen
+    else 										// Show all users
     {
     	$membersListSqlCondition .= ' ) ';
     }
@@ -257,7 +257,7 @@ else
     		}
     		$columnValues[] = $columnHeader;
     	}  // End-Foreach
-    	break;							// Abbruch nach dem ersten Mitglied, da nur die usfIds eines Mitglieds benoetigt werden um die headlines zu erzeugen
+    	break;							// abort after the first member, since only the usfIds of one member are needed to create the headlines
     }
     
     $table->setColumnAlignByArray($columnAlign);

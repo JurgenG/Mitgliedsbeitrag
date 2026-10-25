@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Anzeige von Prüfungen fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Display of checks for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -32,7 +32,7 @@ $gNavigation->addUrl(CURRENT_URL, $headline);
 
 $page = new HtmlPage('plg-mitgliedsbeitrag-tests', $headline);
 
-//Prüfungen nur anzeigen, wenn mindestens ein Einzeltest aktiviert ist
+// Only show checks if at least one individual test is enabled
 if (in_array(1, $pPreferences->config['tests_enable']))
 {
     $form = new HtmlForm('tests_form', '', $page);
@@ -45,7 +45,7 @@ if (in_array(1, $pPreferences->config['tests_enable']))
         $form->closeGroupBox();
     }
     
-    // Pruefung der Rollenmitgliedschaften in den altersgestaffelten Rollen nur, wenn es mehrere Staffelungen gibt
+    // Check the role memberships in the age-staggered roles only if there are several staggerings
     if ($pPreferences->config['tests_enable']['role_membership_age_staggered_roles'] && count($pPreferences->config['Altersrollen']['altersrollen_token']) > 1)
     {
         $form->openGroupBox('role_membership_AGE_STAGGERed_roles', $gL10n->get('PLG_MEMBERSHIPFEE_ROLE_MEMBERSHIP_AGE_STAGGERED_ROLES'));

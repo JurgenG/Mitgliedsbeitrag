@@ -9,9 +9,9 @@
  *
  * Parameters:
  *
- * mode         : start     - Startbildschirm anzeigen
- *                anlegen   - Fehlende Kategorien und Profilfelder anlegen
- *                soll_ist  - Anzeige des Soll/Ist-Vergleiches
+ * mode         : start     - show start screen
+ *                anlegen   - create missing categories and profile fields
+ *                soll_ist  - show the target/actual comparison
  ***********************************************************************************************
  */
 use Admidio\Infrastructure\Entity\Entity;
@@ -42,7 +42,7 @@ $getMode = admFuncVariableIsValid($_GET, 'mode', 'string', array(
 if ($getMode == 'anlegen') {
     $arr = check_DB();
 
-    // pruefen, ob es die Kategorie Mitgliedschaft gibt, wenn nicht: anlegen
+    // check whether the category Mitgliedschaft exists, if not: create it
     if (! isset($arr['IST']['TBL_CATEGORIES']['Mitgliedschaft']['cat_id'])) {
         $nextCatSequence = getNextCatSequence('USF');
         setCategory($arr['SOLL']['TBL_CATEGORIES']['Mitgliedschaft'], $nextCatSequence);
@@ -51,18 +51,18 @@ if ($getMode == 'anlegen') {
     $cat_id_mitgliedschaft = getCat_IDPMB('MEMBERSHIP' . $gCurrentOrgId);
     $nextFieldSequence = getNextFieldSequence($cat_id_mitgliedschaft);
 
-    // pruefen, ob es das Profilfeld Mitgliedsnummer gibt, wenn nicht: anlegen
+    // check whether the profile field Mitgliedsnummer exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Mitgliedsnummer']['usf_name'])) {
         setUserField($cat_id_mitgliedschaft, $arr['SOLL']['TBL_USER_FIELDS']['Mitgliedsnummer'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Beitritt gibt, wenn nicht: anlegen
+    // check whether the profile field Beitritt exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Beitritt']['usf_name'])) {
         setUserField($cat_id_mitgliedschaft, $arr['SOLL']['TBL_USER_FIELDS']['Beitritt'], $nextFieldSequence);
     }
 
-    // pruefen, ob es die Kategorie Mitgliedsbeitrag gibt, wenn nicht: anlegen
+    // check whether the category Mitgliedsbeitrag exists, if not: create it
     if (! isset($arr['IST']['TBL_CATEGORIES']['Mitgliedsbeitrag']['cat_id'])) {
         $nextCatSequence = getNextCatSequence('USF');
         setCategory($arr['SOLL']['TBL_CATEGORIES']['Mitgliedsbeitrag'], $nextCatSequence);
@@ -71,36 +71,36 @@ if ($getMode == 'anlegen') {
     $cat_id_mitgliedsbeitrag = getCat_IDPMB('MEMBERSHIP_FEE' . $gCurrentOrgId);
     $nextFieldSequence = getNextFieldSequence($cat_id_mitgliedsbeitrag);
 
-    // pruefen, ob es das Profilfeld Bezahlt gibt, wenn nicht: anlegen
+    // check whether the profile field Bezahlt exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Bezahlt']['usf_name'])) {
         setUserField($cat_id_mitgliedsbeitrag, $arr['SOLL']['TBL_USER_FIELDS']['Bezahlt'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Beitrag gibt, wenn nicht: anlegen
+    // check whether the profile field Beitrag exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Beitrag']['usf_name'])) {
         setUserField($cat_id_mitgliedsbeitrag, $arr['SOLL']['TBL_USER_FIELDS']['Beitrag'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Beitragstext gibt, wenn nicht: anlegen
+    // check whether the profile field Beitragstext exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Beitragstext']['usf_name'])) {
         setUserField($cat_id_mitgliedsbeitrag, $arr['SOLL']['TBL_USER_FIELDS']['Beitragstext'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Sequenztyp gibt, wenn nicht: anlegen
+    // check whether the profile field Sequenztyp exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Sequenztyp']['usf_name'])) {
         setUserField($cat_id_mitgliedsbeitrag, $arr['SOLL']['TBL_USER_FIELDS']['Sequenztyp'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Faelligkeitsdatum gibt, wenn nicht: anlegen
+    // check whether the profile field Faelligkeitsdatum exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Faelligkeitsdatum']['usf_name'])) {
         setUserField($cat_id_mitgliedsbeitrag, $arr['SOLL']['TBL_USER_FIELDS']['Faelligkeitsdatum'], $nextFieldSequence);
     }
 
-    // pruefen, ob es die Kategorie Mandat gibt, wenn nicht: anlegen
+    // check whether the category Mandat exists, if not: create it
     if (! isset($arr['IST']['TBL_CATEGORIES']['Mandat']['cat_id'])) {
         $nextCatSequence = getNextCatSequence('USF');
         setCategory($arr['SOLL']['TBL_CATEGORIES']['Mandat'], $nextCatSequence);
@@ -109,24 +109,24 @@ if ($getMode == 'anlegen') {
     $cat_id_mandat = getCat_IDPMB('MANDATE' . $gCurrentOrgId);
     $nextFieldSequence = getNextFieldSequence($cat_id_mandat);
 
-    // pruefen, ob es das Profilfeld Mandatsreferenz gibt, wenn nicht: anlegen
+    // check whether the profile field Mandatsreferenz exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Mandatsreferenz']['usf_name'])) {
         setUserField($cat_id_mandat, $arr['SOLL']['TBL_USER_FIELDS']['Mandatsreferenz'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Mandatsdatum gibt, wenn nicht: anlegen
+    // check whether the profile field Mandatsdatum exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Mandatsdatum']['usf_name'])) {
         setUserField($cat_id_mandat, $arr['SOLL']['TBL_USER_FIELDS']['Mandatsdatum'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Orig_Mandatsreferenz gibt, wenn nicht: anlegen
+    // check whether the profile field Orig_Mandatsreferenz exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Orig_Mandatsreferenz']['usf_name'])) {
         setUserField($cat_id_mandat, $arr['SOLL']['TBL_USER_FIELDS']['Orig_Mandatsreferenz'], $nextFieldSequence);
     }
 
-    // pruefen, ob es die Kategorie Kontodaten gibt, wenn nicht: anlegen
+    // check whether the category Kontodaten exists, if not: create it
     if (! isset($arr['IST']['TBL_CATEGORIES']['Kontodaten']['cat_id'])) {
         $nextCatSequence = getNextCatSequence('USF');
         setCategory($arr['SOLL']['TBL_CATEGORIES']['Kontodaten'], $nextCatSequence);
@@ -135,59 +135,59 @@ if ($getMode == 'anlegen') {
     $cat_id_kontodaten = getCat_IDPMB('ACCOUNT_DATA');
     $nextFieldSequence = getNextFieldSequence($cat_id_kontodaten);
 
-    // pruefen, ob es das Profilfeld IBAN gibt, wenn nicht: anlegen
+    // check whether the profile field IBAN exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['IBAN']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['IBAN'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
-    // pruefen, ob es das Profilfeld BIC gibt, wenn nicht: anlegen
+    // check whether the profile field BIC exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['BIC']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['BIC'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Bankname gibt, wenn nicht: anlegen
+    // check whether the profile field Bankname exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Bankname']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['Bankname'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Kontoinhaber gibt, wenn nicht: anlegen
+    // check whether the profile field Kontoinhaber exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Kontoinhaber']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['Kontoinhaber'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld KontoinhaberStrasse gibt, wenn nicht: anlegen
+    // check whether the profile field KontoinhaberStrasse exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['KontoinhaberStrasse']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['KontoinhaberStrasse'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld KontoinhaberPLZ gibt, wenn nicht: anlegen
+    // check whether the profile field KontoinhaberPLZ exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['KontoinhaberPLZ']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['KontoinhaberPLZ'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld KontoinhaberOrt gibt, wenn nicht: anlegen
+    // check whether the profile field KontoinhaberOrt exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['KontoinhaberOrt']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['KontoinhaberOrt'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld KontoinhaberEMail gibt, wenn nicht: anlegen
+    // check whether the profile field KontoinhaberEMail exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['KontoinhaberEMail']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['KontoinhaberEMail'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
 
-    // pruefen, ob es das Profilfeld Orig_Debtor_Agent gibt, wenn nicht: anlegen
+    // check whether the profile field Orig_Debtor_Agent exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Orig_Debtor_Agent']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['Orig_Debtor_Agent'], $nextFieldSequence);
         $nextFieldSequence ++;
     }
-    // pruefen, ob es das Profilfeld Orig_IBAN gibt, wenn nicht: anlegen
+    // check whether the profile field Orig_IBAN exists, if not: create it
     if (! isset($arr['IST']['TBL_USER_FIELDS']['Orig_IBAN']['usf_name'])) {
         setUserField($cat_id_kontodaten, $arr['SOLL']['TBL_USER_FIELDS']['Orig_IBAN'], $nextFieldSequence);
     }
@@ -400,7 +400,7 @@ if ($getMode == 'start' || $getMode == 'anlegen') // Default: start
         $form->addDescription('<strong>' . $gL10n->get('PLG_MEMBERSHIPFEE_ABORT') . '</strong> ' . $gL10n->get('PLG_MEMBERSHIPFEE_NO_CHANGES'));
     } else {
         $pPreferences = new ConfigTable();
-        $pPreferences->init(); // Konfigurationstabelle anlegen
+        $pPreferences->init(); // create configuration table
 
         $form->addDescription($gL10n->get('PLG_MEMBERSHIPFEE_ALL_FIELDS_ARE_AVAILABLE'));
         $form->addButton('btnSollIst', $gL10n->get('SYS_NEXT'), array(
@@ -608,10 +608,10 @@ if ($getMode == 'start' || $getMode == 'anlegen') // Default: start
     $page->show();
 }
 
-// Funktionen, die nur in diesem Script benoetigt werden
+// Functions that are only needed in this script
 
 /**
- * Prueft die Datenbank auf fehlende Profilfelder und Kategorien
+ * Checks the database for missing profile fields and categories
  *
  * @return array $DB_array
  */
@@ -619,7 +619,7 @@ function check_DB()
 {
     global $gProfileFields;
 
-    // $DB_array['SOLL'] beinhaltet die erforderlichen Werte fuer die Kategorien und die User Fields
+    // $DB_array['SOLL'] contains the required values for the categories and the user fields
     $DB_array['SOLL']['TBL_CATEGORIES']['Kontodaten'] = array(
         'cat_org_id' => 'Null',
         'cat_name' => 'PMB_ACCOUNT_DATA',
@@ -909,7 +909,7 @@ function check_DB()
 }
 
 /**
- * Erzeugt die Texte fuer den Soll-Ist-Vergleich der Profilfelder
+ * Creates the texts for the target/actual comparison of the profile fields
  *
  * @param array $arr
  * @param string $field
@@ -987,7 +987,7 @@ function SollIstProfilfeld($arr, $field)
 }
 
 /**
- * Erzeugt die Texte fuer den Soll-Ist-Vergleich der Kategorien
+ * Creates the texts for the target/actual comparison of the categories
  *
  * @param array $arr
  * @param string $field
@@ -1012,11 +1012,11 @@ function SollIstKategorie($arr, $field)
 }
 
 /**
- * Erzeugt den naechsten freien Wert fuer cat_sequence
+ * Creates the next free value for cat_sequence
  *
  * @param string $cat_type
- *            Kategorietyp
- * @return int Der naechste freie Wert fuer cat_sequence
+ *            Category type
+ * @return int The next free value for cat_sequence
  */
 function getNextCatSequence($cat_type)
 {
@@ -1036,11 +1036,11 @@ function getNextCatSequence($cat_type)
 }
 
 /**
- * Erzeugt den naechsten freien Wert fuer usf_sequence
+ * Creates the next free value for usf_sequence
  *
  * @param int $usf_cat_id
  *            Cat_Id
- * @return int Der naechste freie Wert fuer usf_sequence
+ * @return int The next free value for usf_sequence
  */
 function getNextFieldSequence($usf_cat_id)
 {
@@ -1060,11 +1060,11 @@ function getNextFieldSequence($usf_cat_id)
 }
 
 /**
- * Gibt zu einem Kategorienamen die entsprechende Cat_ID zurueck
+ * Returns the corresponding Cat_ID for a category name
  *
  * @param string $cat_name_intern
- *            Name der zu pruefenden Kategorie
- * @return int cat_id Cat_id der Kategorie
+ *            Name of the category to check
+ * @return int cat_id Cat_id of the category
  */
 function getCat_IDPMB($cat_name_intern)
 {
@@ -1082,12 +1082,12 @@ function getCat_IDPMB($cat_name_intern)
 }
 
 /**
- * Erzeugt eine Kategorie in der Tabelle TBL_CATEGORIES
+ * Creates a category in the table TBL_CATEGORIES
  *
  * @param array $arr
- *            Array mit Werten für die Spalten
+ *            Array with values for the columns
  * @param int $sequence
- *            Neue Sequence der anzulegenden Kategorie
+ *            New sequence of the category to be created
  * @return void
  */
 function setCategory($arr, $sequence)
@@ -1104,14 +1104,14 @@ function setCategory($arr, $sequence)
 }
 
 /**
- * Erzeugt ein Profilfeld in der Tabelle TBL_USER_FIELDS
+ * Creates a profile field in the table TBL_USER_FIELDS
  *
  * @param int $cat_id
- *            Cat_Id der Kategorie, in der das Profilfeld angelegt wird
+ *            Cat_Id of the category in which the profile field is created
  * @param array $arr
- *            Array mit Werten für die Spalten
+ *            Array with values for the columns
  * @param int $sequence
- *            Neue Sequence des anzulegenden Profilfeldes
+ *            New sequence of the profile field to be created
  * @return void
  */
 function setUserField($cat_id, $arr, $sequence)

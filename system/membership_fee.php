@@ -36,7 +36,7 @@ try {
     $duedates = array();
     $directdebittype = false;
 
-    // alle Mitglieder einlesen
+    // read all members
     $members = list_members(array(
         'DUEDATE' . $gCurrentOrgId,
         'SEQUENCETYPE' . $gCurrentOrgId,
@@ -49,9 +49,9 @@ try {
         'BIC'
     ), 0);
 
-    // jetzt wird gezaehlt
+    // now count
     foreach ($members as $member => $memberdata) {
-        // alle Faelligkeitsdaten einlesen
+        // read all due dates
         if (! empty($memberdata['DUEDATE' . $gCurrentOrgId]) && ! empty($memberdata['FEE' . $gCurrentOrgId]) && empty($memberdata['PAID' . $gCurrentOrgId]) && 
         // && !empty($memberdata['CONTRIBUTORY_TEXT'.$gCurrentOrgId])
         ! empty($memberdata['IBAN'])) {
@@ -147,7 +147,7 @@ try {
     $fixrollen = beitragsrollen_einlesen('fix');
     $alt_fix_rollen = $altersrollen + $fixrollen;
 
-    // das Array fuer die Auswahl der Profilfelder plus evtl. Zusatzfelder erzeugen
+    // create the array for selecting the profile fields plus any additional fields
     $fieldSelectionList = array();
     $i = 1;
     foreach ($gProfileFields->getProfileFields() as $field) {
@@ -189,7 +189,7 @@ try {
         var creditor = $("input[type=text]#creditor").val();
         var origcreditor = $("input[type=text]#origcreditor").val(creditor);
         $("input[type=text]#creditor").val("");
-    };'); // !!!: ohne true
+    };'); // !!!: without true
 
     $page->addJavascript('
      $(".form-preferences").submit(function(event) {
@@ -250,7 +250,7 @@ try {
         var arr_default_fields' . $conf . ' = createColumnsArray' . $conf . '();
         var fieldNumberIntern' . $conf . '  = 0;
 
-    	// Funktion fuegt eine neue Zeile zum Zuordnen von Spalten fuer die Liste hinzu
+    	// Function adds a new row for assigning columns to the list
     	function addColumn' . $conf . '()
     	{
         	var category = "";
@@ -258,11 +258,11 @@ try {
         	var table = document.getElementById("mylist_fields_tbody' . $conf . '");
         	var newTableRow = table.insertRow(fieldNumberIntern' . $conf . ');
         	newTableRow.setAttribute("id", "row" + (fieldNumberIntern' . $conf . ' + 1))
-        	//$(newTableRow).css("display", "none"); // ausgebaut wg. Kompatibilitaetsproblemen im IE8
+        	//$(newTableRow).css("display", "none"); // removed due to compatibility problems with IE8
         	var newCellCount = newTableRow.insertCell(-1);
         	newCellCount.innerHTML = (fieldNumberShow) + ".&nbsp;' . $gL10n->get('SYS_COLUMN') . '&nbsp;:";
 
-        	// neue Spalte zur Auswahl des Profilfeldes
+        	// new column for selecting the profile field
         	var newCellField = newTableRow.insertCell(-1);
         	htmlCboFields = "<select class=\"form-control\"  size=\"1\" id=\"column" + fieldNumberShow + "\" class=\"ListProfileField\" name=\"column' . $conf . '_" + fieldNumberShow + "\">" +
                 "<option value=\"\"></option>";
@@ -280,8 +280,8 @@ try {
 
             	var selected = "";
 
-            	// bei gespeicherten Listen das entsprechende Profilfeld selektieren
-            	// und den Feldnamen dem Listenarray hinzufuegen
+            	// for saved lists, select the corresponding profile field
+            	// and add the field name to the list array
             	if(arr_default_fields' . $conf . '[fieldNumberIntern' . $conf . '])
             	{
                 	if(arr_user_fields[counter]["id"] == arr_default_fields' . $conf . '[fieldNumberIntern' . $conf . ']["id"])
@@ -734,7 +734,7 @@ try {
 
         // PANEL: TESTS
 
-        // Panel Tests nur anzeigen, wenn mindestens ein Einzeltest aktiviert ist
+        // Only show the tests panel if at least one individual test is enabled
         if (in_array(1, $pPreferences->config['tests_enable'])) {
             $formTests = new HtmlForm('tests_form', '', $page);
             $formTests->addButton('btn_tests', $gL10n->get('PLG_MEMBERSHIPFEE_TESTS'), array(
@@ -1251,8 +1251,8 @@ try {
             $configSelection = array();
             $i = 0;
             foreach ($gProfileFields->getProfileFields() as $field) {
-                // normalerweise sollte für das "Datenfeld für die laufende Nummer" ein Profilfeld mit einer laufenden Nummer (Mitgliedsnummer oder UserID) gewählt werden
-                // LAST_NAME oder DEBTOR z.B. darf nicht gewählt werden, da dies zu einem SQL-FEHLER in der Funktion list_members führt
+                // normally a profile field with a sequential number (member number or UserID) should be chosen for the "data field for the sequential number"
+                // LAST_NAME or DEBTOR, for example, must not be chosen, as this leads to an SQL ERROR in the function list_members
                 if (in_array($field->getValue('usf_name_intern'), array(
                     'LAST_NAME',
                     'FIRST_NAME',
@@ -1581,11 +1581,11 @@ try {
                 }
                 if (count($fixrollen) > 1) {
                     $fixrollenL = $fixrollen;
-                    array_pop($fixrollenL); // das letzte Element entfernen
+                    array_pop($fixrollenL); // remove the last element
                     $fixrollenR = $fixrollen;
 
                     foreach ($fixrollenL as $keyL => $dataL) {
-                        unset($fixrollenR[$keyL]); // dasselbe Element entfernen
+                        unset($fixrollenR[$keyL]); // remove the same element
                         foreach ($fixrollenR as $keyR => $dataR) {
                             $formTestsSetup->addCheckbox('fixrollenfixrollen' . $keyL . '_' . $keyR, $dataL['rolle'] . ' ./. ' . $dataR['rolle'], (in_array($keyL . '_' . $keyR, $pPreferences->config['Rollenpruefung']['fixrollenfixrollen']) ? 1 : 0));
                         }

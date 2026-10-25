@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Erzeugt ein Modal-Fenster um neu erzeugte Beiträge und Beitragstexte zu editieren
+ * Creates a modal window to edit newly generated fees and fee texts
  *
  * @copyright The Admidio Team
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
@@ -11,9 +11,9 @@
 /******************************************************************************
  * Parameters:
  *
- * user_id    : User_Id des Benutzer, dessen Daten angezeigt werden
- * mode       : edit  - editieren von Text und Beitragstext
- *              savew - speichern von Text und Beitragstext
+ * user_id    : User_Id of the user whose data is displayed
+ * mode       : edit  - edit text and fee text
+ *              savew - save text and fee text
  *
  *****************************************************************************/
 

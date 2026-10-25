@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Neuberechnung der Mitgliedsbeitraege
+ * Recalculation of the membership fees
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -62,12 +62,12 @@ if ($getMode == 'preview') // Default
     $members = array();
     $message = '';
 
-    // anstelle eines Leerzeichens ist ein # in der $pPreferences->config gespeichert; # wird hier wieder ersetzt
+    // a # is stored in $pPreferences->config instead of a space; # is replaced again here
     $text_token = ($pPreferences->config['Beitrag']['beitrag_text_token'] == '#') ? ' ' : $pPreferences->config['Beitrag']['beitrag_text_token'];
 
     $role_separator = ($pPreferences->config['Beitrag']['beitrag_role_separator'] != '') ? $pPreferences->config['Beitrag']['beitrag_role_separator'] : ' ';
 
-    // alle Beitragsrollen einlesen
+    // read all contribution roles
     $contributingRolls = beitragsrollen_einlesen('', array(
         'FIRST_NAME',
         'LAST_NAME',
@@ -75,11 +75,11 @@ if ($getMode == 'preview') // Default
         'DEBTOR'
     ));
 
-    // pruefen, ob Eintraege in der Rollenauswahl bestehen
+    // check whether entries exist in the role selection
     if (isset($_POST['recalculation_roleselection'])) {
         $_SESSION['pMembershipFee']['recalculation_rol_sel'] = $_POST['recalculation_roleselection'];
 
-        // nicht gewaehlte Beitragsrollen im Array $contributingRolls loeschen
+        // remove unselected contribution roles from the array $contributingRolls
         $message .= '<strong>' . $gL10n->get('SYS_NOTE') . ':</strong> ' . $gL10n->get('PLG_MEMBERSHIPFEE_RECALCULATION_ROLLQUERY_INFO') . '</strong><br/><br/>';
         foreach ($contributingRolls as $rol => $roldata) {
             if (! in_array($rol, $_POST['recalculation_roleselection'])) {
@@ -89,7 +89,7 @@ if ($getMode == 'preview') // Default
             }
         }
 
-        // Rollendaten aufbereiten fuer list_members()
+        // prepare role data for list_members()
         $selectionRolls = array();
         $role = new Role($gDb);
         foreach ($_POST['recalculation_roleselection'] as $rol) {
@@ -101,15 +101,15 @@ if ($getMode == 'preview') // Default
         unset($_SESSION['pMembershipFee']['recalculation_rol_sel']);
     }
 
-    // wenn $_SESSION['pMembershipFee']['recalculation_user'] vorhanden ist, dann wurde bereits eine Berechnung durchgeführt
+    // if $_SESSION['pMembershipFee']['recalculation_user'] exists, a calculation has already been performed
     if (! isset($_SESSION['pMembershipFee']['recalculation_user'])) {
 
-        // diese Rollen durchlaufen und bei den Familienrollen eine Zahlungspflichtigen bestimmen
+        // iterate through these roles and determine a payer for the family roles
         foreach ($contributingRolls as $rol => $roldata) {
-            // nur Familien
+            // families only
             if ($roldata['rollentyp'] == 'fam') {
-                // alle Mitglieder dieser Rolle durchlaufen und einen Zahlungspflichtigen bestimmen
-                // 1. Durchlauf: hierbei das erste Mitglied bei dem (Kontonummer UND BLZ) oder IBAN belegt sind bestimmen
+                // iterate through all members of this role and determine a payer
+                // 1st pass: determine the first member for whom (account number AND bank code) or IBAN is set
                 foreach ($roldata['members'] as $key => $data) {
                     $contributingRolls[$rol]['has_to_pay'] = $key;
 
@@ -118,8 +118,8 @@ if ($getMode == 'preview') // Default
                         break;
                     }
                 }
-                // alle Mitglieder dieser Rolle durchlaufen und einen Zahlungspflichtigen bestimmen
-                // 2. Durchlauf: gibt es einen Rollenleiter, dann den Zahlungspflichtigen ueberschreiben, da hoeherwertiger
+                // iterate through all members of this role and determine a payer
+                // 2nd pass: if there is a role leader, overwrite the payer, since it takes precedence
                 foreach ($roldata['members'] as $key => $data) {
                     if (isGroupLeader($key, $rol)) {
                         $contributingRolls[$rol]['has_to_pay'] = $key;
@@ -129,7 +129,7 @@ if ($getMode == 'preview') // Default
             }
         }
 
-        // alle aktiven Mitglieder einlesen
+        // read all active members
         $members = list_members(array(
             'FIRST_NAME',
             'LAST_NAME',
@@ -140,7 +140,7 @@ if ($getMode == 'preview') // Default
             'DEBTOR'
         ), $selectionRolls);
 
-        // alle Mitglieder durchlaufen und aufgrund von Rollenzugehoerigkeiten die Beitraege bestimmen
+        // iterate through all members and determine the fees based on role memberships
         foreach ($members as $member => $memberdata) {
             $members[$member]['FEE_NEW'] = 0;
             $members[$member]['CONTRIBUTORY_TEXT_NEW'] = '';
@@ -151,10 +151,10 @@ if ($getMode == 'preview') // Default
                     $rolDescription = $role_separator . $roldata['rol_description'] . ' ';
                 }
 
-                // alle Rollen, außer Familienrollen
+                // all roles except family roles
                 if (($roldata['rollentyp'] != 'fam') && (array_key_exists($member, $roldata['members']))) {
                     // anteilige Beitragsberechnung (Beginn)
-                    if ($pPreferences->config['Beitrag']['beitrag_anteilig'] == true) // anhand des Beginns einer Rollenzugehörigkeit
+                    if ($pPreferences->config['Beitrag']['beitrag_anteilig'] == true) // based on the start of a role membership
                     {
                         $time_begin = strtotime((string) $roldata['members'][$member]['mem_begin']);
                     } else // anhand des Beitrittsdatums
@@ -162,23 +162,23 @@ if ($getMode == 'preview') // Default
                         $time_begin = strtotime($members[$member]['ACCESSION' . $gCurrentOrgId]);
                     }
 
-                    // anteilige Beitragsberechnung anhand des Endes einer Rollenzugehörigkeit
-                    // Info: da es das Feld "Austrittsdatum" nicht gibt, kann nur das Ende einer Rollenzugehörigkeit verarbeitet werden
+                    // pro-rata fee calculation based on the end of a role membership
+                    // Info: since the field "exit date" does not exist, only the end of a role membership can be processed
 
-                    // das Standarddatum '9999-12-31' kann auf einigen Systemen nicht verarbeitet werden
+                    // the default date '9999-12-31' cannot be processed on some systems
                     if ($roldata['members'][$member]['mem_end'] == '9999-12-31') {
                         $time_end = strtotime('2038-01-19');
                     } else {
                         $time_end = strtotime((string) $roldata['members'][$member]['mem_end']);
                     }
 
-                    // Beitragsberechnung nur, wenn das Mitglied im aktuellen Jahr eingetreten ist. Geprüft wird aber im Prinzip nur das Beitrittsdatum
-                    // Beginn einer Rollenzugehörigkeit wird nicht ausgewertet, da Mitglieder mit zukünftigen Rollenmitgliedschaften sowieso nicht eingelesen wurden
+                    // fee calculation only if the member joined in the current year. In principle, only the join date is checked
+                    // the start of a role membership is not evaluated, since members with future role memberships were not read anyway
                     if ($time_begin < strtotime((date('Y') + 1) . '-01-01')) {
 
-                        // anteiligen Beitrag berechnen, falls das Mitglied im aktuellen Jahr ein- oder ausgetreten ist
-                        // && Beitragszeitraum (cost_period) darf nicht "Einmalig" (-1) sein
-                        // && Beitragszeitraum (cost_period) darf nicht "Jaehrlich" (1) sein
+                        // calculate pro-rata fee if the member joined or left in the current year
+                        // && contribution period (cost_period) must not be "One-time" (-1)
+                        // && contribution period (cost_period) must not be "Yearly" (1)
                         if ((strtotime(date('Y') . '-01-01') < $time_begin || $time_end < strtotime(date('Y') . '-12-31')) && ($roldata['rol_cost_period'] != - 1) && ($roldata['rol_cost_period'] != 1)) {
 
                             if (strtotime(date('Y') . '-01-01') < $time_begin) {
@@ -201,13 +201,13 @@ if ($getMode == 'preview') // Default
                             if ($pPreferences->config['Beitrag']['beitrag_suffix'] != '') {
                                 $members[$member]['CONTRIBUTORY_TEXT_NEW'] .= ' ' . $pPreferences->config['Beitrag']['beitrag_suffix'] . ' ';
                             }
-                            // nur einmal soll beitrag_suffix angezeigt werden, wenn aber rol_description leer ist,
-                            // wird es mehrfach hintereinander mit vielen Leerzeichen dazwischen angefuegt, deshalb ersetzen
-                            // zuerst zwei aufeinanderfolgende Leerzeichen durch ein Leerzeichen ersetzen
+                            // beitrag_suffix should be displayed only once, but if rol_description is empty,
+                            // it is appended several times in a row with many spaces in between, so replace
+                            // first replace two consecutive spaces with one space
                             // $members[$member]['CONTRIBUTORY_TEXT_NEW'] = str_replace(' ', ' ', $members[$member]['CONTRIBUTORY_TEXT_NEW']); //toDo testen
                             // jetzt mehrfache beitrag_suffix loeschen
                             $members[$member]['CONTRIBUTORY_TEXT_NEW'] = str_replace($pPreferences->config['Beitrag']['beitrag_suffix'] . ' ' . $pPreferences->config['Beitrag']['beitrag_suffix'], $pPreferences->config['Beitrag']['beitrag_suffix'], $members[$member]['CONTRIBUTORY_TEXT_NEW']);
-                        } else // keine anteilige Berechnung
+                        } else // no pro-rata calculation
                         {
                             $members[$member]['FEE_NEW'] += $roldata['rol_cost'];
                             $members[$member]['CONTRIBUTORY_TEXT_NEW'] .= $rolDescription;
@@ -216,23 +216,23 @@ if ($getMode == 'preview') // Default
                 }
             }
 
-            // wenn definiert: Beitragstext mit dem Namen des Benutzers
+            // if defined: fee text with the name of the user
             if (($pPreferences->config['Beitrag']['beitrag_textmitnam'] == true) && ($members[$member]['FEE_NEW'] != 0) && ! (($members[$member]['LAST_NAME'] . ' ' . $members[$member]['FIRST_NAME'] == $members[$member]['DEBTOR']) || ($members[$member]['FIRST_NAME'] . ' ' . $members[$member]['LAST_NAME'] == $members[$member]['DEBTOR']) || (empty($members[$member]['DEBTOR'])))) {
                 $members[$member]['CONTRIBUTORY_TEXT_NEW'] .= $text_token . $members[$member]['LAST_NAME'] . ' ' . $members[$member]['FIRST_NAME'] . $text_token;
             }
         }
 
-        // alle Rollen und deren Mitglieder durchlaufen und die Beitraege eines Mitglieds,
-        // das zudem ein Familienmitglied ist, dem Zahlungspflichtigen der Familie zugeschlagen
+        // iterate through all roles and their members and add the fees of a member
+        // who is also a family member to the payer of the family
         foreach ($contributingRolls as $rol => $roldata) {
             $rolDescription = ' ';
             if ($roldata['rol_description'] != '') {
                 $rolDescription = $role_separator . $roldata['rol_description'] . ' ';
             }
 
-            // nur Rollen mit dem Praefix einer Familie && die Familienrolle muß Mitglieder aufweisen
+            // only roles with the prefix of a family && the family role must have members
             if (($roldata['rollentyp'] == 'fam') && (count($roldata['members']) > 0)) {
-                // wenn definiert: Beitragstext mit allen Familienmitgliedern
+                // if defined: fee text with all family members
                 if ($pPreferences->config['Beitrag']['beitrag_textmitfam'] == true) {
                     $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] .= ' ';
                     foreach ($roldata['members'] as $member => $memberdata) {
@@ -241,15 +241,15 @@ if ($getMode == 'preview') // Default
                     $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] .= $text_token . ' ';
                 }
 
-                // alle Mitglieder dieser Rolle durchlaufen und die Beitraege der Mitglieder dem Zahlungspflichtigen zuordnen
+                // iterate through all members of this role and assign the members' fees to the payer
                 foreach ($roldata['members'] as $member => $memberdata) {
-                    // nicht beim Zahlungspflichtigen selber und auch nur, wenn ein Zusatzbeitrag beim Mitglied errechnet wurde
+                    // not for the payer himself and only if an additional fee was calculated for the member
                     if (($roldata['has_to_pay'] != $member) && ($members[$member]['FEE_NEW'] > 0)) {
                         $members[$roldata['has_to_pay']]['FEE_NEW'] += $members[$member]['FEE_NEW'];
                         $members[$member]['FEE_NEW'] = 0;
                         $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] .= $members[$member]['CONTRIBUTORY_TEXT_NEW'] . ' ';
 
-                        // wenn nicht definiert: Beitragstext mit allen Familienmitgliedern, trotzdem Name und Vorname anfuegen
+                        // if not defined: fee text with all family members, still append last name and first name
                         if (! $pPreferences->config['Beitrag']['beitrag_textmitnam']) {
                             $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] .= $text_token . $memberdata['LAST_NAME'] . ' ' . $memberdata['FIRST_NAME'] . $text_token . ' ';
                         }
@@ -257,12 +257,12 @@ if ($getMode == 'preview') // Default
                     }
                 }
 
-                // ist diese Familienrolle als Multiplikatorrolle definiert?
+                // is this family role defined as a multiplier role?
                 if (in_array($rol, $pPreferences->config['multiplier']['roles'])) {
                     $members[$roldata['has_to_pay']]['FEE_NEW'] = $members[$roldata['has_to_pay']]['FEE_NEW'] * $roldata['rol_cost'] / 100;
                     $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] = $rolDescription . $members[$roldata['has_to_pay']]['CONTRIBUTORY_TEXT_NEW'] . ' ';
                 } else {
-                    if ($pPreferences->config['Beitrag']['beitrag_anteilig'] == true) // anteilige Beitragsberechnung anhand des Beginns einer Rollenzugehörigkeit
+                    if ($pPreferences->config['Beitrag']['beitrag_anteilig'] == true) // pro-rata fee calculation based on the start of a role membership
                     {
                         $time_begin = strtotime($roldata['members'][$roldata['has_to_pay']]['mem_begin']);
                     } else // anteilige Betragsberechnung anhand des Beitrittsdatums
@@ -270,20 +270,20 @@ if ($getMode == 'preview') // Default
                         $time_begin = strtotime($members[$roldata['has_to_pay']]['ACCESSION' . $gCurrentOrgId]);
                     }
 
-                    // das Standarddatum '9999-12-31' kann auf einigen Systemen nicht verarbeitet werden
+                    // the default date '9999-12-31' cannot be processed on some systems
                     if ($roldata['members'][$member]['mem_end'] == '9999-12-31') {
                         $time_end = strtotime('2038-01-19');
                     } else {
                         $time_end = strtotime($roldata['members'][$member]['mem_end']);
                     }
 
-                    // Beitragsberechnung nur, wenn das Mitglied im aktuellen Jahr eingetreten ist. Geprüft wird aber im Prinzip nur das Beitrittsdatum
-                    // Beginn einer Rollenzugehörigkeit wird nicht ausgewertet, da Mitglieder mit zukünftigen Rollenmitgliedschaften sowieso nicht eingelesen wurden
+                    // fee calculation only if the member joined in the current year. In principle, only the join date is checked
+                    // the start of a role membership is not evaluated, since members with future role memberships were not read anyway
                     if ($time_begin < strtotime((date('Y') + 1) . '-01-01')) {
 
-                        // anteiligen Beitrag berechnen, falls das Mitglied (in diesem Fall der Zahlungspflichtige der Familienrolle) im aktuellen Jahr ein- oder ausgetreten ist
-                        // && Beitragszeitraum (cost_period) darf nicht "Einmalig" (-1) sein
-                        // && Beitragszeitraum (cost_period) darf nicht "Jaehrlich" (1) sein
+                        // calculate pro-rata fee if the member (in this case the payer of the family role) joined or left in the current year
+                        // && contribution period (cost_period) must not be "One-time" (-1)
+                        // && contribution period (cost_period) must not be "Yearly" (1)
                         if ((strtotime(date('Y') . '-01-01') < $time_begin || $time_end < strtotime(date('Y') . '-12-31')) && ($roldata['rol_cost_period'] != - 1) && ($roldata['rol_cost_period'] != 1)) {
 
                             if (strtotime(date('Y') . '-01-01') < $time_begin) {
@@ -314,7 +314,7 @@ if ($getMode == 'preview') // Default
         foreach ($members as $member => $memberdata) {
             // letzte Datenaufbereitung (aufsummieren, ueberschreiben, runden...)
             if ((empty($members[$member]['FEE' . $gCurrentOrgId]) || (! (empty($members[$member]['FEE' . $gCurrentOrgId])) && (isset($_POST['recalculation_modus']) && (($_POST['recalculation_modus'] == 'overwrite') || ($_POST['recalculation_modus'] == 'summation'))))) && (! isset($_POST['recalculation_notpaid']) || (isset($_POST['recalculation_notpaid']) && $members[$member]['PAID' . $gCurrentOrgId] == '')) && ($members[$member]['FEE_NEW'] > $pPreferences->config['Beitrag']['beitrag_mindestbetrag'])) {
-                // wenn vorhanden, dann das erste $role_separator entfernen
+                // if present, remove the first $role_separator
                 // Bsp: SV Musterverein +Jahresbeitrag+Spartenbeitrag soll sein SV Musterverein Jahresbeitrag+Spartenbeitrag
                 if (substr($members[$member]['CONTRIBUTORY_TEXT_NEW'], 0, strlen($role_separator)) == $role_separator) {
                     $members[$member]['CONTRIBUTORY_TEXT_NEW'] = substr($members[$member]['CONTRIBUTORY_TEXT_NEW'], strlen($role_separator));
@@ -322,7 +322,7 @@ if ($getMode == 'preview') // Default
 
                 $members[$member]['CONTRIBUTORY_TEXT_NEW'] = $pPreferences->config['Beitrag']['beitrag_prefix'] . ' ' . $members[$member]['CONTRIBUTORY_TEXT_NEW'] . ' ';
 
-                // alle Beitraege auf 2 Nachkommastellen runden
+                // round all fees to 2 decimal places
                 $members[$member]['FEE_NEW'] = round($members[$member]['FEE_NEW'], 2);
 
                 // ggf. abrunden
@@ -335,12 +335,12 @@ if ($getMode == 'preview') // Default
                     $members[$member]['CONTRIBUTORY_TEXT_NEW'] .= ' ' . $members[$member]['CONTRIBUTORY_TEXT' . $gCurrentOrgId] . ' ';
                 }
 
-                // fuehrende und nachfolgene Leerstellen im Beitragstext loeschen
+                // remove leading and trailing spaces in the fee text
                 $members[$member]['CONTRIBUTORY_TEXT_NEW'] = trim($members[$member]['CONTRIBUTORY_TEXT_NEW']);
-                // zwei aufeinanderfolgende Leerzeichen durch ein Leerzeichen ersetzen
+                // replace two consecutive spaces with one space
                 $members[$member]['CONTRIBUTORY_TEXT_NEW'] = str_replace('  ', ' ', $members[$member]['CONTRIBUTORY_TEXT_NEW']);
             } else {
-                unset($members[$member]); // wenn kein neuer Beitrag errechnet wurde, dann dieses Mitglied in der Liste loeschen
+                unset($members[$member]); // if no new fee was calculated, remove this member from the list
             }
         }
         // save members in session (for mode write and mode print)

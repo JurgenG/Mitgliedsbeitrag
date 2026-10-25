@@ -30,9 +30,9 @@ try {
 
     $gNavigation->addStartUrl(CURRENT_URL);
 
-    // im ersten Schritt prüfen, ob eine Rolle ("Zugriffsrolle") vorhanden ist? (ggf. neu anlegen oder aktualisieren)
+    // first step: check whether a role ("access role") exists (create or update it if necessary)
 
-    // dazu zuerst die Id (cat_id) der Kategorie Allgemein ermitteln
+    // first determine the id (cat_id) of the category General
     $category = new Category($gDb);
     $category->readDataByColumns(array(
         'cat_org_id' => $gCurrentOrgId,
@@ -43,16 +43,16 @@ try {
 
     $role = new Role($gDb);
 
-    // eine eventuell vorhandene Rolle einlesen (das Einlesen über 'rol_name' und 'rol_description' funktioniert nur, wenn diese Daten vom Benutzer nicht verändert worden sind)
+    // read an existing role, if any (reading via 'rol_name' and 'rol_description' only works if the user has not changed this data)
     $role->readDataByColumns(array(
         'rol_cat_id' => $categoryCommonId,
         'rol_name' => $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_TO_PLUGIN'),
         'rol_description' => $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_TO_PLUGIN_DESC')
     ));
 
-    // nur wenn es keine Rolle gibt, neue Daten eingeben (mehr als eine Rolle wird nicht betrachtet)
+    // only if there is no role, enter new data (more than one role is not considered)
     if ($role->getValue('rol_id') === 0) {
-        $role->saveChangesWithoutRights(); // toDo: ggf. erweiterte Berechtigungen für die Rolle vergeben
+        $role->saveChangesWithoutRights(); // toDo: assign extended permissions to the role if necessary
         $role->setValue('rol_edit_user', 1);
         $role->setValue('rol_cat_id', $categoryCommonId, false);
         $role->setValue('rol_name', $gL10n->get('PLG_MEMBERSHIPFEE_ACCESS_TO_PLUGIN'));
@@ -60,13 +60,13 @@ try {
         $role->save();
     }
 
-    // aktuellen Benutzer dieser Rolle hinzufügen
+    // add the current user to this role
     $role->startMembership((int) $gCurrentUser->getValue('usr_id'));
     $role->save();
 
-    // im zweiten Schritt prüfen, ob ein Menüpunkt vorhanden ist und ggf. neu anlegen
+    // second step: check whether a menu item exists and create it if necessary
 
-    // dazu zuerst die Id (men_id) der Menüebene Erweiterungen ermitteln
+    // first determine the id (men_id) of the menu level Extensions
     $menuParent = new MenuEntry($gDb);
     $menuParent->readDataByColumns(array(
         'men_name_intern' => 'extensions'
@@ -75,12 +75,12 @@ try {
 
     $menu = new MenuEntry($gDb);
 
-    // einen eventuell vorhandenen Menüpunkt einlesen
+    // read an existing menu item, if any
     $menu->readDataByColumns(array(
         'men_url' => FOLDER_PLUGINS . PLUGIN_FOLDER . '/index.php'
     ));
 
-    // Daten für diesen Memüpunkt eingeben
+    // enter data for this menu item
     $menu->setValue('men_men_id_parent', $menIdParent);
     $menu->setValue('men_url', FOLDER_PLUGINS . PLUGIN_FOLDER . '/index.php');
     $menu->setValue('men_icon', 'currency-euro');
@@ -88,27 +88,27 @@ try {
     $menu->setValue('men_description', 'PLG_MEMBERSHIPFEE_NAME_DESC');
     $menu->save();
 
-    // die vorher angelegte Rolle diesem Menüpunkt hinzufügen ('Sichtbar für')
+    // add the previously created role to this menu item ('Visible for')
     $rightMenuView = new RolesRights($gDb, 'menu_view', $menu->getValue('men_id'));
     $rightMenuView->addRoles(array(
         $role->getValue('rol_id')
     ));
 
-    // damit am Bildschirm die Menüeinträge aktualisiert werden: alle Sesssions neu laden
+    // so that the menu entries are updated on screen: reload all sessions
     $gCurrentSession->reloadAllSessions();
 
-    // im letzten Schritt die Konfigurationsdaten bearbeiten und Profilfelder und Kategorien anlegen
+    // last step: process the configuration data and create profile fields and categories
 
     $pPreferences = new ConfigTable();
     $checked = $pPreferences->checkforupdate();
 
     $pPreferences->init();
-    $pPreferences->config['install']['access_role_id'] = $role->getValue('rol_id'); // für die Uninstall-Routine: die ID der Zugriffsrolle in der Konfigurationstabelle speichern
-    $pPreferences->config['install']['menu_item_id'] = $menu->getValue('men_id'); // für die Uninstall-Routine: die ID des Menüpunktes in der Konfigurationstabelle speichern
+    $pPreferences->config['install']['access_role_id'] = $role->getValue('rol_id'); // for the uninstall routine: store the ID of the access role in the configuration table
+    $pPreferences->config['install']['menu_item_id'] = $menu->getValue('men_id'); // for the uninstall routine: store the ID of the menu item in the configuration table
     $pPreferences->save();
 
     if ($checked === 2) {
-        // Installationsroutine verkürzt durchlaufen und ohne User-Interface Profilfelder und Kategorien anlegen
+        // run a shortened installation routine and create profile fields and categories without a user interface
         admRedirect(SecurityUtils::encodeUrl(ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/install_db.php', array(
             'mode' => 'anlegen'
         )));

@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Anzeigen einer Historie von Beitragszahlungen fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Display a history of fee payments for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -346,7 +346,7 @@ if ($getMode !== 'csv' && $getMode != 'xlsx' )
 		$table = new HtmlTable('history_table', $page, $hoverRows, $datatable, $classTable);
 		if ($datatable)
 		{
-		    // ab Admidio 4.3 verursacht setDatatablesRowsPerPage, wenn $datatable "false" ist, folgenden Fehler:
+		    // as of Admidio 4.3, setDatatablesRowsPerPage causes the following error when $datatable is "false":
 		    // "Fatal error: Uncaught Error: Call to a member function setDatatablesRowsPerPage() on null"
 		    $table->setDatatablesRowsPerPage($gSettingsManager->getInt('groups_roles_members_per_page'));
 		}

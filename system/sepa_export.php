@@ -1,20 +1,20 @@
 <?php
 /**
  ***********************************************************************************************
- * SEPA-Export fuer das Admidio-Plugin Mitgliedsbeitrag
+ * SEPA export for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
  *
- * Hinweis:   Grundgeruest erstellt von Günter Scheuermann am 28.1.2013
+ * Note:   Basic framework created by Günter Scheuermann on 28.1.2013
  *
  * Parameters:
  *
- * duedatesepatype  :   Array mit Kombinationen von Faelligkeitsdatum und SepaTyp
- *                      - Zeichen 0 bis 9: Faelligkeitsdatum 
- *                      - ab Zeichen 10: Sepatyp
- *                      - Bsp.. 2017-12-12FRST oder 2017-12-30RCUR
+ * duedatesepatype  :   Array with combinations of due date and SEPA type
+ *                      - Characters 0 to 9: due date 
+ *                      - From character 10: SEPA type
+ *                      - E.g. 2017-12-12FRST or 2017-12-30RCUR
  *
  ***********************************************************************************************
  */
@@ -47,7 +47,7 @@ if (!isset($_POST['duedatesepatype']))
 
 if (sizeof($_POST['duedatesepatype']) == 1)
 {
-	$oneDueDateOnly = true;				// es gibt nur ein Fälligkeitsdatum mit einem Sequenztyp: der PmtTpInf-Block wird im PmtInf-Block plaziert (damit KSK die XML-Datei einlesen kann)
+	$oneDueDateOnly = true;				// there is only one due date with one sequence type: the PmtTpInf block is placed in the PmtInf block (so that KSK can read the XML file)
 }
 
 // Initialize and check the parameters
@@ -56,8 +56,8 @@ $postExportFileMode = admFuncVariableIsValid($_POST, 'export_file_mode', 'string
 $dueDateArr   = array();
 $zempf        = array();
 $zpflgt       = array();
-$nbOfTxs_Msg  = 0; 																	// Anzahl der Transaktionen innerhalb der Message
-$ctrlSum_Msg  = 0;																	// Kontrollsumme der Beträge innerhalb der Message
+$nbOfTxs_Msg  = 0; 																	// Number of transactions within the message
+$ctrlSum_Msg  = 0;																	// Control sum of the amounts within the message
 $now          = time();
 $format1      = 'Y-m-d';
 $format2      = 'H:i:s';
@@ -65,15 +65,15 @@ $filename_ext = '';
 
 foreach ($_POST['duedatesepatype'] as $dummy => $data)
 {
-	$filename_ext .= '_'.substr($data, 0, 10).'-'.substr($data, 10);				// Erweiterung fuer den Dateinamen zusammensetzen
-	$dueDateArr[substr($data, 0, 10)]['sequencetype'] = substr($data, 10);			// je DueDate ein PmtInf-Block
-	$dueDateArr[substr($data, 0, 10)]['nbOfTxs_PmtInf'] = 0;						// Anzahl der Transaktionen innerhalb eines PmtInf-Blocks
-	$dueDateArr[substr($data, 0, 10)]['ctrlSum_PmtInf'] = 0;						// Kontrollsumme der Beträge innerhalb eines PmtInf-Blocks
+	$filename_ext .= '_'.substr($data, 0, 10).'-'.substr($data, 10);				// Compose the extension for the file name
+	$dueDateArr[substr($data, 0, 10)]['sequencetype'] = substr($data, 10);			// one PmtInf block per DueDate
+	$dueDateArr[substr($data, 0, 10)]['nbOfTxs_PmtInf'] = 0;						// Number of transactions within a PmtInf block
+	$dueDateArr[substr($data, 0, 10)]['ctrlSum_PmtInf'] = 0;						// Control sum of the amounts within a PmtInf block
 }
 	
 $members = list_members(array('FIRST_NAME', 'LAST_NAME', 'FEE'.$gCurrentOrgId, 'CONTRIBUTORY_TEXT'.$gCurrentOrgId, 'PAID'.$gCurrentOrgId, 'STREET', 'CITY', 'DEBTOR', 'DEBTOR_CITY', 'DEBTOR_STREET', 'IBAN', 'ORIG_IBAN', 'BIC', 'BANK', 'ORIG_DEBTOR_AGENT', 'MANDATEID'.$gCurrentOrgId, 'ORIG_MANDATEID'.$gCurrentOrgId, 'MANDATEDATE'.$gCurrentOrgId, 'DUEDATE'.$gCurrentOrgId, 'SEQUENCETYPE'.$gCurrentOrgId), 0);
 		
-//alle Mitglieder durchlaufen und das Array $zpflgt befuellen
+//loop through all members and fill the array $zpflgt
 foreach ($members as $member => $memberdata)
 {
 	$dueDateMember = $memberdata['DUEDATE'.$gCurrentOrgId];
@@ -114,7 +114,7 @@ foreach ($members as $member => $memberdata)
         }
 
         $zpflgt[$member]['name'] = substr(replace_sepadaten($members[$member]['DEBTOR']), 0, 70);                                                     // Name of account owner.
-       // $zpflgt[$member]['alt_name'] = '';                                                                                                            // Zahlungspflichtiger abweichender Name
+       // $zpflgt[$member]['alt_name'] = '';                                                                                                            // debtor's deviating name
         $zpflgt[$member]['iban'] = strtoupper(str_replace(' ', '', $members[$member]['IBAN']));														  // IBAN
         
         if (isIbanNOT_EU_EWR($zpflgt[$member]['iban']))
@@ -131,7 +131,7 @@ foreach ($members as $member => $memberdata)
                               
         $zpflgt[$member]['bic'] = strtoupper($members[$member]['BIC']);                                                                                           // BIC
         $zpflgt[$member]['mandat_id'] = $members[$member]['MANDATEID'.$gCurrentOrgId];                                     // Mandats-ID
-        $zpflgt[$member]['mandat_datum'] = $members[$member]['MANDATEDATE'.$gCurrentOrgId];                                // Mandats-Datum
+        $zpflgt[$member]['mandat_datum'] = $members[$member]['MANDATEDATE'.$gCurrentOrgId];                                // Mandate date
 
        	$fee = str_replace(',', '.', $members[$member]['FEE'.$gCurrentOrgId]);
        	if (strpos($fee, '.') !== false)
@@ -143,7 +143,7 @@ foreach ($members as $member => $memberdata)
         $zpflgt[$member]['text'] = substr(replace_sepadaten($members[$member]['CONTRIBUTORY_TEXT'.$gCurrentOrgId]), 0, 140);   // Description of the transaction ("Verwendungszweck").
         $zpflgt[$member]['orig_mandat_id'] = $members[$member]['ORIG_MANDATEID'.$gCurrentOrgId];                           // urspruengliche Mandats-ID
         $zpflgt[$member]['orig_iban'] = strtoupper(str_replace(' ', '', $members[$member]['ORIG_IBAN']));                                             // urspruengliche IBAN
-        $zpflgt[$member]['orig_dbtr_agent'] = $members[$member]['ORIG_DEBTOR_AGENT'];                                                                 // urspruengliches Kreditinstitut, nur "SMNDA" moeglich
+        $zpflgt[$member]['orig_dbtr_agent'] = $members[$member]['ORIG_DEBTOR_AGENT'];                                                                 // original financial institution, only "SMNDA" possible
 
         $dueDateArr[$dueDateMember]['nbOfTxs_PmtInf']++;
         $dueDateArr[$dueDateMember]['ctrlSum_PmtInf'] += $zpflgt[$member]['betrag'];
@@ -153,7 +153,7 @@ foreach ($members as $member => $memberdata)
     }
 }
 
-$nbOfTxs_Msg = count($zpflgt);                                                                                        //SEPA Anzahl der Lastschriften
+$nbOfTxs_Msg = count($zpflgt);                                                                                        //SEPA number of direct debits
 
 if ($nbOfTxs_Msg == 0)
 {
@@ -161,7 +161,7 @@ if ($nbOfTxs_Msg == 0)
 }
 
 $message_id = substr('Message-ID-'.replace_sepadaten($gCurrentOrganization->getValue('org_shortname')), 0, 35);   //SEPA Message-ID    (max. 35)
-$message_datum = date($format1, $now).'T'.date($format2, $now).'.000Z';                                           //SEPA Message-Datum z.B.: 2010-11-21T09:30:47.000Z
+$message_datum = date($format1, $now).'T'.date($format2, $now).'.000Z';                                           //SEPA message date e.g.: 2010-11-21T09:30:47.000Z
 $message_initiator_name = substr(replace_sepadaten($pPreferences->config['Kontodaten']['inhaber']), 0, 70);       //SEPA Message Initiator Name
 
 $payment_id = 'Beitragszahlungen';                                                                                //SEPA Payment_ID (max. 35)
@@ -184,12 +184,12 @@ if ($postExportFileMode === 'xml_file')
 {
 
     /******************************************************************************
-    * Schreibt Lastschriften in einen XML-String
+    * Writes direct debits into an XML string
     *****************************************************************************/
     $xmlfile = '';
     $xmlfile .= "<?xml version='1.0' encoding='UTF-8'?>\n";
 
-    // DFÜ-Abkommen Version 3.1
+    // DFÜ agreement version 3.1
     // Pain 008.001.002
     // ########## Document ###########
     $xmlfile .=  "<Document xmlns='urn:iso:std:iso:20022:tech:xsd:pain.008.001.02' 
@@ -202,7 +202,7 @@ if ($postExportFileMode === 'xml_file')
         // ########## Group-Header ###########
         $xmlfile .= "<GrpHdr>\n";
             $xmlfile .= "<MsgId>$message_id</MsgId>\n";                       		//MessageIdentification
-            $xmlfile .= "<CreDtTm>$message_datum</CreDtTm>\n";                		//Datum & Zeit
+            $xmlfile .= "<CreDtTm>$message_datum</CreDtTm>\n";                		//Date & time
             $xmlfile .= "<NbOfTxs>$nbOfTxs_Msg</NbOfTxs>\n";                      	//NumberOfTransactions
             $xmlfile .= "<CtrlSum>$ctrlSum_Msg</CtrlSum>\n";                 		//ControlSum
             $xmlfile .= "<InitgPty>\n";
@@ -210,46 +210,46 @@ if ($postExportFileMode === 'xml_file')
             $xmlfile .= "</InitgPty>\n";
         $xmlfile .= "</GrpHdr>\n";
 
-        foreach ($dueDateArr as $dueDate => $data)      							// je DueDate ein PmtInf-Block
+        foreach ($dueDateArr as $dueDate => $data)      							// one PmtInf block per DueDate
         {
         	// ########## Payment Information ###########
         	$xmlfile .= "<PmtInf>\n";
             	$xmlfile .= "<PmtInfId>$payment_id</PmtInfId>\n";                 	//Payment-ID
             	$xmlfile .= "<PmtMtd>DD</PmtMtd>\n";                              	//Payment-Methode, Lastschrift: DD
-            	$xmlfile .= "<BtchBookg>true</BtchBookg>\n";                      	//BatchBooking, Sammelbuchung (true) oder eine Einzelbuchung handelt (false)
+            	$xmlfile .= "<BtchBookg>true</BtchBookg>\n";                      	//BatchBooking, whether it is a batch booking (true) or a single booking (false)
             	$xmlfile .= '<NbOfTxs>'.$data['nbOfTxs_PmtInf']."</NbOfTxs>\n";     //Number of Transactions
             	$xmlfile .= '<CtrlSum>'.$data['ctrlSum_PmtInf']."</CtrlSum>\n";     //Control Sum
      
-            	if ($oneDueDateOnly)												//es gibt nur ein Fälligkeitsdatum mit einem Sequenztyp: der PmtTpInf-Block wird im PmtInf-Block plaziert
+            	if ($oneDueDateOnly)												//there is only one due date with one sequence type: the PmtTpInf block is placed in the PmtInf block
             	{
             		$xmlfile .= "<PmtTpInf>\n";                                     //PaymentTypeInformation
             			$xmlfile .= "<SvcLvl>\n";                                   //ServiceLevel
             				$xmlfile .= "<Cd>SEPA</Cd>\n";                          //Code, immer SEPA
             			$xmlfile .= "</SvcLvl>\n";
             			$xmlfile .= "<LclInstrm>\n";                                //LocalInstrument, Lastschriftart
-            				$xmlfile .= "<Cd>CORE</Cd>\n";                          //CORE (Basislastschrift oder B2B (Firmenlastschrift)
+            				$xmlfile .= "<Cd>CORE</Cd>\n";                          //CORE (basic direct debit) or B2B (business direct debit)
             			$xmlfile .= "</LclInstrm>\n";
             			$xmlfile .= '<SeqTp>'.$data['sequencetype']."</SeqTp>\n";           //SequenceType
-            			//Der SequenceType gibt an, ob es sich um eine Erst-, Folge-,
-            			//Einmal- oder letztmalige Lastschrift handelt.
-            			//Zulaessige Werte: FRST, RCUR, OOFF, FNAL
-            			//Wenn <OrgnlDbtrAcct> = SMNDA und <Amdmnt-Ind> = true
-            			//dann muss dieses Feld mit FRST belegt sein.
+            			//The SequenceType indicates whether it is a first, recurrent,
+            			//one-off or final direct debit.
+            			//Permitted values: FRST, RCUR, OOFF, FNAL
+            			//If <OrgnlDbtrAcct> = SMNDA and <Amdmnt-Ind> = true
+            			//then this field must be set to FRST.
             		$xmlfile .= "</PmtTpInf>\n";
             	}
             	
-            	$xmlfile .= "<ReqdColltnDt>$dueDate</ReqdColltnDt>\n";      		//RequestedCollectionDate, Faelligkeitsdatum der Lastschrift
+            	$xmlfile .= "<ReqdColltnDt>$dueDate</ReqdColltnDt>\n";      		//RequestedCollectionDate, due date of the direct debit
             	$xmlfile .= "<Cdtr>\n";                                           	//Creditor
-                	$xmlfile .= '<Nm>'.$zempf['name']."</Nm>\n";                  	//Name, max. 70 Zeichen
+                	$xmlfile .= '<Nm>'.$zempf['name']."</Nm>\n";                  	//Name, max. 70 characters
             	$xmlfile .= "</Cdtr>\n";
-            	$xmlfile .= "<CdtrAcct>\n";                                       	//CreditorAccount, Creditor-Konto
+            	$xmlfile .= "<CdtrAcct>\n";                                       	//CreditorAccount, creditor account
                 	$xmlfile .= "<Id>\n";
                     	$xmlfile .= '<IBAN>'.$zempf['iban']."</IBAN>\n";
                 	$xmlfile .= "</Id>\n";
             	$xmlfile .= "</CdtrAcct>\n";
             	$xmlfile .= "<CdtrAgt>\n";                                        	//CreditorAgent, Creditor-Bank
                 	$xmlfile .= "<FinInstnId>\n";                                 	//FinancialInstitutionIdentification
-                	if(strlen($zempf['bic']) !== 0)       						  	//ist ein BIC vorhanden?
+                	if(strlen($zempf['bic']) !== 0)       						  	//is a BIC available?
                 	{
                 		$xmlfile .= '<BIC>'.$zempf['bic']."</BIC>\n";
                 	}
@@ -265,11 +265,11 @@ if ($postExportFileMode === 'xml_file')
 
             	// ########## CREDITOR, Zahlungsempfaenger ##############
             	$xmlfile .= "<CdtrSchmeId>\n";                                    //CreditorSchemeIdentification, Identifikation des Zahlungsempfaengers
-                	$xmlfile .= "<Id>\n";                                         //Eindeutiges Identifizierungmerkmal einer Organisation oder Person
+                	$xmlfile .= "<Id>\n";                                         //Unique identifier of an organisation or person
                     	$xmlfile .= "<PrvtId>\n";                                 //PrivateIdentification, Personenidentifikation
                         	$xmlfile .= "<Othr>\n";                               //OtherIdentification
                             	$xmlfile .= '<Id>'.$zempf['ci']."</Id>\n";        //Eindeutiges Identifizierungsmerkmal des Glaeubigers
-                            	$xmlfile .= "<SchmeNm>\n";                        //SchemeName, Name des Identifikationsschemas
+                            	$xmlfile .= "<SchmeNm>\n";                        //SchemeName, name of the identification scheme
                                 	$xmlfile .= "<Prtry>SEPA</Prtry>\n";          //Proprietary, immer SEPA
                             	$xmlfile .= "</SchmeNm>\n";
                         	$xmlfile .= "</Othr>\n";
@@ -278,7 +278,7 @@ if ($postExportFileMode === 'xml_file')
             	$xmlfile .= "</CdtrSchmeId>\n";
 
             	// ######### Direct Debit Transaction Information, Lastschriften ##############
-            	foreach ($zpflgt as $dummy => $zpflgtdata)                        // je Zahlungspflichtiger ein DrctDbtTxInf-Block
+            	foreach ($zpflgt as $dummy => $zpflgtdata)                        // one DrctDbtTxInf block per debtor
             	{
             		if ($dueDate == $zpflgtdata['duedate'])
             		{
@@ -286,26 +286,26 @@ if ($postExportFileMode === 'xml_file')
                     		$xmlfile .= "<PmtId>\n";                                  //PaymentIdentification, Referenzierung einer einzelnen Transaktion
                         		$xmlfile .= '<EndToEndId>'.$zpflgtdata['end2end_id']."</EndToEndId>\n";   //EndToEndIdentification
                                         //eindeutige Referenz des Zahlers (Auftraggebers). Diese Referenz
-                                        //wird unveraendert durch die gesamte Kette bis zum Zahlungsempfaenger
-                                        //geleitet (Ende-zu-Ende-Referenz). Ist keine Referenz vorhanden
-                                        //muss die Konstante NOTPROVIDED benutzt werden.
+                                        //is passed on unchanged through the entire chain to the payee
+                                        //(end-to-end reference). If no reference is available
+                                        //the constant NOTPROVIDED must be used.
                     		$xmlfile .= "</PmtId>\n";
                     		
-                    		if (!$oneDueDateOnly)												//PmtTpInf-Block entweder hier unter DrctDbtTxInf oder unter PmtInf
+                    		if (!$oneDueDateOnly)												//PmtTpInf block either here under DrctDbtTxInf or under PmtInf
                     		{
                      			$xmlfile .= "<PmtTpInf>\n";                                     //PaymentTypeInformation
                      				$xmlfile .= "<SvcLvl>\n";                                   //ServiceLevel
                      					$xmlfile .= "<Cd>SEPA</Cd>\n";                          //Code, immer SEPA
                      				$xmlfile .= "</SvcLvl>\n";
                      				$xmlfile .= "<LclInstrm>\n";                                //LocalInstrument, Lastschriftart
-                     					$xmlfile .= "<Cd>CORE</Cd>\n";                          //CORE (Basislastschrift oder B2B (Firmenlastschrift)
+                     					$xmlfile .= "<Cd>CORE</Cd>\n";                          //CORE (basic direct debit) or B2B (business direct debit)
                      				$xmlfile .= "</LclInstrm>\n";
                      				$xmlfile .= '<SeqTp>'.$zpflgtdata['sequencetype']."</SeqTp>\n";                //SequenceType
-                     																//Der SequenceType gibt an, ob es sich um eine Erst-, Folge-,
-                     																//Einmal- oder letztmalige Lastschrift handelt.
-                     																//Zulaessige Werte: FRST, RCUR, OOFF, FNAL
-                     																//Wenn <OrgnlDbtrAcct> = SMNDA und <Amdmnt-Ind> = true
-                     																//dann muss dieses Feld mit FRST belegt sein.
+                     																//The SequenceType indicates whether it is a first, recurrent,
+                     																//one-off or final direct debit.
+                     																//Permitted values: FRST, RCUR, OOFF, FNAL
+                     																//If <OrgnlDbtrAcct> = SMNDA and <Amdmnt-Ind> = true
+                     																//then this field must be set to FRST.
                      			$xmlfile .= "</PmtTpInf>\n";
                     		}
                     		
@@ -313,26 +313,26 @@ if ($postExportFileMode === 'xml_file')
                     		$xmlfile .= "<DrctDbtTx>\n";                              //DirectDebitTransaction, Angaben zum Lastschriftmandat
                         		$xmlfile .= "<MndtRltdInf>\n";                        //MandateRelated-Information, mandatsbezogene Informationen
                             		$xmlfile .= '<MndtId>'.$zpflgtdata['mandat_id']."</MndtId>\n";            //eindeutige Mandatsreferenz
-                            		$xmlfile .= '<DtOfSgntr>'.$zpflgtdata['mandat_datum']."</DtOfSgntr>\n";   //Datum, zu dem das Mandat unterschrieben wurde
+                            		$xmlfile .= '<DtOfSgntr>'.$zpflgtdata['mandat_datum']."</DtOfSgntr>\n";   //Date on which the mandate was signed
 
                             		if((strlen($zempf['orig_cdtr_name']) !== 0)
                                 		|| (strlen($zempf['orig_cdtr_id']) !== 0)
                                 		|| (strlen($zpflgtdata['orig_mandat_id']) !== 0)
                                 		|| (strlen($zpflgtdata['orig_iban']) !== 0)
-                                		|| (strlen($zpflgtdata['orig_dbtr_agent']) !== 0)) //Kennzeichnet, ob das Mandat veraendert wurde,
+                                		|| (strlen($zpflgtdata['orig_dbtr_agent']) !== 0)) //Indicates whether the mandate was changed,
                             		{
                                 		$xmlfile .= "<AmdmntInd>true</AmdmntInd>\n";  //AmendmentIndicator "true"
                                 		$xmlfile .= "<AmdmntInfDtls>\n";              //AmendmentInformationDetails, Pflichtfeld, falls <AmdmntInd>=true
 
-                                		if(strlen($zpflgtdata['orig_mandat_id']) !== 0)        //Kennzeichnet, ob das Mandat veraendert wurde,
+                                		if(strlen($zpflgtdata['orig_mandat_id']) !== 0)        //Indicates whether the mandate was changed,
                                 		{
                                     		$xmlfile .= '<OrgnlMndtId>'.$zpflgtdata['orig_mandat_id']."</OrgnlMndtId>\n";
                                 		}
 
-                                		if((strlen($zempf['orig_cdtr_name']) !== 0) || (strlen($zempf['orig_cdtr_id']) !== 0))                //Kennzeichnet, ob das Mandat veraendert wurde,
+                                		if((strlen($zempf['orig_cdtr_name']) !== 0) || (strlen($zempf['orig_cdtr_id']) !== 0))                //Indicates whether the mandate was changed,
                                 		{
                                     		$xmlfile .= "<OrgnlCdtrSchmeId>\n";       //Identifikation des Zahlungsempfaengers
-                                    		if(strlen($zempf['orig_cdtr_name']) !== 0) //Kennzeichnet, ob das Mandat veraendert wurde,
+                                    		if(strlen($zempf['orig_cdtr_name']) !== 0) //Indicates whether the mandate was changed,
                                     		{
                                         		$xmlfile .= '<Nm>'.$zempf['orig_cdtr_name']."</Nm>\n";
                                     		}
@@ -352,7 +352,7 @@ if ($postExportFileMode === 'xml_file')
                                     		$xmlfile .= "</OrgnlCdtrSchmeId>\n";
                                 		}
 
-                                		if(strlen($zpflgtdata['orig_iban']) !== 0 || strlen($zpflgtdata['orig_dbtr_agent']) !== 0)             //Kennzeichnet, ob das Mandat veraendert wurde,
+                                		if(strlen($zpflgtdata['orig_iban']) !== 0 || strlen($zpflgtdata['orig_dbtr_agent']) !== 0)             //Indicates whether the mandate was changed,
                                 		{
                                     		$xmlfile .= "<OrgnlDbtrAcct>\n";
                                         		$xmlfile .= "<Id>\n";
@@ -363,7 +363,7 @@ if ($postExportFileMode === 'xml_file')
                                     		$xmlfile .= "</OrgnlDbtrAcct>\n";
                                 		}
 
-                                	/*	if(strlen($zpflgtdata['orig_dbtr_agent']) !== 0)       //Kennzeichnet, ob das Mandat veraendert wurde,
+                                	/*	if(strlen($zpflgtdata['orig_dbtr_agent']) !== 0)       //Indicates whether the mandate was changed,
                                 		{
                                     		$xmlfile .= "<OrgnlDbtrAgt>\n";
                                         		$xmlfile .= "<FinInstnId>\n";
@@ -386,7 +386,7 @@ if ($postExportFileMode === 'xml_file')
                     		//## Kreditinstitut des Zahlers (Zahlungspflichtigen)
                         	$xmlfile .= "<DbtrAgt>\n";                                //DebtorAgent, Kreditinstitut des Zahlers (Zahlungspflichtigen)
                             	$xmlfile .= "<FinInstnId>\n";                         //FinancialInstitutionIdentification
-                            	if(strlen($zpflgtdata['bic']) !== 0)       			  //ist ein BIC vorhanden?
+                            	if(strlen($zpflgtdata['bic']) !== 0)       			  //is a BIC available?
                             	{
                                 	$xmlfile .= '<BIC>'.$zpflgtdata['bic']."</BIC>\n";
                             	}
@@ -404,8 +404,8 @@ if ($postExportFileMode === 'xml_file')
                         		if (!empty($zpflgtdata['land']))
                         		{
                         			$xmlfile .= "<PstlAdr>\n";
-                        				$xmlfile .= '<Ctry>'.$zpflgtdata['land']."</Ctry>\n";              //Zahlungspflichtigen-Adresse ist Pflicht
-                        				$xmlfile .= '<AdrLine>'.$zpflgtdata['street']."</AdrLine>\n";     // bei Lastschriften ausserhalb EU/EWR
+                        				$xmlfile .= '<Ctry>'.$zpflgtdata['land']."</Ctry>\n";              //Debtor address is mandatory
+                        				$xmlfile .= '<AdrLine>'.$zpflgtdata['street']."</AdrLine>\n";     // for direct debits outside the EU/EEA
                         				$xmlfile .= '<AdrLine>'.$zpflgtdata['ort']."</AdrLine>\n";          
                         			$xmlfile .= "</PstlAdr>\n";
                         		}
@@ -445,9 +445,9 @@ if ($postExportFileMode === 'xml_file')
     *****************************************************************************/
 
     header('content-type: text/xml');
-    header('Cache-Control: private'); // noetig fuer IE, da ansonsten der Download mit SSL nicht funktioniert
+    header('Cache-Control: private'); // needed for IE, since otherwise the download over SSL does not work
     header('Content-Transfer-Encoding: binary'); // Im Grunde ueberfluessig, hat sich anscheinend bewaehrt
-    header('Cache-Control: post-check=0, pre-check=0'); // Zwischenspeichern auf Proxies verhindern
+    header('Cache-Control: post-check=0, pre-check=0'); // prevent caching on proxies
     header('Content-Disposition: attachment; filename="'.$pPreferences->config['SEPA']['dateiname'].$filename_ext.'.xml"');
 
     echo $xmlfile;

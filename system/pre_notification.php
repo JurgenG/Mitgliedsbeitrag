@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Modul Vorabinformation fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Pre-notification module for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -9,15 +9,15 @@
  *
  * Parameters:
  *
- * mode             : html       - Standardmodus zun Anzeigen einer html-Liste
- *                    prepare    - user in einem CheckedArray setzen bzw loeschen
- *                    export     - erzeugt eine Exportdatei
- *                    mail       - nur zur Pruefung, ob user im CheckedArray markiert sind
- * usr_id           : <>0        - Id des Benutzers, fuer der im CheckedArray gesetzt/geloescht wird
- *                    leer       - alle user im CheckedArray aendern von gesetzt->geloescht bzw geloescht->gesetzt
- * checked          : true  - Der Haken beim Benutzer wurde gesetzt
- *                    false - Der Haken beim Benutzer wurde entfernt
- * duedate          : Das uebergebene Faelligkeitsdatum zur Filterung
+ * mode             : html       - default mode for displaying an html list
+ *                    prepare    - set or delete user in a CheckedArray
+ *                    export     - creates an export file
+ *                    mail       - only to check whether users are marked in the CheckedArray
+ * usr_id           : <>0        - ID of the user for whom the CheckedArray entry is set/deleted
+ *                    leer       - change all users in the CheckedArray from set->deleted or deleted->set
+ * checked          : true  - The checkmark for the user was set
+ *                    false - The checkmark for the user was removed
+ * duedate          : The due date passed in for filtering
  ***********************************************************************************************
  */
 use Admidio\Infrastructure\Exception;
@@ -92,7 +92,7 @@ if ($getMode == 'mail' || $getMode == 'export') {
             AND (  cat_org_id = ' . $gCurrentOrgId . '
                 OR cat_org_id IS NULL ) ';
 
-    if ($getDueDate != 0) // nur Benutzer mit Faelligkeitsdatum anzeigen ("Mit Faelligkeitsdatum" wurde gewaehlt)
+    if ($getDueDate != 0) // show only users with a due date ("With due date" was selected)
     {
         $memberCondition .= 'AND usd_value = \'' . $getDueDate . '\'   )';
     } else {
@@ -202,13 +202,13 @@ if ($getMode == 'mail' || $getMode == 'export') {
 
     if ($getMode == 'prepare') {
         $ret_text = 'ERROR';
-        if ($getUserId != 0) // ein einzelner User wurde selektiert
+        if ($getUserId != 0) // a single user was selected
         {
-            if ($getChecked == 'false') // der Haken wurde geloescht
+            if ($getChecked == 'false') // the checkmark was removed
             {
                 unset($_SESSION['pMembershipFee']['checkedArray'][$getUserId]);
                 $ret_text = 'success';
-            } elseif ($getChecked == 'true') // der Haken wurde gesetzt
+            } elseif ($getChecked == 'true') // the checkmark was set
             {
                 $_SESSION['pMembershipFee']['checkedArray'][$getUserId] = isset($_SESSION['pMembershipFee']['mailArray'][$getUserId]) ? $_SESSION['pMembershipFee']['mailArray'][$getUserId] : '';
                 $ret_text = 'success';
@@ -340,7 +340,7 @@ if ($getMode == 'mail' || $getMode == 'export') {
             'setFocus' => false
         ));
 
-        // alle Faelligkeitsdaten einlesen
+        // read all due dates
         $sql = 'SELECT DISTINCT usd_value
                 FROM ' . TBL_USER_DATA . ',' . TBL_MEMBERS . ', ' . TBL_ROLES . ', ' . TBL_CATEGORIES . '
                 WHERE usd_usf_id =  ? -- $gProfileFields->getProperty(\'DUEDATE\'.$gCurrentOrgId, \'usf_id\')

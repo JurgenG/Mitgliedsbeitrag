@@ -49,7 +49,7 @@ try {
 
     switch ($getMode) {
         case 'security_check':
-            // Sicherheitsabfrage, ob wirklich alles gelöscht werden soll
+            // confirmation prompt whether everything should really be deleted
 
             global $gL10n;
 
@@ -88,11 +88,11 @@ try {
             break;
 
         case 'uninst':
-            // Sicherheitsabfrage wurde bestätigt, es darf alles gelöscht werden
+            // confirmation was given, everything may be deleted
 
-            // Zugriffsrolle und Menüpunkt löschen
+            // delete access role and menu item
             if ($pPreferences->config['install']['access_role_id'] == 0 || $pPreferences->config['install']['menu_item_id'] == 0) {
-                // nur zur Sicherheit; dass 'access_role_id' und/oder 'menu_item_id'== 0 ist, dürfte eigentlich nicht vorkommen
+                // just to be safe; 'access_role_id' and/or 'menu_item_id' being 0 should actually never happen
                 $result .= $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_NO_INST_IDS_FOUND');
             } else {
                 $result_role = true;
@@ -104,22 +104,22 @@ try {
 
                 $result_menu = false;
 
-                // Alle in der Konfigurationstabelle gespeicherten Zugriffsrollen (org-übergreifend) einlesen
+                // read all access roles stored in the configuration table (across organizations)
                 $access_roles_prefs = $pPreferences->getAllAccessRoles();
 
-                // der Menüpunkt wird nur entfernt, wenn die bei der Installation erzeugte Zugriffsrolle
-                // die einzige Rolle ist, die noch in der Konfigurationstabelle gespeichert ist
+                // the menu item is only removed if the access role created during installation
+                // is the only role still stored in the configuration table
                 if (count($access_roles_prefs) === 1 && $access_roles_prefs[0] == $pPreferences->config['install']['access_role_id']) {
                     $menu = new MenuEntry($gDb, (int) $pPreferences->config['install']['menu_item_id']);
                     $result_menu = $menu->delete();
                     $result .= ($result_menu ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_MENU_ITEM_SUCCESS') : $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_MENU_ITEM_ERROR'));
                 } else {
-                    // Menüpunkt nicht entfernen, wenn er noch für eine andere Organisation verwendet wird
+                    // do not remove the menu item if it is still used by another organization
                     $result .= $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_MENU_ITEM_NOT_DELETED');
                 }
             }
 
-            // Konfigurationsdaten löschen (nur in aktueller Organisation)
+            // delete configuration data (current organization only)
             $result_data = false;
             $result_db = false;
 
@@ -132,7 +132,7 @@ try {
                 $gCurrentOrgId
             ));
 
-            // wenn die Tabelle nur Einträge dieses Plugins hatte, sollte sie jetzt leer sein und kann gelöscht werden
+            // if the table only had entries of this plugin, it should now be empty and can be deleted
             $sql = 'SELECT * FROM ' . $pPreferences->getTableName() . ' ';
 
             $statement = $gDb->queryPrepared($sql);
@@ -145,9 +145,9 @@ try {
             $result .= ($result_data ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_DATA_DELETE_SUCCESS') : $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_DATA_DELETE_ERROR'));
             $result .= ($result_db ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_TABLE_DELETE_SUCCESS') : $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_TABLE_DELETE_ERROR'));
 
-            // Profilfelder löschen
+            // delete profile fields
 
-            // alle von Mitgliedsbeitrag angelegten Profilfelder
+            // all profile fields created by Mitgliedsbeitrag
             $fieldArray = array();
             $fieldArray[] = 'ACCESSION' . $gCurrentOrgId;
             $fieldArray[] = 'BANK';
@@ -185,7 +185,7 @@ try {
                 $category->readDataById((int) $catId);
 
                 if ($category->getValue('cat_org_id') === $gCurrentOrgId) {
-                    // das Profilfeld ist organisationsbezogen und kann deshalb gelöscht werden
+                    // the profile field is organization-specific and can therefore be deleted
                     $result_profileField = $profileField->delete();
 
                     $result .= ($result_profileField ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_PROFILE_FIELD_SUCCESS', array(
@@ -194,9 +194,9 @@ try {
                         $fieldName
                     )));
                 } else {
-                    // das Profilfeld ist für alle Orgas, deshalb vor Löschung prüfen, ob es evtl. noch woanders verwendet wird
+                    // the profile field is shared by all organizations, so check before deleting whether it is still used elsewhere
 
-                    // die aktuellen Konfigurationsdaten wurden bereits gelöscht, wenn jetzt noch eine weitere Installation vorhanden ist, dann nicht löschen
+                    // the current configuration data has already been deleted; if another installation still exists now, do not delete
                     if ($pPreferences->getAllPluginInstallations() > 0) {
                         $result .= $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_PROFILE_FIELD_NOT_DELETED', array(
                             $fieldName
@@ -213,7 +213,7 @@ try {
                 }
             }
 
-            // Maildaten löschen
+            // delete mail data
             $result_mail = false;
 
             $sql = 'DELETE FROM ' . TBL_TEXTS . '
@@ -226,7 +226,7 @@ try {
 
             $result .= ($result_mail ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_MAIL_TEXTS_SUCCESS') : $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_MAIL_TEXTS_ERROR'));
 
-            // alle von Mitgliedsbeitrag angelegten Profilfelder
+            // all profile fields created by Mitgliedsbeitrag
             $catArray = array();
             $catArray[] = 'ACCOUNT_DATA';
             $catArray[] = 'MANDATE' . $gCurrentOrgId;
@@ -244,7 +244,7 @@ try {
 
                 try {
                     if ($category->getValue('cat_org_id') === $gCurrentOrgId) {
-                        // das Profilfeld ist organisationsbezogen und kann deshalb gelöscht werden
+                        // the profile field is organization-specific and can therefore be deleted
                         $result_category = $category->delete();
 
                         $result .= ($result_category ? $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_CATEGORY_SUCCESS', array(
@@ -253,9 +253,9 @@ try {
                             $cat
                         )));
                     } else {
-                        // das Profilfeld ist für alle Orgas, deshalb vor Löschung prüfen, ob es evtl. noch woanders verwendet wird
+                        // the profile field is shared by all organizations, so check before deleting whether it is still used elsewhere
 
-                        // die aktuellen Konfigurationsdaten wurden bereits gelöscht, wenn jetzt noch eine weitere Installation vorhanden ist, dann nicht löschen
+                        // the current configuration data has already been deleted; if another installation still exists now, do not delete
                         if ($pPreferences->getAllPluginInstallations() > 0) {
                             $result .= $gL10n->get('PLG_MEMBERSHIPFEE_UNINST_CATEGORY_NOT_DELETED', array(
                                 $cat
@@ -277,7 +277,7 @@ try {
                 }
             }
 
-            // Abschlussmeldung ausgeben
+            // output final message
             $gNavigation->clear();
             $gMessage->setForwardUrl($gHomepage);
             $gMessage->show($result);

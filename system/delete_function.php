@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Funktionen der Deleteroutine
+ * Functions of the delete routine
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

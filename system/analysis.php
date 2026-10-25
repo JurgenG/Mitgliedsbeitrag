@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Beitragsanalyse fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Fee analysis for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

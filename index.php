@@ -35,10 +35,10 @@ try {
     $checked = $pPreferences->checkforupdate();
 
     if ($checked === 1) {
-        // Nur Update der Konfigurationstabelle (Konfigurationdaten sind vorhanden, der Stand ist aber unterschiedlich zur Version.php)
+        // Only update the configuration table (configuration data exist, but the version differs from Version.php)
         $pPreferences->init();
     } elseif ($checked === 2) {
-        // Detaillierte Installationsroutine durchlaufen (mind. ein Profilfeld fehlt)
+        // Run the detailed installation routine (at least one profile field is missing)
         $urlInst = ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/install_db.php';
         $gMessage->show($gL10n->get('PLG_MEMBERSHIPFEE_INSTALL_DETAILED_DESC', array(
             '<a href="' . $urlInst . '">' . $urlInst . '</a>'
@@ -46,7 +46,7 @@ try {
     }
 
     $pPreferences->read();
-    // prüfen, ob role_id und/ item_id gespeichert sind (Wichtig für eine Deinstallation; evtl. ist eine vorher durchgeführte Deinstallation fehlgeschlagen)
+    // check whether role_id and/or item_id are stored (important for an uninstall; a previous uninstall may have failed)
     if ($pPreferences->config['install']['access_role_id'] == 0 || $pPreferences->config['install']['menu_item_id'] == 0) {
         $urlInst = ADMIDIO_URL . FOLDER_PLUGINS . PLUGIN_FOLDER . '/system/install.php';
         $gMessage->show($gL10n->get('PLG_MEMBERSHIPFEE_INSTALL_UPDATE_REQUIRED', array(

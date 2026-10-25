@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Konfigurationsdaten fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Configuration data for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -13,9 +13,9 @@ global $gProfileFields;
 
 $config_default = array();
 
-// Standardwerte einer Neuinstallation
+// Default values of a new installation
 
-// Altersrollen
+// Age roles
 $config_default['Altersrollen'] = array(
     'altersrollen_token' => array(
         '*'
@@ -23,7 +23,7 @@ $config_default['Altersrollen'] = array(
     'altersrollen_offset' => 0
 );
 
-// Familienrollen
+// Family roles
 $config_default['Familienrollen'] = array(
     'familienrollen_beitrag' => array(
         0
@@ -42,7 +42,7 @@ $config_default['Familienrollen'] = array(
     )
 );
 
-// Beitrag
+// Fee
 $config_default['Beitrag'] = array(
     'beitrag_prefix' => 'Mitgliedsbeitrag 2026',
     'beitrag_suffix' => '(ant.)',
@@ -55,7 +55,7 @@ $config_default['Beitrag'] = array(
     'beitrag_mindestbetrag' => 0
 );
 
-// Kontodaten
+// Account data
 $config_default['Kontodaten'] = array(
     'bank' => 'Sparkasse Musterstadt',
     'inhaber' => 'Musterverein e.V.',
@@ -66,7 +66,7 @@ $config_default['Kontodaten'] = array(
     'origci' => ''
 );
 
-// Mandatsreferenz
+// Mandate reference
 $config_default['Mandatsreferenz'] = array(
     'prefix_fam' => 'FAM',
     'prefix_mem' => 'MIT',
@@ -75,7 +75,7 @@ $config_default['Mandatsreferenz'] = array(
     'data_field' => '-- User_ID --'
 );
 
-// Rollenpruefung
+// Role check
 $config_default['Rollenpruefung'] = array(
     'altersrollenfamilienrollen' => array(
         ' '
@@ -118,7 +118,7 @@ $config_default['tests_enable'] = array(
     'bic_check' => 1
 );
 
-// Rechnungs-Export
+// Invoice export
 $config_default['Rechnungs-Export'] = array(
     'rechnung_dateiname' => 'rechnung',
     'rechnung_dateityp' => 'xlsx'
@@ -135,11 +135,11 @@ $config_default['SEPA'] = array(
     'duedate_for_all' => 0
 );
 
-// Plugininformationen
+// Plugin information
 $config_default['Plugininformationen']['version'] = '';
 $config_default['Plugininformationen']['stand'] = '';
 
-// Spalten fuer die Ansichtsdefinitionen
+// Columns for the view definitions
 $config_default['columnconfig'] = array(
     'payments_fields' => array(
         'p' . $gProfileFields->getProperty('PAID' . $GLOBALS['gCurrentOrgId'], 'usf_id'),
@@ -172,20 +172,20 @@ $config_default['columnconfig'] = array(
     )
 );
 
-// Mitgliedsnummer
+// Member number
 $config_default['membernumber'] = array(
     'format' => '',
     'fill_gaps' => 1
 );
 
-// Zugriffsberechtigung für das Modul preferences
+// Access authorization for the preferences module
 $config_default['access']['preferences'] = array();
 
-// Infos für Uninstall
+// Info for uninstall
 $config_default['install']['access_role_id'] = 0;
 $config_default['install']['menu_item_id'] = 0;
 
-// Individualbeiträge
+// Individual contributions
 $config_default['individual_contributions'] = array(
     'access_to_module' => '0',
     'desc' => array(
@@ -205,17 +205,17 @@ $config_default['individual_contributions'] = array(
     )
 );
 
-// Multiplikatorrollen (nur Familienrollen)
+// Multiplier roles (family roles only)
 $config_default['multiplier']['roles'] = array();
 
 /*
- * Mittels dieser Zeichenkombination werden Konfigurationsdaten, die zur Laufzeit als Array verwaltet werden,
- * zu einem String zusammengefasst und in der Admidiodatenbank gespeichert.
- * Muessen die vorgegebenen Zeichenkombinationen (#_#) jedoch ebenfalls, z.B. in der Beschreibung
- * einer Konfiguration, verwendet werden, so kann das Plugin gespeicherte Konfigurationsdaten
- * nicht mehr richtig einlesen. In diesem Fall ist die vorgegebene Zeichenkombination abzuaendern (z.B. in !-!)
+ * Using this character combination, configuration data that is managed as an array at runtime
+ * is combined into a string and stored in the Admidio database.
+ * If the predefined character combination (#_#) must also be used, e.g. in the description
+ * of a configuration, the plugin can no longer read stored configuration data
+ * correctly. In this case the predefined character combination must be changed (e.g. to !-!)
  *
- * Achtung: Vor einer Aenderung muss eine Deinstallation durchgefuehrt werden!
- * Bereits gespeicherte Werte in der Datenbank koennen nach einer Aenderung nicht mehr eingelesen werden!
+ * Attention: An uninstall must be performed before making a change!
+ * Values already stored in the database can no longer be read after a change!
  */
 $dbtoken = '#_#';
