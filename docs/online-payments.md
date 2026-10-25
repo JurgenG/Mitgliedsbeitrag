@@ -135,6 +135,30 @@ installations aren't forced into a reinstall.
 - Amounts are passed to providers as strings with two decimals (`"25.00"`) in `EUR`. The fee is
   normalised with the existing helpers, never parsed ad hoc.
 
+## Permissions
+
+Admidio's role rights are fixed columns of the roles table, so a plugin can't add checkboxes to the
+role editor. Like the existing *Access to preferences*, each payment permission is therefore a
+**role multi-select in the plugin preferences**, stored as a list of role ids in
+`config['access'][<permission>]`. **Administrators always have every permission.** Everyone else
+needs membership in one of the selected roles. Default: no roles, so admin only.
+
+| Permission (config key) | Allows |
+|---|---|
+| `payment_settings` | Enable/disable online payments, choose the provider, view/change provider settings (API key, test/live mode), see the webhook URL |
+| `payment_details` | Read-only view of per-member payment data: payment id, provider, status, paid timestamp, link to the payment in the provider's dashboard |
+| `payment_links` | Send mails containing `#payment_link#`; invalidate/regenerate a member's personal pay link |
+| `payment_refunds` | Reserved for refunds through the provider. Refunds are out of scope for phase 1; nothing uses it yet |
+
+- The permissions are **independent**: none implies another, and *Access to preferences* does **not**
+  include `payment_settings`. A treasurer can send links without seeing the API key.
+- All of them additionally require normal plugin access (`isUserAuthorized()`).
+- Checked with one generic helper, `isUserAuthorizedFor('<permission>')`. The decision logic lives in
+  the Admidio-independent class `classes/Service/AccessControl.php` and is unit-tested. Unknown
+  permission names throw instead of silently allowing or denying.
+- The public endpoints `pay.php` and `payment_webhook.php` can't use role permissions: neither the
+  paying member nor the provider is logged in. They are protected as described under *Security*.
+
 ## Configuration UI
 
 A new panel *Online payments* in the plugin preferences, saved through
@@ -166,13 +190,15 @@ keys in all language files.
    `test_mode`). Language keys are added with the UI that uses them.
 3. ✅ `PaymentProviderInterface`, `PaymentResult`, `FakeProvider`, with unit tests; then
    `getName()` and `extractWebhookPaymentId()` for multi-provider support.
-4. `PaymentService`: open-fee lookup, token handling, mark paid (tested against `FakeProvider`).
-5. Optional profile fields (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`): created on enable,
+4. Permissions: config defaults, `AccessControl` (unit-tested), `isUserAuthorizedFor()`, and the
+   role-selection panel in the preferences.
+5. `PaymentService`: open-fee lookup, token handling, mark paid (tested against `FakeProvider`).
+6. Optional profile fields (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`): created on enable,
    removed on uninstall.
-6. `pay.php` + `#payment_link#` mail placeholder.
-7. `payment_webhook.php`.
-8. `MollieProvider` (curl) + preferences panel.
-9. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
+7. `pay.php` + `#payment_link#` mail placeholder.
+8. `payment_webhook.php`.
+9. `MollieProvider` (curl) + preferences panel.
+10. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
 
 ## Decisions
 
