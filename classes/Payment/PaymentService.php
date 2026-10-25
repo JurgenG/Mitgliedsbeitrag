@@ -82,6 +82,24 @@ final class PaymentService
     }
 
     /**
+     * Checks a pay link
+     * @param string $userUuid
+     * @param string $token Token from the pay link
+     * @return PaymentMember|null The member if the link is valid, otherwise null
+     */
+    public function checkPayLink(string $userUuid, string $token): ?PaymentMember
+    {
+        $member = $this->store->findMember($userUuid);
+
+        // an empty stored token must never match an empty token from the link
+        if ($member === null || $member->token === '' || !hash_equals($member->token, $token)) {
+            return null;
+        }
+
+        return $member;
+    }
+
+    /**
      * Creates a payment for the member's current open fee
      * @param string $userUuid
      * @param string $token       Token from the pay link
@@ -93,10 +111,9 @@ final class PaymentService
      */
     public function startPayment(string $userUuid, string $token, string $redirectUrl, string $webhookUrl): ?PaymentResult
     {
-        $member = $this->store->findMember($userUuid);
+        $member = $this->checkPayLink($userUuid, $token);
 
-        // an empty stored token must never match an empty token from the link
-        if ($member === null || $member->token === '' || !hash_equals($member->token, $token)) {
+        if ($member === null) {
             throw new InvalidPayLinkException('Invalid pay link');
         }
 
