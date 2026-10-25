@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Verarbeiten der Einstellungen des Admidio-Plugins Mitgliedsbeitrag
+ * Processing of the settings of the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -39,7 +39,7 @@ $gMessage->showHtmlTextOnly(true);
 // CSRF protection: reject the request if the token is missing or invalid
 checkCsrfToken();
 
-// Rueckgabecode
+// return code
 $ret = 'success';
 
 try {
@@ -55,7 +55,7 @@ try {
             $pPreferences->config['Beitrag']['beitrag_textmitnam'] = isset($_POST['beitrag_textmitnam']) ? 1 : 0;
             $pPreferences->config['Beitrag']['beitrag_textmitfam'] = isset($_POST['beitrag_textmitfam']) ? 1 : 0;
             $pPreferences->config['Beitrag']['beitrag_text_token'] = $_POST['beitrag_text_token'];
-            $pPreferences->config['Beitrag']['beitrag_role_separator'] = replace_sepadaten($_REQUEST['beitrag_role_separator']); // $_POST übergibt keine führenden und nachfolgenden Leerzeichen, $_REQUEST schon
+            $pPreferences->config['Beitrag']['beitrag_role_separator'] = replace_sepadaten($_REQUEST['beitrag_role_separator']); // $_POST does not pass leading and trailing spaces, $_REQUEST does
             break;
 
         case 'agestaggeredroles':
@@ -70,15 +70,15 @@ try {
                 $pPreferences->config['Altersrollen']['altersrollen_token'][] = $_POST['altersrollen_token' . $conf];
                 $altersrollen_anzahl ++;
             }
-            // diese Zeile ist nur zur Sicherheit, falls ein Nutzer einen Refresh (F5) des Browsers ausfuehrt
-            // und dadurch nicht durch das Plugin kontrollierte Loeschungen oder Hinzufuegungen ausfuehrt
+            // this line is only a safeguard in case a user refreshes (F5) the browser
+            // and thereby performs deletions or additions that are not controlled by the plugin
             if ($altersrollen_anzahl == 0) {
                 $gMessage->show($gL10n->get('PLG_MEMBERSHIPFEE_ERROR_MIN_CONFIG'));
             }
             break;
 
         case 'familyroles':
-            // familienrollen_pruefung zwischenspeichern
+            // cache familienrollen_pruefung
             $familienrollen_pruefung = $pPreferences->config['Familienrollen']['familienrollen_pruefung'];
 
             unset($pPreferences->config['Familienrollen']);
@@ -223,11 +223,11 @@ try {
 
             if (count($fixrollen) > 1) {
                 $fixrollenL = $fixrollen;
-                array_pop($fixrollenL); // das letzte Element entfernen
+                array_pop($fixrollenL); // remove the last element
                 $fixrollenR = $fixrollen;
 
                 foreach ($fixrollenL as $keyL => $dataL) {
-                    unset($fixrollenR[$keyL]); // dasselbe Element entfernen
+                    unset($fixrollenR[$keyL]); // remove the same element
                     foreach ($fixrollenR as $keyR => $dataR) {
                         if (isset($_POST['fixrollenfixrollen' . $keyL . '_' . $keyR])) {
                             $pPreferences->config['Rollenpruefung']['fixrollenfixrollen'][] = $keyL . '_' . $keyR;
@@ -258,7 +258,7 @@ try {
                         $pPreferences->config['columnconfig'][$conf][] = $_POST['column' . $conf . '_' . $number];
                     }
                 }
-                // doppelte Einträge führen zu einem SQL-FEHLER in der Funktion list_members
+                // duplicate entries lead to an SQL ERROR in the function list_members
                 $pPreferences->config['columnconfig'][$conf] = array_unique($pPreferences->config['columnconfig'][$conf]);
             }
             break;

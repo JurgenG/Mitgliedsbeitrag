@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * E-Mails versenden aus dem Plugin Mitgliedsbeitrag
+ * Sending emails from the plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -62,7 +62,7 @@ $user = new User($gDb, $gProfileFields);
 $userField = new Entity($gDb, TBL_USER_FIELDS, 'usf'); 
 
 $singleMail = false;
-if ($getUserUuid !== '' && $getUsfUuid !== '')                          // ein E-Mail-Link wurde angeklickt
+if ($getUserUuid !== '' && $getUsfUuid !== '')                          // an email link was clicked
 {
     $user->readDataByUuid($getUserUuid);
     $userField->readDataByUuid($getUsfUuid);
@@ -85,7 +85,7 @@ elseif (isset($_SESSION['pMembershipFee']['checkedArray']))
         $gMessage->show($gL10n->get('PLG_MEMBERSHIPFEE_EMAIL_EMPTY'));
         // => EXIT
     }
-    elseif (count($mailToArray) === 1)                                      // der Mail-Button wurde angeklickt (aber es gibt nur eine Mail-Adresse in der Liste)
+    elseif (count($mailToArray) === 1)                                      // the mail button was clicked (but there is only one email address in the list)
     {
         $user->readDataById(key($mailToArray));
         $getUserUuid = $user->getValue('usr_uuid');
@@ -100,14 +100,14 @@ else
     // => EXIT
 }
 
-// Subject und Body erzeugen
+// create subject and body
 $text = new Text($gDb);
 
 //abhaengig vom aufrufenden Modul Text einlesen
 if (substr_count($gNavigation->getUrl(), 'pre_notification') === 1)
 {
     $text->readDataByColumns(array('txt_name' => 'PMBMAIL_PRE_NOTIFICATION', 'txt_org_id' => $gCurrentOrgId));
-    //wenn noch nichts drin steht (=> "Einstellungen" und "Sichern" wurde noch nicht aufgerufen), dann vorbelegen (aber nicht speichern)
+    //if nothing is set yet (=> "Settings" and "Save" have not been called yet), then prefill (but do not save)
     if ($text->getValue('txt_text') == '')
     {
         // convert <br /> to a normal line feed
@@ -118,7 +118,7 @@ if (substr_count($gNavigation->getUrl(), 'pre_notification') === 1)
 elseif (substr_count($gNavigation->getUrl(), 'payments') === 1)
 {
     $text->readDataByColumns(array('txt_name' => 'PMBMAIL_CONTRIBUTION_PAYMENTS', 'txt_org_id' => $gCurrentOrgId));
-    //wenn noch nichts drin steht (=> "Einstellungen" und "Sichern" wurde noch nicht aufgerufen), dann vorbelegen (aber nicht speichern)
+    //if nothing is set yet (=> "Settings" and "Save" have not been called yet), then prefill (but do not save)
     if ($text->getValue('txt_text') == '')
     {
         // convert <br /> to a normal line feed
@@ -129,7 +129,7 @@ elseif (substr_count($gNavigation->getUrl(), 'payments') === 1)
 elseif (substr_count($gNavigation->getUrl(), 'bill') === 1)
 {
     $text->readDataByColumns(array('txt_name' => 'PMBMAIL_BILL', 'txt_org_id' => $gCurrentOrgId));
-    //wenn noch nichts drin steht (=> "Einstellungen" und "Sichern" wurde noch nicht aufgerufen), dann vorbelegen (aber nicht speichern)
+    //if nothing is set yet (=> "Settings" and "Save" have not been called yet), then prefill (but do not save)
     if ($text->getValue('txt_text') == '')
     {
         // convert <br /> to a normal line feed
@@ -142,10 +142,10 @@ $mailSrcText = $text->getValue('txt_text');
 
 if ($singleMail)
 {
-    $mailSrcText = replace_emailparameter($mailSrcText, $user);             // nur wenn eine einzige Empfängeradresse vorhanden ist, die Parameter ersetzen
+    $mailSrcText = replace_emailparameter($mailSrcText, $user);             // replace the parameters only if there is a single recipient address
 }
 
-// Betreff und Inhalt anhand von Kennzeichnungen splitten oder ggf. Default-Inhalte nehmen
+// split subject and content based on markers or, if necessary, use default content
 if(strpos($mailSrcText, '#subject#') !== false)
 {
     $mailSubject = trim(substr($mailSrcText, strpos($mailSrcText, '#subject#') + 9, strpos($mailSrcText, '#content#') - 9));
@@ -178,7 +178,7 @@ else
 if ($singleMail)
 {
     //Datensatz fuer E-Mail-Adresse zusammensetzen
-    if($userField->getValue('usf_name_intern') === 'DEBTOR_EMAIL')                      // Problem: 'DEBTOR_EMAIL' ist als TEXT in der DB definiert
+    if($userField->getValue('usf_name_intern') === 'DEBTOR_EMAIL')                      // Problem: 'DEBTOR_EMAIL' is defined as TEXT in the DB
     {
         if(StringUtils::strValidCharacters((string) $user->getValue('DEBTOR_EMAIL'), 'email'))
         {
@@ -208,13 +208,13 @@ else
     $userEmail = $gL10n->get('PLG_MEMBERSHIPFEE_MAILCOUNT', array(count($mailToArray)));
 }
 
-// Wenn die letzte URL in der Zuruecknavigation die des Scriptes message_send.php ist,
-// dann soll das Formular gefuellt werden mit den Werten aus der Session
-// dieser Fall tritt i.d.R. nur ein, wenn der Mailversand fehlgeschlagen ist
+// If the last URL in the back navigation is that of the script message_send.php,
+// then the form should be filled with the values from the session
+// this case usually only occurs if sending the mail failed
 if (strpos($gNavigation->getUrl(), 'message_send.php') > 0 && isset($_SESSION['pMembershipFee']['message_request']))
 {
     // Das Formular wurde also schon einmal ausgef�llt,
-    // da der User hier wieder gelandet ist nach der Mailversand-Seite
+    // since the user landed here again after the mail sending page
     $formValues = $_SESSION['pMembershipFee']['message_request'];
     unset($_SESSION['pMembershipFee']['message_request']);
     $gNavigation->deleteLastUrl();
@@ -256,7 +256,7 @@ $form->addInput('namefrom', $gL10n->get('SYS_YOUR_NAME'), $gCurrentUser->getValu
     array('maxLength' => 50, 'property' => HtmlForm::FIELD_DISABLED)
 );
 
-//Auswahlmöglichkeit für Sender-EMail-Adresse (falls es mehrere gibt)
+//Selection option for the sender email address (if there are several)
 $sql = 'SELECT COUNT(*) AS count
           FROM '.TBL_USER_FIELDS.'
     INNER JOIN '. TBL_USER_DATA .'

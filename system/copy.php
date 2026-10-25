@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Kopieren von Profildaten fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Copying profile data for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -9,12 +9,12 @@
  *
  * Parameters:
  *
- * mode             : html   - Standardmodus zun Anzeigen einer html-Liste
- *                    assign - Kopieren der Daten
- * source_userid    : die UserID des Quelle-Mitglieds
- * target_userid    : die UserID des Ziel-Mitglieds
- * source_usfid     : die UsfID der Quelle
- * target_usfid     : die UsfID des Ziels
+ * mode             : html   - default mode to display an html list
+ *                    assign - copy the data
+ * source_userid    : the UserID of the source member
+ * target_userid    : the UserID of the target member
+ * source_usfid     : the UsfID of the source
+ * target_usfid     : the UsfID of the target
  ***********************************************************************************************
  */
 

@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Berechnung von Individualbeiträgen
+ * Calculation of individual contributions
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -62,7 +62,7 @@ if ($getMode == 'preview')     //Default
 	$members = array();
 	$message = '';
 
-	// alle aktiven Mitglieder einlesen
+	// read all active members
 	$members = list_members(array('FIRST_NAME', 'LAST_NAME', 'FEE'.$gCurrentOrgId, 'CONTRIBUTORY_TEXT'.$gCurrentOrgId), 0);
 
  	foreach ($members as $member => $memberdata)
@@ -87,13 +87,13 @@ if ($getMode == 'preview')     //Default
      		    $usfid = $pPreferences->config['individual_contributions']['profilefield'][$i];
      		    $multiplikator = $user->getValue($gProfileFields->getPropertyById((int) $usfid, 'usf_name_intern'));
      		    
-     		    //wenn das Profilfeld leer ist, dann wäre $multiplikator = ""; mit "" kann aber nicht multipliziert werden
+     		    //if the profile field is empty, $multiplikator would be ""; but "" cannot be multiplied
      		    $multiplikator = ($multiplikator === "") ?  0 : $multiplikator;
      		} 
             
             $amount =   $pPreferences->config['individual_contributions']['amount'][$i] * $multiplikator;
             
-            // Einzelbeträge auf 2 Nachkommastellen runden
+            // round individual amounts to 2 decimal places
 			$amount = round($amount, 2);
  
 			$members[$member]['FEE_NEW'] += $amount;
@@ -103,7 +103,7 @@ if ($getMode == 'preview')     //Default
 			}            
 		}  
 
-		// Gesamtbetrag auf 2 Nachkommastellen runden
+		// round total amount to 2 decimal places
 		$members[$member]['FEE_NEW'] = round($members[$member]['FEE_NEW'], 2);
 		
 		//ggf. abrunden
@@ -118,14 +118,14 @@ if ($getMode == 'preview')     //Default
 		    $members[$member]['FEE_NEW'] += (float) $members[$member]['FEE'.$gCurrentOrgId];
             $members[$member]['CONTRIBUTORY_TEXT_NEW'] = $members[$member]['CONTRIBUTORY_TEXT'.$gCurrentOrgId].' '.$members[$member]['CONTRIBUTORY_TEXT_NEW'];
 		
-		    //fuehrende und nachfolgene Leerstellen im Beitragstext loeschen
+		    //remove leading and trailing spaces in the fee text
 		    $members[$member]['CONTRIBUTORY_TEXT_NEW'] = trim($members[$member]['CONTRIBUTORY_TEXT_NEW']);
-		    //zwei aufeinanderfolgende Leerzeichen durch ein Leerzeichen ersetzen
+		    //replace two consecutive spaces with one space
 		    $members[$member]['CONTRIBUTORY_TEXT_NEW'] = str_replace('  ', ' ', $members[$member]['CONTRIBUTORY_TEXT_NEW']);
 		}
 		else
 		{
-		    unset($members[$member]);        //wenn kein neuer Beitrag errechnet wurde, dann dieses Mitglied in der Liste loeschen
+		    unset($members[$member]);        //if no new fee was calculated, remove this member from the list
 		}
  	}
 	

@@ -1,26 +1,26 @@
 <?php
 /**
  ***********************************************************************************************
- * Routine um eine Mandatsaenderung (Zahlungspflichtiger) zu bearbeiten
+ * Routine to process a mandate change (debtor)
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
  *
- * Hinweis:   mandate_change.php ist eine modifizierte members_assignment.php
+ * Note:   mandate_change.php is a modified members_assignment.php
  *
  * Parameters:
  *
- * mode             : html   - Standardmodus zum Anzeigen einer html-Liste
- *                    assign - Schreiben der Aenderungen in die Datenbank
- * usr_uuid         : Uuid des Benutzers, fuer den die Mandatsaenderungen durchgefuehrt werden
- * iban             : die neue IBAN des Zahlungspflichtigen
- * origiban         : die urspruengliche IBAN des Zahlungspflichtigen
- * mandateid        : die neue Mandatsreferenz des Zahlungspflichtigen
- * origmandateid    : die urspruengliche Mandatsreferenz des Zahlungspflichtigen
- * bankchanged      : die Bankverbindung wurde geaendert
- * bank             : die neue Bank des Zahlungspflichtigen
- * bic              : der neue BIC des Zahlungspflichtigen
+ * mode             : html   - default mode for displaying an html list
+ *                    assign - write the changes to the database
+ * usr_uuid         : UUID of the user for whom the mandate changes are made
+ * iban             : the new IBAN of the debtor
+ * origiban         : the original IBAN of the debtor
+ * mandateid        : the new mandate reference of the debtor
+ * origmandateid    : the original mandate reference of the debtor
+ * bankchanged      : the bank details were changed
+ * bank             : the new bank of the debtor
+ * bic              : the new BIC of the debtor
  ***********************************************************************************************
  */
 
@@ -70,10 +70,10 @@ if($getMode == 'assign')
 
     $gMessage->showTextOnly(true);
 
-    // wurde die Bank geaendert?
+    // was the bank changed?
     if ($getBankChanged == 'false')             //nein, dieselbe Bank
     {
-        //hat eine Aenderung der IBAN stattgefunden?
+        //has the IBAN been changed?
         if ($getIBAN != $user->getValue('IBAN'))
         {
             //ja, dann muss origIBAN befuellt sein
@@ -88,9 +88,9 @@ if($getMode == 'assign')
             }
         }
     }
-    else               //die Bank wurde geaendert
+    else               //the bank was changed
     {
-        //bei einer Aenderung der Bank muss es eine andere IBAN geben
+        //when the bank is changed, there must be a different IBAN
         if ($getIBAN != $user->getValue('IBAN'))
         {
             $bank_change = 'true';
@@ -102,10 +102,10 @@ if($getMode == 'assign')
         }
     }
 
-    // wurde die Mandatsreferenz geaendert?
+    // was the mandate reference changed?
     if($getMandateID != $user->getValue('MANDATEID'.$gCurrentOrgId))
     {
-        //bei einer Aenderung muss origMandateID befuellt sein
+        //when changed, origMandateID must be filled
         if (strlen($getOrigMandateID) !== 0)
         {
             $mandateid_change = 'true';
@@ -132,7 +132,7 @@ if($getMode == 'assign')
             $user->setValue('SEQUENCETYPE'.$gCurrentOrgId, '');
             $user->setValue('ORIG_DEBTOR_AGENT', 'SMNDA');
 
-            // wenn die Bank gewechselt wurde, braucht die neue Bank die urspruengliche IBAN nicht zu kennen
+            // if the bank was changed, the new bank does not need to know the original IBAN
             $user->setValue('ORIG_IBAN', '');
         }
         if($mandateid_change == 'true')

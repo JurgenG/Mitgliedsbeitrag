@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Modul Rechnung für das Admidio-Plugin Mitgliedsbeitrag
+ * Invoice module for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -9,17 +9,17 @@
  *
  * Parameters:
  *
- * mode             : html       - Standardmodus zun Anzeigen einer html-Liste
- *                    prepare    - user in einem CheckedArray setzen bzw loeschen
- *                    export     - erzeugt eine Exportdatei
- *                    mail       - nur zur Pruefung, ob user im CheckedArray markiert sind
- * usr_id           : <>0        - Id des Benutzers, fuer der im CheckedArray gesetzt/geloescht wird
- *                    leer       - alle user im CheckedArray aendern von gesetzt->geloescht bzw geloescht->gesetzt
- * mem_show_choice  : 0 - (Default) Alle Benutzer anzeigen
- *                    1 - Nur Benutzer anzeigen, bei denen eien E-Mail vorhanden ist
- *                    2 - Nur Benutzer anzeigen, bei denen keine E-Mail vorhanden ist
- * checked          : true  - Der Haken beim Benutzer wurde gesetzt
- *                    false - Der Haken beim Benutzer wurde entfernt
+ * mode             : html       - default mode to display an html list
+ *                    prepare    - set or delete user in a CheckedArray
+ *                    export     - creates an export file
+ *                    mail       - only to check whether users are marked in the CheckedArray
+ * usr_id           : <>0        - Id of the user who is set/deleted in the CheckedArray
+ *                    empty      - change all users in the CheckedArray from set->deleted or deleted->set
+ * mem_show_choice  : 0 - (Default) Show all users
+ *                    1 - Show only users who have an email
+ *                    2 - Show only users who have no email
+ * checked          : true  - The checkmark for the user was set
+ *                    false - The checkmark for the user was removed
  ***********************************************************************************************
  */
 use Admidio\Infrastructure\Exception;
@@ -77,7 +77,7 @@ if ($getMode == 'mail' || $getMode == 'export') {
         echo 'marker_empty';
     }
 } else {
-    $membersListFields = array_filter($pPreferences->config['columnconfig']['bill_fields']); // array_filter: löschen leerer Einträge, falls das Setup fehlgeschlagen ist
+    $membersListFields = array_filter($pPreferences->config['columnconfig']['bill_fields']); // array_filter: deleting empty entries in case the setup failed
 
     $membersListSqlCondition = 'AND mem_usr_id IN (SELECT DISTINCT usr_id
         FROM ' . TBL_USERS . '
@@ -107,15 +107,15 @@ if ($getMode == 'mail' || $getMode == 'export') {
          AND paid.usd_value IS NULL
          AND fee.usd_value IS NOT NULL
                     ';
-    if ($getMembersShow == 1) // Nur Benutzer anzeigen, bei denen eine E-Mail vorhanden ist
+    if ($getMembersShow == 1) // Show only users who have an email
     {
         $membersListSqlCondition .= 'AND (email.usd_value IS NOT NULL 
                                       OR debtoremail.usd_value IS NOT NULL )) ';
-    } elseif ($getMembersShow == 2) // Nur Benutzer anzeigen, bei denen keine E-Mail vorhanden ist
+    } elseif ($getMembersShow == 2) // Show only users who have no email
     {
         $membersListSqlCondition .= ' AND email.usd_value IS NULL 
                                       AND debtoremail.usd_value IS NULL) ';
-    } else // Alle Benutzer anzeigen
+    } else // Show all users
     {
         $membersListSqlCondition .= ' ) ';
     }
@@ -123,13 +123,13 @@ if ($getMode == 'mail' || $getMode == 'export') {
 
     if ($getMode == 'prepare') {
         $ret_text = 'ERROR';
-        if ($getUserId != 0) // ein einzelner User wurde selektiert
+        if ($getUserId != 0) // a single user was selected
         {
-            if ($getChecked == 'false') // der Haken wurde geloescht
+            if ($getChecked == 'false') // the checkmark was removed
             {
                 unset($_SESSION['pMembershipFee']['checkedArray'][$getUserId]);
                 $ret_text = 'success';
-            } elseif ($getChecked == 'true') // der Haken wurde gesetzt
+            } elseif ($getChecked == 'true') // the checkmark was set
             {
                 $_SESSION['pMembershipFee']['checkedArray'][$getUserId] = isset($_SESSION['pMembershipFee']['mailArray'][$getUserId]) ? $_SESSION['pMembershipFee']['mailArray'][$getUserId] : '';
                 $ret_text = 'success';
@@ -312,7 +312,7 @@ if ($getMode == 'mail' || $getMode == 'export') {
                 }
                 $columnValues[] = $columnHeader;
             }
-            break; // Abbruch nach dem ersten Mitglied, da nur die usfIds eines Mitglieds benoetigt werden um die headlines zu erzeugen
+            break; // Abort after the first member, since only the usfIds of one member are needed to generate the headlines
         }
 
         $table->setColumnAlignByArray($columnAlign);

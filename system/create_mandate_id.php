@@ -62,7 +62,7 @@ if ($getMode == 'preview')     //Default
 	{	
 		$_SESSION['pMembershipFee']['createmandateid_rol_sel'] = $_POST['createmandateid_roleselection'];
 		
-		// Rollenwahl ist vorhanden, deshalb Daten aufbereiten fuer list_members
+		// role selection exists, so prepare data for list_members
 		$rols = array();
 		$role = new Role($gDb);
 		foreach ($_POST['createmandateid_roleselection'] as $rol_id)
@@ -86,21 +86,21 @@ if ($getMode == 'preview')     //Default
 		$members = list_members(array('LAST_NAME', 'FIRST_NAME', 'DEBTOR', 'MANDATEID'.$gCurrentOrgId, 'FEE'.$gCurrentOrgId, 'CONTRIBUTORY_TEXT'.$gCurrentOrgId, 'IBAN'), $rols);
 	}
 	
-	//alle Mitglieder loeschen, bei denen keine IBAN vorhanden ist
+	//remove all members who have no IBAN
 	$members = array_filter($members, 'delete_without_IBAN');
 	
-	//alle Mitglieder loeschen, bei denen bereits eine Mandatsreferenz vorhanden ist
+	//remove all members who already have a mandate reference
 	$members = array_filter($members, 'delete_with_MANDATEID');
 	
-	//alle Beitragsrollen einlesen
+	//read all contribution roles
 	$contributingRolls = beitragsrollen_einlesen('fam', array('FIRST_NAME', 'LAST_NAME'));
 	
-	//alle uebriggebliebenen Mitglieder durchlaufen und eine Mandatsreferenz erzeugen
+	//iterate through all remaining members and generate a mandate reference
 	foreach ($members as $member => $memberdata)
 	{
 		$prefix = $pPreferences->config['Mandatsreferenz']['prefix_mem'];
 	
-		//wenn 'DEBTOR' nicht leer ist, dann gibt es einen Zahlungspflichtigen
+		//if 'DEBTOR' is not empty, there is a payer
 		if ($memberdata['DEBTOR'] != '')
 		{
 			$prefix = $pPreferences->config['Mandatsreferenz']['prefix_pay'];

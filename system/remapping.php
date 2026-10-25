@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Neuzuordnung von Mitgliedern
+ * Reassignment of members
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -54,7 +54,7 @@ if ($getMode == 'preview')     //Default
     $page = new HtmlPage('plg-mitgliedsbeitrag-remapping-preview', $headline);
     $page->setContentFullWidth(); 
     
-	//Vor der Neuzuordnung die altersgestaffelten Rollen auf Luecken oder Ueberlappungen pruefen
+	//Before the reassignment, check the age-graded roles for gaps or overlaps
 	$arr = check_rols();
 	if (!in_array($gL10n->get('PLG_MEMBERSHIPFEE_AGE_STAGGERED_ROLES_RESULT_OK'), $arr))
 	{
@@ -65,10 +65,10 @@ if ($getMode == 'preview')     //Default
 	$stack = array();
 	$members = array();
 	
-	// alle Altersrollen einlesen
+	// read all age roles
 	$altersrollen = beitragsrollen_einlesen('alt', array('FIRST_NAME', 'LAST_NAME', 'BIRTHDAY'));
 	
-	// alle Altersrollen durchlaufen
+	// iterate through all age roles
 	foreach ($altersrollen as $roleId => $roldata)
 	{
 		foreach($altersrollen[$roleId]['members'] as $member => $memberdata)
@@ -82,14 +82,14 @@ if ($getMode == 'preview')     //Default
 						'<a href="'.SecurityUtils::encodeUrl(ADMIDIO_URL.FOLDER_MODULES.'/profile/profile.php', array('user_uuid' => $user->getValue('usr_uuid'))).'">'.$memberdata['LAST_NAME'].'</a>' )));
 			}
 	
-			// das Alter des Mitglieds am Stichtag bestimmen
+			// determine the age of the member on the reference date
             $deadline = getDeadline($pPreferences->config['Altersrollen']['altersrollen_offset']);
             $age = ageCalculator(strtotime($memberdata['BIRTHDAY']), strtotime($deadline));
 			
-			// ist das Alter des Mitglieds außerhalb des Altersschemas der Rolle
+			// is the age of the member outside the age scheme of the role
 			if (($age < $roldata['von']) || ($age > $roldata['bis']))
 			{
-				// wenn ja, dann Mitglied auf den Stack legen 
+				// if yes, put the member on the stack 
 				$stack[] = array('LAST_NAME' => $memberdata['LAST_NAME'],
 						'FIRST_NAME' => $memberdata['FIRST_NAME'], 'user_id' => $member, 
 						'alter' => $age, 'alterstyp' => $roldata['alterstyp']);
@@ -108,15 +108,15 @@ if ($getMode == 'preview')     //Default
 		}
 	}
 	
-	// wenn ein Mitglied Angehoeriger mehrerer Rollen war (duerfte eigentlich gar nicht vorkommen),
-	// dann wurde er auch mehrfach in das Array $stack aufgenommen
+	// if a member belonged to several roles (should actually never happen),
+	// he was also added to the array $stack several times
 	// --> doppelte Vorkommen loeschen
 	$stack = array_map('unserialize', array_unique(array_map('serialize', $stack)));
 	
-	// den Stack abarbeiten
+	// process the stack
 	foreach ($stack as $key => $stackdata)
 	{
-		// alle Altersrollen durchlaufen und pruefen, ob das Mitglied in das Altersschema der Rolle passt
+		// iterate through all age roles and check whether the member fits the age scheme of the role
 		foreach ($altersrollen as $roleId => $roldata)
 		{
 			if (($stackdata['alter'] <= $roldata['bis'])
@@ -124,7 +124,7 @@ if ($getMode == 'preview')     //Default
 					&& ($stackdata['alterstyp'] == $roldata['alterstyp'])
 					&& !array_key_exists($stackdata['user_id'], $roldata['members']))
 			{
-				// das Mitglied passt in das Altersschema der Rolle und das Kennzeichen dieser Altersstaffelung passt auch
+				// the member fits the age scheme of the role and the identifier of this age grading matches as well
 				$members[] = array('LAST_NAME' => $stackdata['LAST_NAME'],
 						          'FIRST_NAME' => $stackdata['FIRST_NAME'],
 						             'user_id' => $stackdata['user_id'],
@@ -272,8 +272,8 @@ elseif ($getMode == 'write')
                       
 			$gDb->queryPrepared($sql, $queryParams);
             
-			// stopMembership() kann nicht verwendet werden, da es unter best. Umstaenden Mitgliedschaften nicht loescht
-			// Beschreibung von stopMembership()
+			// stopMembership() cannot be used, since under certain circumstances it does not delete memberships
+			// Description of stopMembership()
 			//      only stop membership if there is an actual membership
 			//      the actual date must be after the beginning
 			//      and the actual date must be before the end date
@@ -281,7 +281,7 @@ elseif ($getMode == 'write')
 		}
 		elseif ($data['toDo'] == 'set')
 		{
-			// das Mitglied passt in das Altersschema der Rolle und das Kennzeichen dieser Altersstaffelung passt auch
+			// the member fits the age scheme of the role and the identifier of this age grading matches as well
 			$tablemember->startMembership($data['role_id'], $data['user_id']);
 		}
 	}

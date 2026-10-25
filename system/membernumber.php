@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Dieses Plugin generiert fuer aktive Mitglieder der aktuellen Organisation eine Mitgliedsnummer.
+ * This plugin generates a member number for active members of the current organization.
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

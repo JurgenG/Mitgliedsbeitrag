@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Gemeinsame Funktionen fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Common functions for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -31,67 +31,67 @@ if (! defined('PLUGIN_FOLDER')) {
 spl_autoload_register('myAutoloader');
 
 /**
- * Mein Autoloader
- * Script aus dem Netz
+ * My autoloader
+ * Script from the web
  * https://www.marcosimbuerger.ch/tech-blog/php-autoloader.html
  *
  * @param string $className
- *            Die übergebene Klasse
- * @return string Der überprüfte Klassenname
+ *            The given class
+ * @return string The verified class name
  */
 function myAutoloader($className)
 {
     // Projekt spezifischer Namespace-Prefix.
     $prefix = 'Plugins\\';
 
-    // Base-Directory für den Namespace-Prefix.
+    // Base directory for the namespace prefix.
     $baseDir = __DIR__ . '/../../';
 
-    // Check, ob die Klasse den Namespace-Prefix verwendet.
+    // Check whether the class uses the namespace prefix.
     $len = strlen($prefix);
 
     if (strncmp($prefix, $className, $len) !== 0) {
-        // Wenn der Namespace-Prefix nicht verwendet wird, wird abgebrochen.
+        // If the namespace prefix is not used, abort.
         return;
     }
     // Den relativen Klassennamen ermitteln.
     $relativeClassName = substr($className, $len);
 
-    // Den Namespace-Präfix mit dem Base-Directory ergänzen,
-    // Namespace-Trennzeichen durch Verzeichnis-Trennzeichen im relativen Klassennamen ersetzen,
-    // .php anhängen.
+    // Prepend the base directory to the namespace prefix,
+    // replace namespace separators with directory separators in the relative class name,
+    // append .php.
     $file = $baseDir . str_replace('\\', '/', $relativeClassName) . '.php';
-    // Pfad zur Klassen-Datei zurückgeben.
+    // Return the path to the class file.
     if (file_exists($file)) {
         require $file;
     }
 }
 
 /**
- * Funktion prueft, ob der Nutzer berechtigt ist das Plugin auszuführen.
+ * Checks whether the user is authorized to run the plugin.
  *
- * In Admidio im Modul Menü kann über 'Sichtbar für' die Sichtbarkeit eines Menüpunkts eingeschränkt werden.
- * Der Zugriff auf die darunter liegende Seite ist von dieser Berechtigung jedoch nicht betroffen.
+ * In the Admidio Menu module, the visibility of a menu item can be restricted via 'Visible for'.
+ * However, access to the underlying page is not affected by this permission.
  *
- * Mit Admidio 5 werden alle Startcripte meiner Plugins umbenannt zu index.php
- * Um die index.php auszuführen, kann die bei einem Menüpunkt angegebene URL wie folgt angegeben sein:
- * /adm_plugins/<Installationsordner des Plugins>
- * oder
- * /adm_plugins/<Installationsordner des Plugins>/
- * oder
- * /adm_plugins/<Installationsordner des Plugins>/<Dateiname.php>
+ * With Admidio 5, all start scripts of my plugins are renamed to index.php
+ * To run index.php, the URL specified for a menu item can be given as follows:
+ * /adm_plugins/<plugin installation folder>
+ * or
+ * /adm_plugins/<plugin installation folder>/
+ * or
+ * /adm_plugins/<plugin installation folder>/<filename.php>
  *
- * Das Installationsscript des Plugins erstellt automatisch einen Menüpunkt in der Form: /adm_plugins/<Installationsordner des Plugins>/index.php
- * Standardmäßig wird deshalb für die Prüfung index.php als <Dateiname.php> verwendet, alternativ die übergebene Datei ($scriptname).
+ * The plugin's installation script automatically creates a menu item in the form: /adm_plugins/<plugin installation folder>/index.php
+ * By default, index.php is therefore used as <filename.php> for the check, alternatively the file passed in ($scriptname).
  *
- * Diese Funktion ermittelt nur die Menüpunkte, die einen Dateinamen am Ende (index.php oder $scriptname) aufweisen, liest bei diesen Menüpunkten
- * die unter 'Sichtbar für' eingetragenen Rollen ein und prüft, ob der angemeldete Benutzer Mitglied mindestens einer dieser Rollen ist.
- * Wenn ja, ist der Benutzer berechtigt, das Plugin auszuführen (auch, wenn es weitere Menüpunkte ohne Dateinamen am Ende gibt).
- * Wichtiger Hinweis: Sind unter 'Sichtbar für' keine Rollen angegeben, so darf jeder Benutzer das Plugin ausführen
+ * This function only determines the menu items that end with a filename (index.php or $scriptname), reads the roles entered under 'Visible for'
+ * for these menu items and checks whether the logged-in user is a member of at least one of these roles.
+ * If so, the user is authorized to run the plugin (even if there are other menu items without a filename at the end).
+ * Important note: If no roles are specified under 'Visible for', every user may run the plugin
  *
  * @param string $scriptName
- *            Der Scriptname des Plugins (default: 'index.php')
- * @return bool true, wenn der User berechtigt ist
+ *            The script name of the plugin (default: 'index.php')
+ * @return bool true if the user is authorized
  */
 function isUserAuthorized(string $scriptname = '')
 {
@@ -129,11 +129,11 @@ function isUserAuthorized(string $scriptname = '')
 }
 
 /**
- * Funktion prueft, ob der Nutzer berechtigt ist, das Modul Preferences aufzurufen.
+ * Checks whether the user is authorized to call the Preferences module.
  *
  * @param
  *            none
- * @return bool true, wenn der User berechtigt ist
+ * @return bool true if the user is authorized
  */
 function isUserAuthorizedForPreferences()
 {
@@ -143,7 +143,7 @@ function isUserAuthorizedForPreferences()
 
     $userIsAuthorized = false;
 
-    if ($GLOBALS['gCurrentUser']->isAdministrator()) // Mitglieder der Rolle Administrator dürfen "Preferences" immer aufrufen
+    if ($GLOBALS['gCurrentUser']->isAdministrator()) // Members of the Administrator role may always call "Preferences"
     {
         $userIsAuthorized = true;
     } else {
@@ -182,35 +182,35 @@ function checkCsrfToken()
 }
 
 /**
- * Funktion um alle beitragsbezogenen Rollen einzulesen
+ * Reads all fee-related roles
  *
  * @param string $rollenwahl
- *            [optional] 'alt' fuer alle altersgestaffelte Rollen,
- *            'fam' fuer alle Familienrollen,
- *            'fix' fuer alle Fixbeitragsrollen,
- *            leer fuer alle Beitragsrollen
+ *            [optional] 'alt' for all age-graded roles,
+ *            'fam' for all family roles,
+ *            'fix' for all fixed-fee roles,
+ *            empty for all fee roles
  * @param array $with_members
- *            [optional] Um die Rollen mit Mitgliedern einzulesen ist hier
- *            ein Array mit den einzulesenden usf_name_intern anzugeben,
- *            z.B. array('FIRST_NAME','LAST_NAME');
- *            ohne uebergebenen Parameter werden die Rollen ohne Mitglieder eingelesen
- * @return array $rollen Array mit Rollennamen im Format:<br/>
- *         $rollen[rol_id]['rolle'] =Rollenname ('rol_name')<br/>
- *         $rollen[rol_id]['rol_cost'] =Beitrag der Rollen ('rol_cost')<br/>
- *         $rollen[rol_id]['rol_cost_period'] =Beitragszeitraum ('rol_cost_period')<br/>
- *         $rollen[rol_id]['rol_timestamp_create'] =Erzeugungsdatum der Rolle ('rol_timestamp_create')<br/>
- *         $rollen[rol_id]['rol_description'] =Beschreibung ('rol_description')<br/>
- *         $rollen[rol_id]['von'] =nur bei altersgestaffelten Rollen 'von'<br/>
- *         $rollen[rol_id]['bis'] =nur bei altersgestaffelten Rollen 'bis'<br/>
- *         $rollen[rol_id]['alterstyp'] =nur bei altersgestaffelten Rollen 'Trennzeichen'<br/>
- *         $rollen[rol_id]['rollentyp'] =Rollentyp ('alt', 'fam' oder 'fix')
+ *            [optional] To read the roles with their members, specify here
+ *            an array with the usf_name_intern values to read,
+ *            e.g. array('FIRST_NAME','LAST_NAME');
+ *            without this parameter the roles are read without members
+ * @return array $rollen Array with role names in the format:<br/>
+ *         $rollen[rol_id]['rolle'] =role name ('rol_name')<br/>
+ *         $rollen[rol_id]['rol_cost'] =fee of the role ('rol_cost')<br/>
+ *         $rollen[rol_id]['rol_cost_period'] =fee period ('rol_cost_period')<br/>
+ *         $rollen[rol_id]['rol_timestamp_create'] =creation date of the role ('rol_timestamp_create')<br/>
+ *         $rollen[rol_id]['rol_description'] =description ('rol_description')<br/>
+ *         $rollen[rol_id]['von'] =only for age-graded roles 'von'<br/>
+ *         $rollen[rol_id]['bis'] =only for age-graded roles 'bis'<br/>
+ *         $rollen[rol_id]['alterstyp'] =only for age-graded roles 'separator'<br/>
+ *         $rollen[rol_id]['rollentyp'] =role type ('alt', 'fam' or 'fix')
  */
 function beitragsrollen_einlesen($rollenwahl = '', $with_members = array())
 {
     global $pPreferences;
     $rollen = array();
 
-    // alle Rollen einlesen
+    // read all roles
     $sql = 'SELECT rol_id, rol_name, rol_cost, rol_cost_period, rol_timestamp_create, rol_description
               FROM ' . TBL_ROLES . ', ' . TBL_CATEGORIES . '
              WHERE rol_valid  = true
@@ -238,9 +238,9 @@ function beitragsrollen_einlesen($rollenwahl = '', $with_members = array())
     }
 
     foreach ($rollen as $key => $data) {
-        // alle Alterskonfigurationen durchlaufen
+        // iterate over all age configurations
         foreach ($pPreferences->config['Altersrollen']['altersrollen_token'] as $altkey => $altdata) {
-            // ist es eine altersgestaffelte Rolle?
+            // is it an age-graded role?
             if (substr_count($data['rolle'], $pPreferences->config['Altersrollen']['altersrollen_token'][$altkey]) === 4) {
                 $v1 = strpos($data['rolle'], $pPreferences->config['Altersrollen']['altersrollen_token'][$altkey], 0);
                 $v2 = strpos($data['rolle'], $pPreferences->config['Altersrollen']['altersrollen_token'][$altkey], $v1 + 1);
@@ -265,23 +265,23 @@ function beitragsrollen_einlesen($rollenwahl = '', $with_members = array())
             }
         }
 
-        // alle Familienkonfigurationen durchlaufen
+        // iterate over all family configurations
         foreach ($pPreferences->config['Familienrollen']['familienrollen_prefix'] as $famkey => $famdata) {
-            // ist es eine Familienrolle?
+            // is it a family role?
             if (substr($data['rolle'], 0, strlen($pPreferences->config['Familienrollen']['familienrollen_prefix'][$famkey])) == $pPreferences->config['Familienrollen']['familienrollen_prefix'][$famkey]) {
                 $rollen[$key]['rollentyp'] = 'fam';
                 $rollen[$key]['familientyp'] = $pPreferences->config['Familienrollen']['familienrollen_prefix'][$famkey];
             }
         }
 
-        // wenn der Rollentyp jetzt immer noch leer ist, dann kann es nur eine Fixrolle sein
+        // if the role type is still empty now, it can only be a fixed-fee role
         if ($rollen[$key]['rollentyp'] == '') {
             $rollen[$key]['rollentyp'] = 'fix';
         }
     }
 
-    // jetzt sind alle Familienrollen, Altersrollen und Fixrollen markiert
-    // alle nicht benoetigten Rollen loeschen
+    // now all family roles, age roles and fixed-fee roles are marked
+    // delete all roles that are not needed
     foreach ($rollen as $key => $data) {
         if (($rollenwahl == 'fam') && ($rollen[$key]['rollentyp'] != 'fam')) {
             unset($rollen[$key]);
@@ -301,10 +301,10 @@ function beitragsrollen_einlesen($rollenwahl = '', $with_members = array())
 }
 
 /**
- * Liest alle Mitglieder von Rollen einer oder mehrerer Kategorie(n) ein.
- * Die cat_ids der einzulesenden Kategorien werden direkt aus der $config_ini gelesen
+ * Reads all members of roles in one or more categories.
+ * The cat_ids of the categories to read are taken directly from $config_ini
  *
- * @return array $members Array mit den user_ids der Mitglieder
+ * @return array $members Array with the user_ids of the members
  */
 function bezugskategorie_einlesen()
 {
@@ -312,8 +312,8 @@ function bezugskategorie_einlesen()
 
     $members = array();
 
-    // Hinweis: die Ueberpruefung, ob $config_ini['Rollenpruefung']['bezugskategorie']
-    // befuellt und ein Array ist, ist in der aufrufenden Routine erfolgt
+    // Note: the check whether $config_ini['Rollenpruefung']['bezugskategorie']
+    // is filled and an array was done in the calling routine
 
     $sql = 'SELECT DISTINCT mem_usr_id
             FROM ' . TBL_MEMBERS . ', ' . TBL_ROLES . ', ' . TBL_CATEGORIES . ' ';
@@ -356,26 +356,26 @@ function bezugskategorie_einlesen()
 }
 
 /**
- * Diese Funktion liefert als Rueckgabe die usr_ids von Rollenangehoerigen.<br/>
- * moegliche Aufrufe:<br/>
- * list_members(array('usf_name_intern1','usf_name_intern2'), array('Rollenname1' => Schalter aktiv/ehem) )<br/>
- * oder list_members(array('usf_name_intern1','usf_name_intern2'), 'Rollenname' )<br/>
- * oder list_members(array('usf_name_intern1','usf_name_intern2'), Schalter aktiv/ehem )<br/>
- * oder list_members(array('p1','p2'), Schalter aktiv/ehem )<br/>
+ * This function returns the usr_ids of role members.<br/>
+ * possible calls:<br/>
+ * list_members(array('usf_name_intern1','usf_name_intern2'), array('Rollenname1' => switch active/former) )<br/>
+ * or list_members(array('usf_name_intern1','usf_name_intern2'), 'Rollenname' )<br/>
+ * or list_members(array('usf_name_intern1','usf_name_intern2'), switch active/former )<br/>
+ * or list_members(array('p1','p2'), switch active/former )<br/>
  *
- * Schalter aktiv/ehem: 0 = aktive Mitglieder, 1 = ehemalige Mitglieder, ungleich 1 oder 0: alle Mitglieder <br/>
+ * Switch active/former: 0 = active members, 1 = former members, anything other than 1 or 0: all members <br/>
  *
- * Aufruf: z.B. list_members(array('FIRST_NAME','LAST_NAME'), array('Mitglied' => 0,'Administrator' => 0));
+ * Call: e.g. list_members(array('FIRST_NAME','LAST_NAME'), array('Mitglied' => 0,'Administrator' => 0));
  *
  * @param array $fields
- *            Array mit usf_name_intern oder p+usfID, z.B. array('FIRST_NAME','p2')
+ *            Array with usf_name_intern or p+usfID, e.g. array('FIRST_NAME','p2')
  * @param array/string/bool $rols
- *            Array mit Rollen, z.B. <br/>
- *            array('Rollenname1' => Schalter aktiv/ehem) )<br/>
- *            oder 'Rollenname' <br/>
- *            oder Schalter aktiv/ehem <br/>
+ *            Array with roles, e.g. <br/>
+ *            array('Rollenname1' => switch active/former) )<br/>
+ *            or 'Rollenname' <br/>
+ *            or switch active/former <br/>
  * @param string $conditions
- *            SQL-String als zusaetzlicher Filter von $members, z.B. 'AND usd_usf_id = 78'
+ *            SQL string as additional filter for $members, e.g. 'AND usd_usf_id = 78'
  * @return array $members
  */
 function list_members($fields, $rols = array(), $conditions = '')
@@ -404,7 +404,7 @@ function list_members($fields, $rols = array(), $conditions = '')
             $nameRow = $usfID;
             $nameIntern = $gProfileFields->getPropertyById($usfID, 'usf_name_intern');
 
-            if ($nameIntern === '') // prüfen, ob ein 'usf_name_intern' mit der angegebenen $usfID existiert; wenn nicht, zum nächsten Feld
+            if ($nameIntern === '') // check whether a 'usf_name_intern' with the given $usfID exists; if not, go to the next field
             {
                 continue;
             }
@@ -428,14 +428,14 @@ function list_members($fields, $rols = array(), $conditions = '')
     if (is_string($rols)) {
         $inString .= ' WHERE mem_rol_id = ' . getRoleId($rols) . ' AND ';
     } elseif (is_int($rols) && ($rols == 0)) {
-        // aktive Mitglieder
+        // active members
         $inString .= ' WHERE mem_begin <= \'' . DATE_NOW . '\' ';
         $inString .= ' AND mem_end >= \'' . DATE_NOW . '\' AND ';
     } elseif (is_int($rols) && ($rols == 1)) {
-        // nicht-aktive Mitglieder (ehemalige Mitglieder)
+        // inactive members (former members)
         $inString .= ' WHERE ( (mem_begin > \'' . DATE_NOW . '\') OR (mem_end < \'' . DATE_NOW . '\') ) AND ';
     } elseif (is_int($rols) && ($rols > 1 || $rols < 0)) {
-        // alle Mitglieder (aktiv und nicht-aktiv)
+        // all members (active and inactive)
         $inString .= ' WHERE ';
     } elseif (is_array($rols)) {
         if (sizeof($rols) == 1) {
@@ -443,17 +443,17 @@ function list_members($fields, $rols = array(), $conditions = '')
             $rowArray[] = 'mem_begin';
             $rowArray[] = 'mem_end';
 
-            reset($rols); // nur zur Sicherheit, falls eine Funktion vorher den Array-Zeiger verändert hat
+            reset($rols); // just to be safe, in case a function has previously moved the array pointer
             $roleKey = key($rols);
             $roleValue = current($rols);
 
             $addString .= ' ) AND mem_rol_id = ' . getRoleId($roleKey) . ' ';
             if ($roleValue == 0) {
-                // aktive Mitglieder
+                // active members
                 $addString .= ' AND mem_begin <= \'' . DATE_NOW . '\' ';
                 $addString .= ' AND mem_end >= \'' . DATE_NOW . '\'  ';
             } elseif ($roleValue == 1) {
-                // nicht aktive Mitglieder (ehemalige Mitglieder)
+                // inactive members (former members)
                 $addString .= ' AND ( (mem_begin > \'' . DATE_NOW . '\') OR (mem_end < \'' . DATE_NOW . '\') ) ';
             }
             $inString .= ' WHERE (';
@@ -468,11 +468,11 @@ function list_members($fields, $rols = array(), $conditions = '')
                 $inString .= 'mem_rol_id = ' . getRoleId($rol) . ' ';
 
                 if ($rol_switch == 0) {
-                    // aktive Mitglieder
+                    // active members
                     $inString .= ' AND mem_begin <= \'' . DATE_NOW . '\' ';
                     $inString .= ' AND mem_end >= \'' . DATE_NOW . '\' ';
                 } elseif ($rol_switch == 1) {
-                    // nicht aktive Mitglieder (ehemalige Mitglieder)
+                    // inactive members (former members)
                     $inString .= ' AND ( (mem_begin > \'' . DATE_NOW . '\') OR (mem_end < \'' . DATE_NOW . '\') )';
                 }
                 $inString .= ' ) ';
@@ -508,9 +508,9 @@ function list_members($fields, $rols = array(), $conditions = '')
 }
 
 /**
- * Normalisiert verschiedene Zahlenformate in einen Float-Wert.
- * Akzeptiert z.B. "1.234,56 €", "1234.56", "1,234.56" etc.
- * Beitrag von tt2g89 (GitHub #163)
+ * Normalizes various number formats into a float value.
+ * Accepts e.g. "1.234,56 €", "1234.56", "1,234.56" etc.
+ * Contributed by tt2g89 (GitHub #163)
  */
 function normalize_fee($value)
 {
@@ -522,7 +522,7 @@ function normalize_fee($value)
     }
     $v = (string) $value;
     $v = trim($v);
-    // Entfernt alles außer Ziffern, Minus, Punkt und Komma
+    // Removes everything except digits, minus, period and comma
     $v = preg_replace('/[^\d\-\.,]/u', '', $v);
     // Falls sowohl Punkt als auch Komma vorkommen, annehmen: '.' Tausender, ',' Dezimal
     if (strpos($v, ',') !== false && strpos($v, '.') !== false) {
@@ -540,8 +540,8 @@ function normalize_fee($value)
 }
 
 /**
- * Callbackfunktion fuer array_filter ,
- * die globale Variable $delete_NULL_field muß in der uebergebenden Routine definiert sein
+ * Callback function for array_filter,
+ * the global variable $delete_NULL_field must be defined in the calling routine
  *
  * @param string $wert
  * @return bool
@@ -554,11 +554,11 @@ function delete_NULL($wert)
 }
 
 /**
- * Funktion liest die Rollen-ID einer Rolle aus
+ * Reads the role ID of a role
  *
  * @param string $role_name
- *            Name der zu pruefenden Rolle
- * @return int rol_id Rol_id der Rolle, 0, wenn nicht gefunden
+ *            Name of the role to check
+ * @return int rol_id rol_id of the role, 0 if not found
  */
 function getRoleId($role_name)
 {
@@ -586,11 +586,11 @@ function getRoleId($role_name)
 }
 
 /**
- * Konvertiert einen numerischen Beitragszeitraum in einen String
+ * Converts a numeric fee period into a string
  *
  * @param int $my_rol_cost_period
- *            Beitragszeitraum als int
- * @return string Beitragszeitraum als String
+ *            Fee period as int
+ * @return string Fee period as string
  */
 function getCostPeriod($my_rol_cost_period)
 {
@@ -610,17 +610,17 @@ function getCostPeriod($my_rol_cost_period)
 }
 
 /**
- * Erzeugt Array mit Daten fuer die Analyse
+ * Creates array with data for the analysis
  *
- * @return array $ret Array im Format:<br/>
- *         $ret['BEITRAG_kto'] = Gesamtsumme der Beitraege mit Kto-Verbindung<br/>
- *         $ret['BEITRAG_kto_anzahl'] = Anzahl mit Kto-Verbindung<br/>
- *         $ret['BEZAHLT_kto'] = Gesamtsumme mit Bezahlt und mit Kto-Verbindung<br/>
- *         $ret['BEZAHLT_kto_anzahl'] = Anzahl mit Bezahlt und mit Kto-Verbindung<br/>
- *         $ret['BEITRAG_rech'] = Gesamtsumme der Beitraege ohne Kto-Verbindung<br/>
- *         $ret['BEITRAG_rech_anzahl'] = Anzahl ohne Kto-Verbindung<br/>
- *         $ret['BEZAHLT_rech'] = Gesamtsumme mit Bezahlt und ohne Kto-Verbindung<br/>
- *         $ret['BEZAHLT_rech_anzahl'] = Anzahl mit Bezahlt und ohne Kto-Verbindung
+ * @return array $ret Array in the format:<br/>
+ *         $ret['BEITRAG_kto'] = total of the fees with bank account<br/>
+ *         $ret['BEITRAG_kto_anzahl'] = number with bank account<br/>
+ *         $ret['BEZAHLT_kto'] = total paid with bank account<br/>
+ *         $ret['BEZAHLT_kto_anzahl'] = number paid with bank account<br/>
+ *         $ret['BEITRAG_rech'] = total of the fees without bank account<br/>
+ *         $ret['BEITRAG_rech_anzahl'] = number without bank account<br/>
+ *         $ret['BEZAHLT_rech'] = total paid without bank account<br/>
+ *         $ret['BEZAHLT_rech_anzahl'] = number paid without bank account
  */
 function analyse_mem()
 {
@@ -643,15 +643,15 @@ function analyse_mem()
         'BEZAHLT_rech_anzahl' => 0
     );
 
-    // alle Mitglieder durchlaufen und im ersten Schritt alle Mitglieder,
-    // bei denen kein Beitrag berechnet wurde, herausfiltern
+    // iterate over all members and, in the first step, filter out all members
+    // for whom no fee was calculated
     foreach ($members as $member => $memberdata) {
         if (empty($memberdata['FEE' . $GLOBALS['gCurrentOrgId']])) {
             unset($members[$member]);
         }
     }
 
-    // jetzt wird gezaehlt
+    // now count
     foreach ($members as $member => $memberdata) {
         if (! empty($memberdata['IBAN'])) {
             $ret['BEITRAG_kto'] += $memberdata['FEE' . $GLOBALS['gCurrentOrgId']];
@@ -674,7 +674,7 @@ function analyse_mem()
 }
 
 /**
- * Erzeugt Array mit Daten fuer die Analyse
+ * Creates array with data for the analysis
  *
  * @return array $ret
  */
@@ -696,9 +696,9 @@ function analyse_rol()
     $fam = beitragsrollen_einlesen('fam');
 
     foreach ($pPreferences->config['Familienrollen']['familienrollen_prefix'] as $famkey => $famdata) {
-        // wieviele Familienrollen mit diesem Praefix gibt es denn?
-        // in der aufrufenden Funktion wird mittels sizeof abgefragt,
-        // deshalb muss hier eine Array erzeugt werden
+        // how many family roles with this prefix are there?
+        // the calling function checks using sizeof,
+        // therefore an array must be created here
         $arr = array();
         foreach ($fam as $key => $data) {
             if (substr($data['rolle'], 0, strlen($pPreferences->config['Familienrollen']['familienrollen_prefix'][$famkey])) == $pPreferences->config['Familienrollen']['familienrollen_prefix'][$famkey]) {
@@ -717,7 +717,7 @@ function analyse_rol()
 }
 
 /**
- * Prueft die Rollenmitgliedschaften in altersgestaffelten Rollen
+ * Checks the role memberships in age-graded roles
  *
  * @return array $ret
  */
@@ -745,7 +745,7 @@ function check_rollenmitgliedschaft_altersrolle()
         }
     }
 
-    // jetzt $check durchlaufen und nur die Eintraege bearbeiten, bei denen mehr als ein Alterstyp vorhanden ist
+    // now iterate over $check and only process the entries that have more than one age type
     foreach ($check as $member => $memberdata) {
         if (count($memberdata['alterstyp']) > 1) {
             $alterstypen = '';
@@ -771,7 +771,7 @@ function check_rollenmitgliedschaft_altersrolle()
 }
 
 /**
- * Prueft die Pflicht-Rollenmitgliedschaften
+ * Checks the mandatory role memberships
  *
  * @return array $ret
  */
@@ -781,8 +781,8 @@ function check_rollenmitgliedschaft_pflicht()
     $ret = array();
     $user = new User($GLOBALS['gDb'], $gProfileFields);
 
-    // alle Beitragsrollen einlesen ('FIRST_NAME' wird zwar in der Funktion nicht benoetigt, ist aber notwendig,
-    // damit die Rollenmitglieder eingelesen werden)
+    // read all fee roles ('FIRST_NAME' is not needed in the function, but is required
+    // so that the role members are read)
     $beitragsrollen = beitragsrollen_einlesen('', array(
         'FIRST_NAME'
     ));
@@ -791,9 +791,9 @@ function check_rollenmitgliedschaft_pflicht()
         'LAST_NAME'
     ), 0);
 
-    // alle Beitragsrollen durchlaufen und diejenigen Rollen loeschen, die nicht als Pflichtrolle definiert sind
+    // iterate over all fee roles and delete those roles that are not defined as mandatory
     foreach ($beitragsrollen as $rol => $roldata) {
-        // alle if und elseif koennte man in einer Zeile schreiben und mit || verknuepfen, aber so ist es uebersichtlicher
+        // all if and elseif could be written in one line and joined with ||, but this is clearer
         if (($roldata['rollentyp'] == 'fam') && (! $pPreferences->config['Rollenpruefung']['familienrollenpflicht'])) {
             unset($beitragsrollen[$rol]);
         } elseif (($roldata['rollentyp'] == 'alt') && (is_array($pPreferences->config['Rollenpruefung']['altersrollenpflicht'])) && ! (in_array($roldata['alterstyp'], $pPreferences->config['Rollenpruefung']['altersrollenpflicht']))) {
@@ -804,22 +804,22 @@ function check_rollenmitgliedschaft_pflicht()
             unset($beitragsrollen[$rol]);
         }
     }
-    // in $beitragsrollen sind jetzt nur noch Pflicht-Beitragsrollen
+    // $beitragsrollen now only contains mandatory fee roles
 
-    // Feature-Wunsch von joesch
+    // feature request by joesch
     if ($pPreferences->config['Rollenpruefung']['bezugskategorie'][0] != ' ') {
-        // zuerst alle Member der Bezugskategorien einlesen
+        // first read all members of the reference categories
         $bezugskategorieMembers = bezugskategorie_einlesen();
 
         foreach ($members as $member => $memberdata) {
-            // alle usr_ids loeschen, wenn sie nicht innerhalb der Bezugskategorie sind
+            // delete all usr_ids if they are not within the reference category
             if (! in_array($member, $bezugskategorieMembers)) {
                 unset($members[$member]);
             }
         }
     }
 
-    // alle Mitglieder durchlaufen und pruefen, ob sie in mind. einer Pflicht-Beitragsrolle sind
+    // iterate over all members and check whether they are in at least one mandatory fee role
     foreach ($members as $member => $memberdata) {
         $marker = false;
         foreach ($beitragsrollen as $rol => $roldata) {
@@ -846,7 +846,7 @@ function check_rollenmitgliedschaft_pflicht()
 }
 
 /**
- * Prueft die Auschluss-Rollenmitgliedschaften
+ * Checks the exclusion role memberships
  *
  * @return array $ret
  */
@@ -856,8 +856,8 @@ function check_rollenmitgliedschaft_ausschluss()
     $ret = array();
     $user = new User($GLOBALS['gDb'], $gProfileFields);
 
-    // alle Beitragsrollen einlesen ('FIRST_NAME' wird zwar in der Funktion nicht benoetigt, ist aber notwendig,
-    // damit die Rollenmitglieder eingelesen werden)
+    // read all fee roles ('FIRST_NAME' is not needed in the function, but is required
+    // so that the role members are read)
     $beitragsrollen = beitragsrollen_einlesen('', array(
         'FIRST_NAME'
     ));
@@ -866,7 +866,7 @@ function check_rollenmitgliedschaft_ausschluss()
         'LAST_NAME'
     ), 0);
 
-    // alle Beitragsrollen durchlaufen und fuer jedes Mitglied seine Rollenzugehoerigkeiten bestimmen
+    // iterate over all fee roles and determine the role memberships for each member
     foreach ($beitragsrollen as $rol => $roldata) {
         foreach ($roldata['members'] as $key => $dummy) {
             if (! isset($members[$key]['rollen'])) {
@@ -883,22 +883,22 @@ function check_rollenmitgliedschaft_ausschluss()
         }
     }
 
-    // Feature-Wunsch von joesch
+    // feature request by joesch
     if ($pPreferences->config['Rollenpruefung']['bezugskategorie'][0] != ' ') {
-        // zuerst alle Member der Bezugskategorien einlesen
+        // first read all members of the reference categories
         $bezugskategorieMembers = bezugskategorie_einlesen();
 
         foreach ($members as $member => $memberdata) {
-            // alle usr_ids loeschen, wenn sie nicht innerhalb der Bezugskategorie sind
+            // delete all usr_ids if they are not within the reference category
             if (! in_array($member, $bezugskategorieMembers)) {
                 unset($members[$member]);
             }
         }
     }
 
-    // alle Mitglieder durchlaufen und pruefen, ob sie in Ausschluss-Beitragsrollen sind
+    // iterate over all members and check whether they are in exclusion fee roles
     foreach ($members as $member => $memberdata) {
-        // falls das Mitglied kein Angehoeriger einer Beitragsrolle ist: abbrechen und zum naechsten Datensatz gehen
+        // if the member does not belong to a fee role: abort and go to the next record
         if (! isset($memberdata['rollen'])) {
             continue;
         }
@@ -963,17 +963,17 @@ function check_rollenmitgliedschaft_ausschluss()
 }
 
 /**
- * Vergleichsfunktion erforderlich fuer usort()
+ * Comparison function required for usort()
  *
  * @param
  *            $wert_a
  * @param
  *            $wert_b
- * @return int 0, 1 oder -1
+ * @return int 0, 1 or -1
  */
 function vergleich($wert_a, $wert_b)
 {
-    // Sortierung nach dem zweiten Wert des Arrays (Index: 1)
+    // Sort by the second value of the array (index: 1)
     $a = $wert_a['year'];
     $b = $wert_b['year'];
 
@@ -986,7 +986,7 @@ function vergleich($wert_a, $wert_b)
 }
 
 /**
- * Prueft die altersgestaffelten Rollen auf Luecken bzw Ueberschneidungen
+ * Checks the age-graded roles for gaps or overlaps
  *
  * @return array $ret
  */
@@ -1038,7 +1038,7 @@ function check_rols()
 }
 
 /**
- * Prueft, ob Angehoerige von Familienrollen die Pruefbedingungen erfuellen
+ * Checks whether members of family roles meet the check conditions
  *
  * @return array $ret
  */
@@ -1058,17 +1058,17 @@ function check_family_roles()
     $check = $pPreferences->config['Familienrollen'];
     $role = new Role($GLOBALS['gDb']);
 
-    // alle Pruefbedingungen einlesen
+    // read all check conditions
     foreach ($check['familienrollen_prefix'] as $key => $prefix) {
         $temp_arr = explode(';', $pPreferences->config['Familienrollen']['familienrollen_pruefung'][$key]);
         foreach ($temp_arr as $keybed => $bedingung) {
-            // den Doppelpunkt in der Pruefbedingung ersetzen
-            // eine Pruefbedingung koennte deshalb auch in folgender Syntax geschrieben werden: von*bis*Anzahl
+            // replace the colon in the check condition
+            // a check condition could therefore also be written in the following syntax: from*to*count
             $bedingung = str_replace(':', '*', $bedingung);
 
             $temp_arr2 = explode('*', $bedingung);
 
-            // pruefen auf ungültige oder fehlerhafte Bedingungen und einlesen der Bedingungen
+            // check for invalid or faulty conditions and read the conditions
             $cond_incorrect = FALSE;
             if (count($temp_arr2) >= 3 && is_numeric($temp_arr2[0]) && is_numeric($temp_arr2[1])) {
                 $check['pruefungsbedingungen'][$key][$keybed]['von'] = $temp_arr2[0];
@@ -1092,7 +1092,7 @@ function check_family_roles()
             }
         }
 
-        // Meldung bei fehlerhaften Pruefbedingungen
+        // message for faulty check conditions
         if ($ret_marker && strlen($pPreferences->config['Familienrollen']['familienrollen_pruefung'][$key]) > 0) {
             $ret_error[] = '<small>' . $GLOBALS['gL10n']->get('PLG_MEMBERSHIPFEE_CONDITION') . ' ' . $pPreferences->config['Familienrollen']['familienrollen_pruefung'][$key] . ' (' . $prefix . ') ' . $GLOBALS['gL10n']->get('PLG_MEMBERSHIPFEE_INVALID') . '.</small>';
         }
@@ -1106,23 +1106,23 @@ function check_family_roles()
 
     unset($bedingung, $keybed, $temp_arr, $temp_arr2, $ret_marker);
 
-    // alle Pruefbedingungen durchlaufen
+    // iterate over all check conditions
     foreach ($check['familienrollen_prefix'] as $key => $prefix) {
-        // alle Familienrollen durchlaufen
+        // iterate over all family roles
         foreach ($fam as $famkey => $famdata) {
             if ($famdata['familientyp'] == $prefix) {
                 $ret_temp = array();
 
-                // alle Pruefungsbedingungen durchlaufen
+                // iterate over all check conditions
                 foreach ($check['pruefungsbedingungen'][$key] as $pruefkey => $pruefdata) {
                     $counter = 0;
-                    // alle Mitglieder durchlaufen
+                    // iterate over all members
                     foreach ($famdata['members'] as $memberID => $memberdata) {
-                        // das Alter des Mitglieds am Stichtag bestimmen
+                        // determine the member's age on the reference date
                         $deadline = getDeadline($pPreferences->config['Altersrollen']['altersrollen_offset']);
                         $age = ageCalculator(strtotime($memberdata['BIRTHDAY']), strtotime($deadline));
 
-                        // passt das Alter zu einer der Pruefbedingungen?
+                        // does the age match one of the check conditions?
                         if ($age >= $pruefdata['von'] && $age <= $pruefdata['bis']) {
                             $counter ++;
                         }
@@ -1164,7 +1164,7 @@ function check_family_roles()
         $ret[] = '<br/><strong>=> ' . $GLOBALS['gL10n']->get('PLG_MEMBERSHIPFEE_FAMILY_ROLES_ROLE_TEST_RESULT_ERROR') . '</strong>';
     }
 
-    // eine evtl. vorhandene Fehlermeldung davorsetzen
+    // prepend any existing error message
     if (count($ret_error) !== 0) {
         $ret = array_merge($ret_error, $ret);
     }
@@ -1172,8 +1172,8 @@ function check_family_roles()
 }
 
 /**
- * Prueft, ob Mandats-ID und Mandatsdatum vorhanden sind
- * (Voraussetzung: IBAN und Mitgliedsbeitrag dürfen nicht leer)
+ * Checks whether mandate ID and mandate date are present
+ * (prerequisite: IBAN and membership fee must not be empty)
  *
  * @return array $ret
  */
@@ -1212,7 +1212,7 @@ function check_mandate_management()
 }
 
 /**
- * Prueft, ob bei Angabe eines Kontoinhabers auch KtoInh-Ort, KtoInh-PLZ und KtoInh-Straße vorhanden sind
+ * Checks whether, when an account holder is given, the account holder's city, postal code and street are also present
  *
  * @return array $ret
  */
@@ -1251,7 +1251,7 @@ function check_account_details()
 }
 
 /**
- * Durchlaeuft alle Mitglieder und prueft deren IBAN
+ * Iterates over all members and checks their IBAN
  *
  * @return array $ret
  */
@@ -1287,37 +1287,14 @@ function check_iban()
 }
 
 /**
- * Calculates <numericString> mod 97 for the IBAN check-digit validation
- * (ISO 7064 mod 97-10). Uses the bcmath extension (bcmod) when it is available,
- * and otherwise falls back to a pure-PHP digit-by-digit reduction, so the IBAN
- * test no longer fatals when bcmath is missing.
- *
- * @param string $numericString String consisting only of the digits 0-9
- * @return int The remainder of <numericString> divided by 97
- */
-function iban_mod97($numericString)
-{
-    if (function_exists('bcmod')) {
-        return (int) bcmod($numericString, '97');
-    }
-
-    // Fallback without bcmath: reduce digit by digit (remainder always stays < 97)
-    $remainder = 0;
-    foreach (str_split($numericString) as $digit) {
-        $remainder = ($remainder * 10 + (int) $digit) % 97;
-    }
-    return $remainder;
-}
-
-/**
- * Prueft die uebergebene IBAN
+ * Checks the given IBAN
  *
  * @param string $iban
  * @return bool
  */
 function test_iban($iban)
 {
-    // von karelvh
+    // by karelvh
     $iban = strtolower(str_replace(' ', '', $iban));
     $Countries = array(
         'al' => 28,
@@ -1439,11 +1416,11 @@ function test_iban($iban)
 }
 
 /**
- * Durchläuft alle Mitglieder und prueft ob ein BIC vorhanden ist,
- * falls das Mitglied aus einem Land außerhalb EU/EWR stammt
- * Prueft die Kontodaten des Vereins ob ein BIC vorhanden ist, falls der Verein
- * aus einem Land außerhalb EU/EWR stammt
- * Überprüft die BIC der Mitglieder und des Vereins auf das gültige Format
+ * Iterates over all members and checks whether a BIC is present,
+ * if the member is from a country outside the EU/EEA
+ * Checks the association's account data for a BIC, if the association
+ * is from a country outside the EU/EEA
+ * Checks the BIC of the members and the association for the valid format
  *
  * @return array $ret
  */
@@ -1455,10 +1432,10 @@ function check_bic()
     $retSum = array();
     $user = new User($gDb, $gProfileFields);
 
-    // Prüf-Pattern für den BIC
+    // Check pattern for the BIC
     $pattern = '/^([a-zA-Z]{4})([a-zA-Z]{2})(([2-9a-zA-Z]{1})([0-9a-np-zA-NP-Z]{1}))((([0-9a-wy-zA-WY-Z]{1})([0-9a-zA-Z]{2}))|([xX]{3})|)$/';
-    // $pattern = '/^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$/'; // auch möglich, aber nicht so detailliert
-    // $pattern = '/^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?$/'; // auch möglich, aber nicht so detailliert
+    // $pattern = '/^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$/'; // also possible, but not as detailed
+    // $pattern = '/^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?$/'; // also possible, but not as detailed
 
     $members = list_members(array(
         'FIRST_NAME',
@@ -1513,7 +1490,7 @@ function check_bic()
 }
 
 /**
- * Prueft, ob die uebergebene IBAN zu einem Land außerhalb EU/EWR gehoert
+ * Checks whether the given IBAN belongs to a country outside the EU/EEA
  *
  * @param string $iban
  * @return bool
@@ -1529,9 +1506,9 @@ function isIbanNOT_EU_EWR($iban)
         'JE', // Jersey
         'GG', // Guernsey
         'IM', // Isle of Man
-               // 'GB', //Großbritannien (je nach Brexit-Vereinbarung)
+               // 'GB', //Great Britain (depending on the Brexit agreement)
         'PM'
-    ); // St. Pierre und Miquelon
+    ); // Saint Pierre and Miquelon
 
     if (in_array($iban_land, $countries)) {
         return true;
@@ -1541,12 +1518,12 @@ function isIbanNOT_EU_EWR($iban)
 }
 
 /**
- * Formatiert den uebergebenen Datumsstring fuer MySQL,
- * date_format2mysql ersetzt date_german2mysql (erstellt von eiseli)
+ * Formats the given date string for MySQL,
+ * date_format2mysql replaces date_german2mysql (created by eiseli)
  *
  * @param string $date
- *            Datumsstring
- * @return DateTime Datum im Format Y-m-d
+ *            Date string
+ * @return DateTime Date in the format Y-m-d
  */
 function date_format2mysql($date)
 {
@@ -1578,13 +1555,13 @@ function getDeadline($altersrollen_offset)
 }
 
 /**
- * Berechnet das Alter an einem bestimmten Tag (Stichtag)
+ * Calculates the age on a specific day (reference date)
  *
  * @param DateTime $geburtstag
- *            Datum des Geburtstages
+ *            Date of birth
  * @param DateTime $stichtag
- *            Datum des Stichtages
- * @return int Das Alter in Jahren
+ *            Reference date
+ * @return int The age in years
  */
 function ageCalculator($geburtstag, $stichtag)
 {
@@ -1607,10 +1584,10 @@ function ageCalculator($geburtstag, $stichtag)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn Beitrag != NULL ist
+ * @return bool true if fee != NULL
  */
 function delete_without_BEITRAG($wert)
 {
@@ -1618,10 +1595,10 @@ function delete_without_BEITRAG($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn IBAN != NULL ist
+ * @return bool true if IBAN != NULL
  */
 function delete_without_IBAN($wert)
 {
@@ -1629,10 +1606,10 @@ function delete_without_IBAN($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn BIC != NULL ist
+ * @return bool true if BIC != NULL
  */
 function delete_without_BIC($wert)
 {
@@ -1640,10 +1617,10 @@ function delete_without_BIC($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn MandateID == NULL ist
+ * @return bool true if MandateID == NULL
  */
 function delete_with_MANDATEID($wert)
 {
@@ -1651,10 +1628,10 @@ function delete_with_MANDATEID($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn Bezahlt == NULL ist
+ * @return bool true if Paid == NULL
  */
 function delete_with_BEZAHLT($wert)
 {
@@ -1662,10 +1639,10 @@ function delete_with_BEZAHLT($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn MandateID != NULL ist
+ * @return bool true if MandateID != NULL
  */
 function delete_without_MANDATEID($wert)
 {
@@ -1673,10 +1650,10 @@ function delete_without_MANDATEID($wert)
 }
 
 /**
- * Callbackfunktion fuer array_filter
+ * Callback function for array_filter
  *
  * @param string $wert
- * @return bool true, wenn MandateID != NULL ist
+ * @return bool true if MandateID != NULL
  */
 function delete_without_MANDATEDATE($wert)
 {
@@ -1692,7 +1669,7 @@ function delete_without_MANDATEDATE($wert)
 function umlaute($tmptext)
 {
     // Autor: guenter47
-    // angepasst wegen einem Fehler bei der Umsetzung von ß
+    // adjusted due to an error in the conversion of ß
     $tmptext = htmlentities($tmptext);
     $tmptext = str_replace('&uuml;', 'ue', $tmptext);
     $tmptext = str_replace('&auml;', 'ae', $tmptext);
@@ -1705,7 +1682,7 @@ function umlaute($tmptext)
 }
 
 /**
- * Ersetzt und entfernt unzulaessige Zeichen in der SEPA-XML-Datei
+ * Replaces and removes invalid characters in the SEPA XML file
  *
  * @param string $tmptext
  * @return string $ret
@@ -1713,25 +1690,25 @@ function umlaute($tmptext)
 function replace_sepadaten($tmptext)
 {
     /*
-     * Zulaessige Zeichen
-     * Fuer die Erstellung von SEPA-Nachrichten sind die folgenden Zeichen in der
-     * Kodierung gemaess UTF-8 bzw. ISO-885933 zugelassen.
+     * Permitted characters
+     * For the creation of SEPA messages, the following characters are permitted
+     * in the encoding according to UTF-8 or ISO-885933.
      * ---------------------------------------------------
-     * Zugelassener Zeichencode| Zeichen | Hexcode
-     * Numerische Zeichen | 0 bis 9 | X'30' bis X'39'
-     * Großbuchstaben | A bis Z | X'41' bis X'5A'
-     * Kleinbuchstaben | a bis z | X'61' bis 'X'7A'
-     * Apostroph | ' | X'27
-     * Doppelpunkt | : | X'3A
-     * Fragezeichen | ? | X'3F
-     * Komma | , | X'2C
+     * Permitted character code| Character | Hex code
+     * Numeric characters | 0 to 9 | X'30' to X'39'
+     * Uppercase letters | A to Z | X'41' to X'5A'
+     * Lowercase letters | a to z | X'61' to 'X'7A'
+     * Apostrophe | ' | X'27
+     * Colon | : | X'3A
+     * Question mark | ? | X'3F
+     * Comma | , | X'2C
      * Minus | - | X'2D
-     * Leerzeichen | | X'20
-     * Linke Klammer | ( | X'28
-     * Pluszeichen | + | X'2B
-     * Punkt | . | X'2E
-     * Rechte Klammer | ) | X'29
-     * Schraegstrich | / | X'2F
+     * Space | | X'20
+     * Left parenthesis | ( | X'28
+     * Plus sign | + | X'2B
+     * Period | . | X'2E
+     * Right parenthesis | ) | X'29
+     * Slash | / | X'2F
      */
     $charMap = array(
         'Ä' => 'Ae',
@@ -1813,13 +1790,13 @@ function replace_sepadaten($tmptext)
 }
 
 /**
- * Ersetzt Parameter im E-Mail-Text
+ * Replaces parameters in the e-mail text
  *
  * @param string $text
- *            Die E-Mail-Nachricht mit Parametern
+ *            The e-mail message with parameters
  * @param Database $user
  *            Object of the class User
- * @return string $text Die E-Mail-Nachricht mit ersetzten Werten
+ * @return string $text The e-mail message with replaced values
  */
 function replace_emailparameter($text, $user)
 {
@@ -1857,11 +1834,11 @@ function replace_emailparameter($text, $user)
 }
 
 /**
- * Wandelt Rollentyp von Kurzform in Langform um
+ * Converts role type from short form to long form
  *
  * @param string $rollentyp
- *            Rollentyp in Kurzform ('fix' oder 'fam')
- * @return string $ret Rollentyp in Langform (z.B. 'Familienrollen')
+ *            Role type in short form ('fix' or 'fam')
+ * @return string $ret Role type in long form (e.g. 'Familienrollen')
  */
 function expand_rollentyp($rollentyp = '')
 {
@@ -1877,12 +1854,12 @@ function expand_rollentyp($rollentyp = '')
 }
 
 /**
- * Verschleiert die IBAN für den Versand durch Aus-X-en der 8.
- * bis 17. Ziffer
+ * Obfuscates the IBAN for sending by replacing the 8th
+ * to 17th digit with x
  *
  * @param string $iban
- *            IBAN des Users
- * @return string verschleierte IBAN (z.B. 'DE1234567xxxxxxxxxx123', 'DE12 3456 7xxx xxxx xxx1 23', ...)
+ *            IBAN of the user
+ * @return string obfuscated IBAN (e.g. 'DE1234567xxxxxxxxxx123', 'DE12 3456 7xxx xxxx xxx1 23', ...)
  */
 function obfuscate_iban($iban)
 {

@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Deleteroutine fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Delete routine for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -31,10 +31,10 @@ if (!isUserAuthorizedForPreferences())
 $duedatecount = 0;
 $paidcount = 0;
 
-//alle Mitglieder einlesen
+//read all members
 $members = list_members(array('DUEDATE'.$gCurrentOrgId, 'SEQUENCETYPE'.$gCurrentOrgId, 'CONTRIBUTORY_TEXT'.$gCurrentOrgId, 'PAID'.$gCurrentOrgId, 'FEE'.$gCurrentOrgId, 'MANDATEID'.$gCurrentOrgId, 'MANDATEDATE'.$gCurrentOrgId, 'IBAN', 'BIC'), 0);
 
-//jetzt wird gezaehlt
+//now count
 foreach ($members as $member => $memberdata)
 {
     if (!empty($memberdata['DUEDATE'.$gCurrentOrgId]))

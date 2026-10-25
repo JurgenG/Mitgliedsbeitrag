@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Versionsdatei fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Version file for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

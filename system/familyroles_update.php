@@ -1,8 +1,8 @@
 <?php
 /**
  ***********************************************************************************************
- * Dieses Plugin führt einen Abgleich durch zwischen den Einträgen von Beitrag, Beitragszeitraum
- * und Beschreibung von Familienrollen mit den Angaben in Einstellungen-Familienrollen.
+ * This plugin performs a comparison between the entries of fee, contribution period
+ * and description of family roles with the data in Settings-Family roles.
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
@@ -54,10 +54,10 @@ if ($getMode == 'preview')     //Default
     
 	$familyRolesToUpdate = array();
 
-	// alle Familienkonfigurationen durchlaufen
+	// iterate through all family configurations
 	foreach($pPreferences->config['Familienrollen']['familienrollen_prefix'] as $key => $data)
 	{
-		// Familienrollen anhand des Präfix bestimmen
+		// determine family roles by prefix
 		$sql = 'SELECT rol_id, rol_name, rol_cost, rol_cost_period, rol_description
                 FROM '.TBL_ROLES.', '. TBL_CATEGORIES. '
 				WHERE rol_valid  = true
@@ -68,7 +68,7 @@ if ($getMode == 'preview')     //Default
 
 	   $statement = $gDb->queryPrepared($sql, array($data.'%', $gCurrentOrgId));
 
-		// die Einträge von Beitrag, Beitragszeitraum und Beschreibung auslesen und mit den Einträgen im Setup vergleichen
+		// read the entries for fee, contribution period and description and compare them with the entries in the setup
 		while ($row = $statement->fetch())
 		{
 			if (	($row['rol_cost']        != $pPreferences->config['Familienrollen']['familienrollen_beitrag'][$key])
@@ -122,7 +122,7 @@ if ($getMode == 'preview')     //Default
 		{
             $role->readDataById( $rol_id);
 
-			//Sonderfall absichern, wenn rol_cost_period_is oder rol_cost_period_shall nicht gesetzt, also null ist
+			//handle special case where rol_cost_period_is or rol_cost_period_shall is not set, i.e. null
 			$rol_cost_period_is = $data['rol_cost_period_is'] !== null ? Role::getCostPeriods($data['rol_cost_period_is']) : '';
 			$rol_cost_period_shall = $data['rol_cost_period_shall'] !== null ? Role::getCostPeriods($data['rol_cost_period_shall']) : '';
 

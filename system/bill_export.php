@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Modul bill_export fuer das Admidio-Plugin Mitgliedsbeitrag
+ * bill_export module for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/

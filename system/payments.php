@@ -1,25 +1,25 @@
 <?php
 /**
  ***********************************************************************************************
- * Setzen eines Bezahlt-Datums fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Setting a paid date for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
  *
- * Hinweis:   payments.php ist eine modifizierte members_assignment.php
+ * Note:   payments.php is a modified members_assignment.php
  *
  * Parameters:
  *
- * mode             : html        - Standardmodus zun Anzeigen einer html-Liste aller Benutzer mit Beitraegen
- *                    assign_date - Setzen eines Bezahlt-Datums
- *                    delete_date - Löschen eines Bezahlt-Datums
- *                    prepare     - eine einzelne Checkbox oder "Alle" wurde angeklickt 
- * usr_id           : Id des Benutzers, fuer den das Bezahlt-Datum gesetzt wird
- * datum_neu        : das neue Bezahlt-Datum
- * mem_show_choice  : 0 - (Default) Alle Benutzer anzeigen
- *                    1 - Nur Benutzer anzeigen, bei denen ein Bezahlt-Datum vorhanden ist
- *                    2 - Nur Benutzer anzeigen, bei denen kein Bezahlt-Datum vorhanden ist
+ * mode             : html        - default mode for displaying an html list of all users with fees
+ *                    assign_date - set a paid date
+ *                    delete_date - delete a paid date
+ *                    prepare     - a single checkbox or "All" was clicked 
+ * usr_id           : ID of the user for whom the paid date is set
+ * datum_neu        : the new paid date
+ * mem_show_choice  : 0 - (Default) Show all users
+ *                    1 - Show only users who have a paid date
+ *                    2 - Show only users who have no paid date
  ***********************************************************************************************
  */
 
@@ -95,22 +95,22 @@ if ($getMode == 'assign_date')
             {
                 $user->readDataById($userId);
             
-                //zuerst mal sehen, ob bei diesem user bereits ein BEZAHLT-Datum vorhanden ist
+                //first check whether this user already has a PAID date
                 if (strlen($user->getValue('PAID'.$gCurrentOrgId)) === 0)
                 {
-                    //da kein BEZAHLT-Datum vorhanden ist, ein neues eintragen
+                    //since there is no PAID date, enter a new one
                     $user->setValue('PAID'.$gCurrentOrgId, $getDatumNeu);
                 
-                    // wenn Lastschrifttyp noch nicht gesetzt ist: als Folgelastschrift kennzeichnen
-                    // BEZAHLT bedeutet, es hat bereits eine Zahlung stattgefunden
-                    // die naechste Zahlung kann nur eine Folgelastschrift sein
-                    // Lastschrifttyp darf aber nur geaendert werden, wenn der Einzug per SEPA stattfand, also ein Faelligkeitsdatum vorhanden ist
+                    // if the direct debit type is not yet set: mark as recurrent direct debit
+                    // PAID means a payment has already taken place
+                    // the next payment can only be a recurrent direct debit
+                    // the direct debit type may only be changed if the collection took place via SEPA, i.e. a due date exists
                     if (strlen($user->getValue('SEQUENCETYPE'.$gCurrentOrgId)) === 0  && strlen($user->getValue('DUEDATE'.$gCurrentOrgId)) !== 0)
                     {
                         $user->setValue('SEQUENCETYPE'.$gCurrentOrgId, 'RCUR');
                     }
                 
-                    //falls Daten von einer Mandatsaenderung vorhanden sind, diese loeschen
+                    //if data from a mandate change exists, delete it
                     if (strlen($user->getValue('ORIG_MANDATEID'.$gCurrentOrgId)) !== 0)
                     {
                         $user->setValue('ORIG_MANDATEID'.$gCurrentOrgId, '');
@@ -124,7 +124,7 @@ if ($getMode == 'assign_date')
                         $user->setValue('ORIG_DEBTOR_AGENT', '');
                     }
                 
-                    //das Faelligkeitsdatum loeschen (wird nicht mehr gebraucht, da ja bezahlt)
+                    //delete the due date (no longer needed since it is paid)
                     if (strlen($user->getValue('DUEDATE'.$gCurrentOrgId)) !== 0)
                     {
                         $user->setValue('DUEDATE'.$gCurrentOrgId, '');
@@ -163,7 +163,7 @@ elseif ($getMode == 'delete_date')
             
                 if (strlen($user->getValue('PAID'.$gCurrentOrgId)) > 0)
                 {
-                    //er hat bereits ein BEZAHLT-Datum, deshalb das vorhandene loeschen
+                    //he already has a PAID date, so delete the existing one
                     $user->setValue('PAID'.$gCurrentOrgId, '');
                     $user->save();
                 }
@@ -185,7 +185,7 @@ else
   
     if (isset($_SESSION['pMembershipFee']['payments_rol_sel']) )
     {
-    	// Rollenwahl ist vorhanden, deshalb Daten aufbereiten fuer list_members
+    	// role selection exists, so prepare data for list_members
     	$membersListRols = array();
     	$role = new Role($gDb);
     	foreach ($_SESSION['pMembershipFee']['payments_rol_sel']as $rol_id)
@@ -199,7 +199,7 @@ else
     	$membersListRols = 0;
     }
     
-    $membersListFields = array_filter($pPreferences->config['columnconfig']['payments_fields']);            //array_filter: löschen leerer Einträge, falls das Setup fehlgeschlagen ist 
+    $membersListFields = array_filter($pPreferences->config['columnconfig']['payments_fields']);            //array_filter: delete empty entries in case the setup failed 
 
     $membersListSqlCondition = 'AND mem_usr_id IN (SELECT DISTINCT usr_id
         FROM '. TBL_USERS. '
@@ -217,15 +217,15 @@ else
          		
        WHERE fee.usd_value IS NOT NULL ';
     
-    if ($getMembersShow == 1)                   // Nur Benutzer anzeigen, bei denen ein Bezahlt-Datum vorhanden ist
+    if ($getMembersShow == 1)                   // Show only users who have a paid date
     {
     	$membersListSqlCondition .= ' AND paid.usd_value IS NOT NULL ) ';
     }
-    elseif ($getMembersShow == 2)				// Nur Benutzer anzeigen, bei denen kein Bezahlt-Datum vorhanden ist
+    elseif ($getMembersShow == 2)				// Show only users who have no paid date
     {
     	$membersListSqlCondition .= ' AND paid.usd_value IS NULL ) ';
     }
-    else 										// Alle Benutzer anzeigen
+    else 										// Show all users
     {
     	$membersListSqlCondition .= ' ) ';
     }
@@ -235,13 +235,13 @@ else
     if ($getMode == 'prepare')
     {
         $ret_text = 'ERROR';
-        if($getUserId != 0)           // ein einzelner User wurde selektiert
+        if($getUserId != 0)           // a single user was selected
         {
-            if ($getChecked == 'false')            // der Haken wurde geloescht
+            if ($getChecked == 'false')            // the checkmark was removed
             {
                 unset($_SESSION['pMembershipFee']['checkedArray'][$getUserId]);
             }
-            elseif ($getChecked == 'true')        // der Haken wurde gesetzt
+            elseif ($getChecked == 'true')        // the checkmark was set
             {
                 $_SESSION['pMembershipFee']['checkedArray'][$getUserId] = 'checked';
             }
@@ -430,7 +430,7 @@ else
                 }
                 $columnValues[] = $columnHeader;
             }  
-            break;							// Abbruch nach dem ersten Mitglied, da nur die usfIds eines Mitglieds benoetigt werden um die headlines zu erzeugen
+            break;							// abort after the first member, since only the usfIds of one member are needed to create the headlines
         }
    
         $table->setColumnAlignByArray($columnAlign);
@@ -480,7 +480,7 @@ else
                 }
                 elseif ($gProfileFields->getPropertyById($usfId, 'usf_type') === 'EMAIL' || $usfId === (int) $gProfileFields->getProperty('DEBTOR_EMAIL', 'usf_id'))
                 {
-                    $columnValues[] = getEmailLink($content, $user->getValue('usr_uuid'), $userField->getValue('usf_uuid'));      // hier $content, nicht $htmlValue
+                    $columnValues[] = getEmailLink($content, $user->getValue('usr_uuid'), $userField->getValue('usf_uuid'));      // here $content, not $htmlValue
                 }
                 else
                 {

@@ -1,24 +1,24 @@
 <?php
 /**
  ***********************************************************************************************
- * Setzen eines Faelligkeitsdatums fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Setting a due date for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0 only
  *
- * Hinweis:   duedates.php ist eine modifizierte members_assignment.php
+ * Note:   duedates.php is a modified members_assignment.php
  *
  * Parameters:
  *
- * mode             : html   - Standardmodus zun Anzeigen einer html-Liste aller Benutzer mit Beitraegen
- *                    assign - Setzen eines Faelligkeitsdatum
- * usr_id           : Id des Benutzers, fuer den das Faelligkeitsdatum gesetzt/geloescht wird
- * datum_neu        : das neue Faelligkeitsdatum
- * mem_show_choice  : 0 - (Default) Alle Benutzer anzeigen
- *                    1 - Nur Benutzer anzeigen, bei denen ein Faelligkeitsdatum vorhanden ist
- *                    2 - Nur Benutzer anzeigen, bei denen kein Faelligkeitsdatum vorhanden ist
- * sequencetype     : Sequenztyp, der gleichzeitig mit dem Faelligkeitsdatum gesetzt wird (FRST, RCUR, FNAL oder OOFF)
+ * mode             : html   - default mode to display an html list of all users with fees
+ *                    assign - set a due date
+ * usr_id           : Id of the user for whom the due date is set/deleted
+ * datum_neu        : the new due date
+ * mem_show_choice  : 0 - (Default) Show all users
+ *                    1 - Show only users who have a due date
+ *                    2 - Show only users who have no due date
+ * sequencetype     : Sequence type that is set together with the due date (FRST, RCUR, FNAL or OOFF)
  ***********************************************************************************************
  */
 use Admidio\Infrastructure\Exception;
@@ -79,7 +79,7 @@ if ($getMode == 'assign') {
     $ret_text = 'ERROR';
 
     $userArray = array();
-    if ($getUserId != 0) // Faelligkeitsdatum nur fuer einen einzigen User aendern
+    if ($getUserId != 0) // change the due date for a single user only
     {
         $userArray[0] = $getUserId;
     } else // Alle aendern wurde gewaehlt
@@ -91,9 +91,9 @@ if ($getMode == 'assign') {
         foreach ($userArray as $dummy => $data) {
             $user->readDataById($data);
 
-            // zuerst mal sehen, ob bei diesem user bereits ein Faelligkeitsdatum vorhanden ist
+            // first check whether this user already has a due date
             if (strlen($user->getValue('DUEDATE' . $gCurrentOrgId)) === 0) {
-                // er hat noch kein Faelligkeitsdatum, deshalb ein neues eintragen
+                // he has no due date yet, so enter a new one
                 $user->setValue('DUEDATE' . $gCurrentOrgId, $getDatumNeu);
 
                 if ($getSequenceType == 'FRST') {
@@ -102,7 +102,7 @@ if ($getMode == 'assign') {
                     $user->setValue('SEQUENCETYPE' . $gCurrentOrgId, $getSequenceType);
                 }
             } else {
-                // er hat bereits ein Faelligkeitsdatum, deshalb das vorhandene loeschen
+                // he already has a due date, so delete the existing one
                 $user->setValue('DUEDATE' . $gCurrentOrgId, '');
             }
 
@@ -118,7 +118,7 @@ if ($getMode == 'assign') {
     $membersList = array();
 
     if (isset($_SESSION['pMembershipFee']['duedates_rol_sel'])) {
-        // Rollenwahl ist vorhanden, deshalb Daten aufbereiten fuer list_members
+        // role selection exists, so prepare data for list_members
         $membersListRols = array();
         $role = new Role($gDb);
         foreach ($_SESSION['pMembershipFee']['duedates_rol_sel'] as $rol_id) {
@@ -129,7 +129,7 @@ if ($getMode == 'assign') {
         $membersListRols = 0;
     }
 
-    $membersListFields = array_filter($pPreferences->config['columnconfig']['duedates_fields']); // array_filter: löschen leerer Eintr�ge, falls das Setup fehlgeschlagen ist
+    $membersListFields = array_filter($pPreferences->config['columnconfig']['duedates_fields']); // array_filter: deleting empty entries in case the setup failed
 
     $membersListSqlCondition = 'AND mem_usr_id IN (SELECT DISTINCT usr_id
         FROM ' . TBL_USERS . '
@@ -167,13 +167,13 @@ if ($getMode == 'assign') {
 		 AND mandateid.usd_value IS NOT NULL  ';
     }
 
-    if ($getMembersShow == 1) // Nur Benutzer anzeigen, bei denen ein Faelligkeitsdatumvorhanden ist
+    if ($getMembersShow == 1) // Show only users who have a due date
     {
         $membersListSqlCondition .= ' AND duedate.usd_value IS NOT NULL ) ';
-    } elseif ($getMembersShow == 2) // Nur Benutzer anzeigen, bei denen kein Faelligkeitsdatum vorhanden ist
+    } elseif ($getMembersShow == 2) // Show only users who have no due date
     {
         $membersListSqlCondition .= ' AND duedate.usd_value IS NULL ) ';
-    } else // Alle Benutzer anzeigen
+    } else // Show all users
     {
         $membersListSqlCondition .= ' ) ';
     }
@@ -340,7 +340,7 @@ if ($getMode == 'assign') {
             }
             $columnValues[] = $columnHeader;
         } // End-Foreach
-        break; // Abbruch nach dem ersten Mitglied, da nur die usfIds eines Mitglieds benoetigt werden um die headlines zu erzeugen
+        break; // Abort after the first member, since only the usfIds of one member are needed to generate the headlines
     }
 
     $table->setColumnAlignByArray($columnAlign);

@@ -92,12 +92,12 @@ $sendResult  = false;
 $user = new User($gDb, $gProfileFields);
 $userField = new Entity($gDb, TBL_USER_FIELDS, 'usf'); 
 
-if ($getUserUuid !== '' && $getUsfUuid !== '')                          // ein einzelner E-Mail-Link wurde angeklickt
+if ($getUserUuid !== '' && $getUsfUuid !== '')                          // a single email link was clicked
 {
     $user->readDataByUuid($getUserUuid);
     $mailToArray = array($user->getValue('usr_id') => $getUsfUuid);
 }
-else                                                                    // wenn nicht, dann kann es nur eine Liste sein (erzeugt von pre_notification.php)
+else                                                                    // if not, it can only be a list (created by pre_notification.php)
 {
     $mailToArray = $_SESSION['pMembershipFee']['checkedArray'];
     foreach ($mailToArray as $userId => $usfUuid )
@@ -118,7 +118,7 @@ foreach ($mailToArray as $userId => $usfUuid )
     $userField->readDataByUuid($usfUuid); 
     
     //Datensatz fuer E-Mail-Adresse zusammensetzen
-    if($userField->getValue('usf_name_intern') === 'DEBTOR_EMAIL')                      // Problem: 'DEBTOR_EMAIL' ist als TEXT in der DB definiert
+    if($userField->getValue('usf_name_intern') === 'DEBTOR_EMAIL')                      // Problem: 'DEBTOR_EMAIL' is defined as TEXT in the DB
     {
         $receiverEmail = $user->getValue('DEBTOR_EMAIL');
         $receiverName = $user->getValue('DEBTOR');
@@ -233,7 +233,7 @@ foreach ($mailToArray as $userId => $usfUuid )
         $email->setCopyToSenderFlag();
     }
 
-    //den User dem Mailobjekt hinzufuegen...
+    //add the user to the mail object...
     $email->addRecipient($receiverEmail, $receiverName);
     
     // add confirmation mail to the sender

@@ -1,7 +1,7 @@
 <?php
 /**
  ***********************************************************************************************
- * Modul pre_notification_export fuer das Admidio-Plugin Mitgliedsbeitrag
+ * Module pre_notification_export for the Admidio plugin Mitgliedsbeitrag
  *
  * @copyright The Admidio Team
  * @see https://www.admidio.org/
