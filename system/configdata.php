@@ -181,6 +181,12 @@ $config_default['membernumber'] = array(
 // Access authorization for the preferences module
 $config_default['access']['preferences'] = array();
 
+// Role-based permissions for online payments (role ids; administrators always have them)
+$config_default['access']['payment_settings'] = array();
+$config_default['access']['payment_details'] = array();
+$config_default['access']['payment_links'] = array();
+$config_default['access']['payment_refunds'] = array();
+
 // Info for uninstall
 $config_default['install']['access_role_id'] = 0;
 $config_default['install']['menu_item_id'] = 0;
