@@ -49,8 +49,13 @@ classes/Payment/PaymentService.php             plugin logic: open fee → paymen
 classes/Payment/PaymentMember.php              value object: a member's fee, paid flag, pay token, purpose
 classes/Payment/PaymentMemberStoreInterface.php  reads/writes PaymentMember data (Admidio-backed in production)
 classes/Payment/InvalidPayLinkException.php    unknown member or wrong token on the pay link
-system/pay.php                                 public: member's link → creates payment → redirect
+classes/Payment/AdmidioPaymentMemberStore.php  PaymentMemberStoreInterface on top of Admidio's User entity
+classes/Payment/PaymentProviderFactory.php     which providers may be selected, and builds the active one
+system/payment_common.php                      Admidio glue: build the PaymentService, pay link, profile fields
+system/pay.php                                 public: member's link → creates payment → redirect; return page
 system/payment_webhook.php?provider=<name>     public: status callback for every provider
+system/payment_link.php                        shows a member's pay link to users with payment_links
+system/fake_checkout.php                       development only: checkout page of the fake provider
 ```
 
 - **No runtime Composer dependency and no SDKs.** Composer is used for dev tooling only (PHPUnit)
@@ -243,13 +248,77 @@ keys in all language files.
 
 ## Development and testing
 
-- `FakeProvider` covers the full flow without an API key.
+- `FakeProvider` covers the full flow without an API key, in unit tests and in a local Admidio
+  instance (see *Trying it out with the fake provider*).
 - Unit tests for everything in `classes/Payment/` (see README, *Development: automated tests*).
 - Real API: a free Mollie account gives a `test_` key immediately, with simulated outcomes (paid /
   failed / expired). Never commit or share the key; paste it only into the local instance's
   preferences.
 - Webhooks need a public URL. For the local Docker instance (`localhost:8090`), use a tunnel
   (ngrok / cloudflared) and set `ADMIDIO_ROOT_PATH` accordingly while testing.
+
+### Trying it out with the fake provider
+
+The fake provider lets a developer click through the whole flow in a local Admidio instance, with
+no provider account, no API key and no tunnel.
+
+- **Only on development machines.** The provider `fake` can only be selected, and `pay.php`,
+  `payment_webhook.php` and `fake_checkout.php` only accept it, when the web server's environment
+  has `MEMBERSHIPFEE_PAYMENT_FAKE=1`. A normal installation never has that variable, so it never
+  offers the fake provider. `PaymentProviderFactory` decides this and is unit-tested.
+- **Payments survive between requests.** In Admidio, `FakeProvider` keeps its payments in a JSON
+  file, `adm_my_files/membershipfee_fake_payments.json` (the plugin folder may be read-only). Without
+  a file (unit tests) it stays in memory.
+- **Fake checkout page.** The checkout URL of a fake payment is `fake_checkout.php?payment=<id>`.
+  It shows the amount and purpose and lets you choose what the "provider" does:
+
+  | Button | Simulates |
+  |---|---|
+  | Pay | successful payment → status `paid` |
+  | Fail | declined card or bank → `failed` |
+  | Cancel | payer aborts at checkout → `canceled` |
+  | Expire | payer leaves checkout open too long → `expired` |
+  | Pending | bank hasn't confirmed yet → `pending`; the page can be opened again later to pay |
+
+  A checkbox *Send webhook* (on by default) makes the page call the plugin's webhook logic right
+  away, in the same request. Untick it to simulate a late or lost webhook, then trigger it by hand:
+  `curl -d id=<payment id> '<webhook URL>'`. Afterwards the page sends you to the payment's return
+  page, like a real provider.
+- Other realistic cases need no extra buttons: changing the fee after checkout gives
+  `amount_mismatch`, paying twice through the same link is impossible because the token changes,
+  and opening an old link shows the "link no longer valid" page.
+
+Setup for `admidio-dev`: add `MEMBERSHIPFEE_PAYMENT_FAKE: "1"` to the `admidio` service's
+`environment` and recreate the container. Then, in the plugin preferences: *Online payments* →
+enable, provider *Fake (development only)* → save. *Payments* now shows a pay-link icon per
+member.
+
+## Pay link, return page and webhook endpoint
+
+- **Profile fields** `PAYTOKEN{org}`, `PAYMENT_ID{org}` and `PAYMENT_PROVIDER{org}` (category
+  *Membership fee*, hidden and disabled like `PAID{org}`) are created when online payments are
+  enabled and saved, and removed on uninstall.
+- **`AdmidioPaymentMemberStore`** reads and writes them through `User`. It uses
+  `saveChangesWithoutRights()`, because nobody is logged in when the webhook or the pay page runs and
+  Admidio otherwise refuses to save disabled fields.
+- **Showing a pay link:** on *Payments*, users with `payment_links` get a link icon per member.
+  It opens `payment_link.php`, which creates the member's token if needed and shows the link to
+  copy. In mail texts, `#payment_link#` expands to the same link. It stays empty if online payments
+  are off or the sender lacks `payment_links`.
+- **`pay.php`** (no login). Parameters: `org`, `user`, `token`, and `mode` = `pay` (default) or
+  `return`. `org` must be the current organisation, and online payments must be on.
+  - `pay`: `startPayment()` → 303 redirect to the checkout, or a "nothing to pay" or "link no
+    longer valid" message. A provider error shows "try again later" without details.
+  - `return` (the payment's `redirectUrl`): if the token is still valid, the fee isn't confirmed yet:
+    "not completed or not confirmed yet" plus a *Pay now* button. If the token is no longer valid,
+    the neutral "link no longer valid; if you just paid, your payment has been registered" message
+    appears. That never confirms or denies a payment to someone who only knows the uuid.
+- **`payment_webhook.php`** (no login). It ignores calls for another provider than the active one,
+  another org or when payments are off. Otherwise it runs `handleWebhook()`, writes the outcome to
+  Admidio's log (`amount_mismatch` as a warning) and always answers 200.
+- **Multiple organisations:** links and webhooks only work for the organisation Admidio currently
+  serves (`$gCurrentOrgId`). That is the default organisation unless the visitor's session selects
+  another one.
 
 ## Implementation steps (small commits)
 
@@ -260,12 +329,13 @@ keys in all language files.
    `getName()` and `extractWebhookPaymentId()` for multi-provider support.
 4. ✅ Permissions: config defaults, `AccessControl` (unit-tested), `isUserAuthorizedFor()`, and the
    role-selection panel in the preferences.
-5. `PaymentService` with `PaymentMemberStoreInterface`: open-fee lookup, token handling, webhook
+5. ✅ `PaymentService` with `PaymentMemberStoreInterface`: open-fee lookup, token handling, webhook
    logic, mark paid (tested against `FakeProvider` and an in-memory store).
-6. Optional profile fields (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`): created on enable,
-   removed on uninstall.
-7. `pay.php` + `#payment_link#` mail placeholder.
-8. `payment_webhook.php`.
+6. Fake provider usable in Admidio: file storage for `FakeProvider`, `PaymentProviderFactory`
+   (unit-tested), then the *Online payments* panel (enable + provider), profile fields
+   (`PAYTOKEN`, `PAYMENT_ID`, `PAYMENT_PROVIDER`), `AdmidioPaymentMemberStore`.
+7. `pay.php`, `payment_link.php`, `#payment_link#` mail placeholder.
+8. `payment_webhook.php`, `fake_checkout.php`.
 9. `MollieApiKey` (key handling, unit-tested), then `MollieProvider` (curl) + preferences panel.
 10. README + user documentation notes (`documentation-*.docx` need regenerating by hand).
 
