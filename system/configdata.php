@@ -208,9 +208,14 @@ $config_default['individual_contributions'] = array(
 // Multiplier roles (family roles only)
 $config_default['multiplier']['roles'] = array();
 
-// Online payments via Mollie (optional, off by default)
-$config_default['mollie'] = array(
+// Online payments (optional, off by default); 'provider' is the name of the active payment provider
+$config_default['payment'] = array(
     'enabled' => 0,
+    'provider' => 'mollie'
+);
+
+// Settings of the payment provider Mollie
+$config_default['mollie'] = array(
     'api_key' => '',
     'test_mode' => 1
 );
